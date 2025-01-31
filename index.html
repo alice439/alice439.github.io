@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Home </title>
+        <style>
+            body {
+                font-family: 'Courier New', Courier, monospace;
+            }
+
+            .header{
+                padding: 20px;
+                text-align: center;
+                color: white;
+                background: #ADD8E6;
+            }
+            .header h1{
+                font-size: 40px;
+            }
+            .footer {
+                padding: 20px; 
+                text-align: center;
+                background: #ADD8E6;
+                color: white;
+                
+                
+            }
+            * {
+                box-sizing: border-box;
+                font-size: 200;
+            }
+            .main{
+                flex: 80%;
+                background-color: white;
+                padding: 50px;
+                text-align: center;
+                color: #779eab;
+            }
+            .answer {
+                padding: 20px;
+                color: #779eab;
+                font-size: 1000;
+                /* text-align: center;*/
+            }
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                /*width: 70%;*/
+                border: 50px solid white;
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+        function recognize_image() {
+            document.getElementById('answer').textContent="Recognizing image..."
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select an image first!");
+                return;
+            }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('preview').style.display = 'block';
+                const base64String = reader.result.split(",")[1]; // Remove "data:image/png;base64," part
+                console.log(base64String);
+                axios({
+                    method: "POST",
+                    url: "https://detect.roboflow.com/handwriting-recognition-qwzqa/9",
+                    params: {
+                        api_key: "ZIi6RjgkJr6VeGgRt9PG"
+                    },
+                    data: base64String,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                })
+                .then(function(response) {
+                    // console.log(response.data.predictions[0].class);
+                    if (response.data.predictions.length==0) {
+                        document.getElementById('answer').textContent="Cannot identify character";
+                    } else {
+                        document.getElementById('answer').textContent="Image contains " + response.data.predictions[0].class;
+                    }
+                })
+                .catch(function(error) {
+                    // console.log(error.message);
+                    document.getElementById('answer').textContent="We recieved an error " + error.message; 
+                });
+            };
+            reader.readAsDataURL(file);
+           
+    }
+        </script>
+
+    </head>
+
+    <body>
+        <div class="header">
+            <h1> Handwriting Recognition AI </h1>
+            <h3> Detect lowcase letters, numbers, and punctuation marks in an image</h3>
+        </div>
+
+        <div class="main">
+            <h1> Upload an image </h1>
+                <div> 
+                    <input type="file" id="imageInput" name="filename" accept="image/*">
+                    <button onclick="recognize_image()">Upload</button>
+                </div>
+              <div class="center"> <img id="preview" style="max-width: 400px; display: none;" class="center"> </div>
+              <div id="answer" style="font-size: 25px"></div> 
+        </div>
+
+        <div class="footer">
+            <h1> </h1>
+        </div>
+
+    </body>
+</html>
+
