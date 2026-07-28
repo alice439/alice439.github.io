@@ -76,11 +76,11 @@
     <div class="prompt-row">
       <div class="input-group" style="flex: 1.3;">
         <label>1. Any Visual Prompt / Material</label>
-        <input type="text" id="promptInput" value="Sparkling liquid gold nuggets" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
+        <input type="text" id="promptInput" value="Lush green jungle leaves" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
       </div>
       <div class="input-group" style="flex: 0.9;">
         <label>2. Your Text</label>
-        <input type="text" id="textInput" value="GOLD" maxlength="12" spellcheck="false">
+        <input type="text" id="textInput" value="LEAF" maxlength="12" spellcheck="false">
       </div>
       <div style="display: flex; align-items: flex-end;">
         <button id="generateBtn" class="primary">✦ Render GenType</button>
@@ -267,7 +267,6 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'nugget') {
-    // Clean Faceted Gold Gem Cut Geometry (Original Style)
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/26})">
         <polygon points="0,-14 11,-5 7,11 -7,11 -11,-5" fill="#8f5d0a"/>
@@ -279,15 +278,35 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'leaf') {
-    // Clean, Vibrant Dual-Leaf Vector Design
+    // Tropical Monstera Split Leaf (Matching Reference Image)
     return `
-      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
-        <ellipse cx="1" cy="2" rx="10" ry="12" fill="rgba(0,0,0,0.25)"/>
-        <path d="M-2,8 C-10,2 -13,-8 -7,-13 C-1,-8 1,0 -2,8 Z" fill="#1e5c2b"/>
-        <path d="M2,13 C-6,3 -8,-10 3,-15 C10,-7 8,5 2,13 Z" fill="url(#leafGrad-${id})" stroke="#123d1b" stroke-width="1.2"/>
-        <path d="M2,13 Q1,-1 3,-15" stroke="#a5d6a7" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-        <path d="M0,4 Q5,2 7,-2" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.8"/>
-        <path d="M1,-2 Q-3,-4 -5,-7" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.8"/>
+      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/30})">
+        <path d="M0,17 C-10,14 -14,2 -13,-7 C-12,-14 -4,-18 0,-18 C4,-18 12,-14 13,-7 C14,2 10,14 0,17 Z" fill="rgba(0,0,0,0.3)"/>
+        
+        <path d="M0,18 L0,2" stroke="#123d1b" stroke-width="3" stroke-linecap="round"/>
+        <path d="M0,18 L0,2" stroke="#2e7d32" stroke-width="1.6" stroke-linecap="round"/>
+        
+        <path d="M 0,-16 
+                 C 5.5,-16 12,-11 13,-4 
+                 C 13.5,0.5 9,1 8,2.5 
+                 C 7,4 12,6 11,9 
+                 C 10,12 6.5,11.5 5,12.5 
+                 C 3.5,13.5 1,15 0,15 
+                 C -1,15 -3.5,13.5 -5,12.5 
+                 C -6.5,11.5 -10,12 -11,9 
+                 C -12,6 -7,4 -8,2.5 
+                 C -9,1 -13.5,0.5 -13,-4 
+                 C -12,-11 -5.5,-16 0,-16 Z" 
+              fill="url(#leafGrad-${id})" stroke="#123d1b" stroke-width="1.3" stroke-linejoin="round"/>
+        
+        <ellipse cx="-4.5" cy="-4" rx="1.5" ry="3.5" transform="rotate(-20 -4.5 -4)" fill="#0e2617"/>
+        <ellipse cx="4.5" cy="-4" rx="1.5" ry="3.5" transform="rotate(20 4.5 -4)" fill="#0e2617"/>
+        <ellipse cx="-3" cy="3" rx="1.2" ry="2.5" transform="rotate(-15 -3 3)" fill="#0e2617"/>
+        <ellipse cx="3" cy="3" rx="1.2" ry="2.5" transform="rotate(15 3 3)" fill="#0e2617"/>
+
+        <path d="M0,14 L0,-14" stroke="#a5d6a7" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M0,5 Q4,3 7,4 M0,-1 Q5,-3 8,-2 M0,-7 Q4,-9 7,-10" stroke="#a5d6a7" stroke-width="0.9" fill="none" opacity="0.7"/>
+        <path d="M0,5 Q-4,3 -7,4 M0,-1 Q-5,-3 -8,-2 M0,-7 Q-4,-9 -7,-10" stroke="#a5d6a7" stroke-width="0.9" fill="none" opacity="0.7"/>
       </g>
     `;
   } else {
@@ -389,7 +408,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
 function render() {
   const prompt = document.getElementById('promptInput').value.trim();
-  const text = (document.getElementById('textInput').value || 'GOLD').toUpperCase();
+  const text = (document.getElementById('textInput').value || 'LEAF').toUpperCase();
   const tileSizeVal = parseInt(document.getElementById('tileSize').value, 10);
   const tileGapVal = parseInt(document.getElementById('tileGap').value, 10);
   const density = parseInt(document.getElementById('density').value, 10);
