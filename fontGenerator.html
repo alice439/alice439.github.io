@@ -69,7 +69,7 @@
   <header>
     <p class="eyebrow">GenType Vector Alphabet Studio</p>
     <h1>3D Vectorized Prompt Typography</h1>
-    <p class="sub">Type any prompt or style concept to build clean, high-fidelity vectorized 3D typography tiles.</p>
+    <p class="sub">Type any prompt, word, numbers, or symbols to build clean, high-fidelity vectorized 3D typography tiles.</p>
   </header>
 
   <div class="prompt-box">
@@ -79,8 +79,8 @@
         <input type="text" id="promptInput" value="Dark green leaf vector" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
       </div>
       <div class="input-group" style="flex: 0.9;">
-        <label>2. Your Text</label>
-        <input type="text" id="textInput" value="LEAF" spellcheck="false">
+        <label>2. Your Text / Symbols</label>
+        <input type="text" id="textInput" value="LEAF 123!@#" spellcheck="false">
       </div>
       <div style="display: flex; align-items: flex-end;">
         <button id="generateBtn" class="primary">✦ Render GenType</button>
@@ -89,13 +89,13 @@
 
     <div class="preset-row">
       <span class="preset-label">Presets:</span>
-      <button class="chip" data-prompt="Dark green leaf vector" data-text="LEAF">🌿 Leaf</button>
-      <button class="chip" data-prompt="Cute pink blossom flowers" data-text="BLOOM">🌸 Flower</button>
-      <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE">🔥 Fire</button>
-      <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE">☕ Coffee</button>
-      <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD">✨ Gold</button>
-      <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON">⚡ Neon</button>
-      <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="GLACIER">🧊 Glacier</button>
+      <button class="chip" data-prompt="Dark green leaf vector" data-text="LEAF 100%">🌿 Leaf</button>
+      <button class="chip" data-prompt="Cute pink blossom flowers" data-text="BLOOM & LOVE">🌸 Flower</button>
+      <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE 2026!">🔥 Fire</button>
+      <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE $5.99">☕ Coffee</button>
+      <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD #1">✨ Gold</button>
+      <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON (80s)">⚡ Neon</button>
+      <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="ICE -10°C">🧊 Glacier</button>
     </div>
   </div>
 
@@ -127,7 +127,9 @@
 
 const tilesWrapper = document.getElementById('tilesWrapper');
 
-const alphabetPaths = {
+// Letters, Numbers & Punctuation Vector Paths
+const characterPaths = {
+  // Alphabet
   'A': 'M25,85 L50,20 L75,85 M35,62 L65,62',
   'B': 'M28,20 L28,85 M28,20 L58,20 C72,20 72,50 58,50 L28,50 M28,50 L62,50 C78,50 78,85 62,85 L28,85',
   'C': 'M75,32 C65,18 32,18 32,52.5 C32,87 65,87 75,73',
@@ -153,7 +155,51 @@ const alphabetPaths = {
   'W': 'M22,20 L35,85 L50,45 L65,85 L78,20',
   'X': 'M25,20 L75,85 M75,20 L25,85',
   'Y': 'M25,20 L50,52.5 L75,20 M50,52.5 L50,85',
-  'Z': 'M25,20 L75,20 L25,85 L75,85'
+  'Z': 'M25,20 L75,20 L25,85 L75,85',
+
+  // Numbers 0 - 9
+  '0': 'M50,20 C28,20 28,85 50,85 C72,85 72,20 50,20 Z M32,75 L68,30',
+  '1': 'M35,32 L50,20 L50,85 M35,85 L65,85',
+  '2': 'M28,32 C28,18 72,18 72,38 C72,58 28,85 28,85 L75,85',
+  '3': 'M28,20 L72,20 L48,48 C68,48 75,60 75,70 C75,85 50,88 28,80',
+  '4': 'M60,85 L60,20 L25,60 L75,60',
+  '5': 'M70,20 L30,20 L28,45 C35,40 50,40 68,48 C78,58 74,85 50,85 C32,85 28,75 25,68',
+  '6': 'M68,28 C58,18 35,22 30,50 C38,42 60,42 70,52 C78,65 74,85 50,85 C30,85 25,65 30,50',
+  '7': 'M25,20 L75,20 L45,85',
+  '8': 'M50,20 C32,20 32,48 50,50 C70,52 72,85 50,85 C28,85 30,52 50,50 C68,48 68,20 50,20 Z',
+  '9': 'M70,50 C62,58 40,58 30,48 C22,35 26,15 50,15 C70,15 75,35 70,50 C65,78 42,82 32,85',
+
+  // Punctuation & Symbols
+  '.': 'M50,78 L50,84',
+  ',': 'M52,75 C52,85 45,90 40,92',
+  '/': 'M70,18 L30,88',
+  '\\': 'M30,18 L70,88',
+  ':': 'M50,32 L50,38 M50,68 L50,74',
+  ';': 'M50,32 L50,38 M52,68 C52,78 45,83 40,85',
+  '"': 'M40,20 L40,38 M60,20 L60,38',
+  "'": 'M50,20 L50,38',
+  '[': 'M65,18 L35,18 L35,88 L65,88',
+  ']': 'M35,18 L65,18 L65,88 L35,88',
+  '(': 'M65,18 C40,35 40,70 65,88',
+  ')': 'M35,18 C60,35 60,70 35,88',
+  '{': 'M65,18 C45,18 45,45 35,53 C45,61 45,88 65,88',
+  '}': 'M35,18 C55,18 55,45 65,53 C55,61 55,88 35,88',
+  '*': 'M50,30 L50,70 M30,40 L70,60 M30,60 L70,40',
+  '&': 'M70,82 C55,88 45,70 58,58 C68,48 40,15 32,32 C25,48 70,85 70,85',
+  '%': 'M28,25 A5,5 0 1,1 28,25.1 M72,80 A5,5 0 1,1 72,80.1 M75,20 L25,85',
+  '$': 'M50,12 L50,90 M72,32 C65,18 32,20 35,42 C38,62 72,55 70,75 C68,90 32,88 25,72',
+  '#': 'M38,18 L28,88 M72,18 L62,88 M20,38 L85,38 M15,68 L80,68',
+  '@': 'M65,72 C55,82 30,80 25,52 C20,25 50,18 72,32 C82,45 82,75 62,75 C52,75 50,62 50,52 C50,35 68,35 68,52',
+  '!': 'M50,18 L50,62 M50,78 L50,84',
+  '?': 'M30,32 C30,15 70,15 70,35 C70,52 50,50 50,65 M50,78 L50,84',
+  '-': 'M25,52 L75,52',
+  '+': 'M50,25 L50,75 M25,50 L75,50',
+  '=': 'M25,38 L75,38 M25,64 L75,64',
+  '<': 'M70,22 L30,52 L70,82',
+  '>': 'M30,22 L70,52 L30,82',
+  '~': 'M22,50 Q38,32 50,50 T78,50',
+  '^': 'M25,58 L50,28 L75,58',
+  '_': 'M15,88 L85,88'
 };
 
 function stringHash(str) {
@@ -304,7 +350,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
 function getSampledPathPoints(pathD, numSamples) {
   const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   pathEl.setAttribute('d', pathD);
-  const totalLen = pathEl.getTotalLength();
+  const totalLen = pathEl.getTotalLength() || 1;
   const points = [];
 
   for (let i = 0; i < numSamples; i++) {
@@ -319,12 +365,23 @@ function getSampledPathPoints(pathD, numSamples) {
   return points;
 }
 
+// Procedural fallback path for any unmapped characters
+function getCharacterPath(char) {
+  const upper = char.toUpperCase();
+  if (characterPaths[upper]) {
+    return characterPaths[upper];
+  }
+  
+  // Dynamic fallback shape (Circle outline for unknown symbols)
+  return 'M50,20 C30,20 30,80 50,80 C70,80 70,20 50,20 Z';
+}
+
 function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, tileIdx) {
-  const pathD = alphabetPaths[char.toUpperCase()] || alphabetPaths['O'];
+  const pathD = getCharacterPath(char);
   const hash = stringHash(char + tileIdx);
   
   const jitterAmount = (100 - bevelVal) * 0.12;
-  const count = Math.floor(22 * (density / 50));
+  const count = Math.max(8, Math.floor(22 * (density / 50)));
   
   const sampledPoints = getSampledPathPoints(pathD, count);
   let shapesSVG = '';
@@ -360,8 +417,8 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
       <rect width="100" height="100" rx="${radiusVal / 2.4}" fill="url(#bg-${tileIdx})"/>
       
-      <path d="${pathD}" stroke="${config.secondary}" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.2"/>
-      <path d="${pathD}" stroke="${config.primary}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
+      <path d="${pathD}" stroke="${config.secondary}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.25"/>
+      <path d="${pathD}" stroke="${config.primary}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
 
       <g>
         ${shapesSVG}
@@ -372,7 +429,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
 function render() {
   const prompt = document.getElementById('promptInput').value.trim();
-  const text = (document.getElementById('textInput').value || 'LEAF').toUpperCase();
+  const text = document.getElementById('textInput').value || 'LEAF';
   const tileSizeVal = parseInt(document.getElementById('tileSize').value, 10);
   const tileGapVal = parseInt(document.getElementById('tileGap').value, 10);
   const density = parseInt(document.getElementById('density').value, 10);
