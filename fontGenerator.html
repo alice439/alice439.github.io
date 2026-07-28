@@ -2,7 +2,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unified Studio Hub - Expanded Ink Foundry</title>
+<title>Unified Studio Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
@@ -278,31 +278,18 @@
     </div>
 
     <div id="tab2" class="tab-content">
-      <div class="inkform-wrap">
-        <header>
+      <div class="app-body">
+        <header style="padding: 0 0 10px;">
           <p class="eyebrow">Inkform / procedural type foundry</p>
-          <h1>Procedural Type Generator & Typography Styles</h1>
-          <p class="sub">Choose from expanded font styles (Cursive, Gothic, Bubble, Pixel, Serif) or generate custom procedural letterforms with realistic material textures and pen physics.</p>
+          <h1>Procedural Type Generator</h1>
+          <p class="sub">Click "Generate New Font" to create distinct, wildly unique typefaces engineered with realistic material textures, stroke geometry, and pen physics.</p>
         </header>
 
         <div class="ink-panel">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
-            <div class="input-group" style="flex: 1.5; min-width: 220px;">
-              <label>Typography Font Style DNA</label>
-              <select id="fontStyleSelect" style="width:100%; padding:8px 12px;">
-                <option value="cursivestyle">Italic Cursive Script</option>
-                <option value="gothicstyle">Blackletter Gothic Serif</option>
-                <option value="bubblestyle">Bubble / Balloon 3D</option>
-                <option value="pixelstyle">Pixel Grid Retro Display</option>
-                <option value="serifstyle">Editorial Roman Serif</option>
-                <option value="procedural">Procedural Engine Dynamic</option>
-              </select>
-            </div>
-            <button id="generateBtn" class="primary" style="margin-top:auto;">🎲 Randomize Style</button>
-          </div>
-          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <span style="font-size:14px; color:var(--text-dark); font-weight:700;" id="dnaLabel">✦ Italic Cursive Script</span>
-            <span style="font-size:12px; color:var(--text-dim);" id="dnaDetail">id: 409 | smooth calligraphic flow</span>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px; flex-wrap:wrap;">
+            <span style="font-size:14px; color:var(--text-dark); font-weight:700;" id="dnaLabel">✦ Modernist Sans</span>
+            <span style="font-size:12px; color:var(--text-dim);" id="dnaDetail">id: 001 | uniform strokes · medium x-height</span>
+            <button id="generateBtn" class="primary" style="margin-left:auto;">✦ Generate New Font</button>
           </div>
         </div>
 
@@ -312,12 +299,11 @@
             <div class="field">
               <div class="field-label"><span>Medium Material</span></div>
               <select id="materialType" style="width:100%; padding:8px 12px; outline:none;">
-                <option value="ink">Classic Fountain Ink</option>
-                <option value="gold">Metallic Foil</option>
                 <option value="watercolor">Watercolor Bleed & Splash Drops</option>
                 <option value="paint">Thick Acrylic Paint (Bristle Impasto)</option>
                 <option value="spray">Spray Paint Splatter & Drips</option>
                 <option value="charcoal">Charcoal / Textured Graphite Pencil</option>
+                <option value="ink">Classic Fountain Ink</option>
               </select>
             </div>
             <div class="field">
@@ -327,8 +313,8 @@
           </div>
         </div>
 
-        <div style="margin-bottom:18px;">
-          <input type="text" id="inkTextInput" value="INKFORM" maxlength="80" spellcheck="false" style="width:100%; padding:12px 14px;">
+        <div style="margin-bottom:2px;">
+          <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="width:100%; padding:12px 14px;">
         </div>
 
         <div class="stage">
@@ -339,22 +325,22 @@
           </div>
         </div>
 
-        <div class="ink-panel">
+        <div class="ink-panel" style="margin-top: 16px;">
           <p class="panel-title">Shape & Physics Controls</p>
           <div class="grid">
-            <div class="field"><div class="field-label"><span>Nib Width</span><span id="v-width">26px</span></div><input type="range" id="width" min="6" max="36" value="26"></div>
+            <div class="field"><div class="field-label"><span>Nib Width</span><span id="v-width">8</span></div><input type="range" id="width" min="1" max="32" value="8"></div>
             <div class="field"><div class="field-label"><span>Nib Angle</span><span id="v-angle">45°</span></div><input type="range" id="angle" min="0" max="180" value="45"></div>
             <div class="field"><div class="field-label"><span>Aspect Ratio (Width)</span><span id="v-aspect">1.0×</span></div><input type="range" id="aspect" min="50" max="220" value="100"></div>
             <div class="field"><div class="field-label"><span>X-Height</span><span id="v-xheight">1.0×</span></div><input type="range" id="xheight" min="50" max="150" value="100"></div>
-            <div class="field"><div class="field-label"><span>Slant Angle</span><span id="v-slant">15°</span></div><input type="range" id="slant" min="-30" max="35" value="15"></div>
-            <div class="field"><div class="field-label"><span>Letter Spacing</span><span id="v-spacing">1.05×</span></div><input type="range" id="spacing" min="60" max="220" value="105"></div>
-            <div class="field"><div class="field-label"><span>Hand Wobble / Jitter</span><span id="v-jitter">0.8</span></div><input type="range" id="jitter" min="0" max="12" step="0.2" value="0.8"></div>
+            <div class="field"><div class="field-label"><span>Slant Angle</span><span id="v-slant">0°</span></div><input type="range" id="slant" min="-20" max="30" value="0"></div>
+            <div class="field"><div class="field-label"><span>Letter Spacing</span><span id="v-spacing">1.0×</span></div><input type="range" id="spacing" min="60" max="220" value="100"></div>
+            <div class="field"><div class="field-label"><span>Hand Wobble</span><span id="v-jitter">0</span></div><input type="range" id="jitter" min="0" max="12" value="0"></div>
             <div class="field"><div class="field-label"><span>Ink Bleed / Wetness</span><span id="v-bleed">20%</span></div><input type="range" id="bleed" min="0" max="100" value="20"></div>
           </div>
 
           <div style="display:flex; gap:18px; align-items:center; margin:8px 0 12px; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Ink / Paint Color</label><input type="color" id="inkColor" value="#1a2b3c"></div>
-            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Paper Color</label><input type="color" id="paperColor" value="#fdfbf7"></div>
+            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Ink / Paint Color</label><input type="color" id="inkColor" value="#4d6770"></div>
+            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Paper Color</label><input type="color" id="paperColor" value="#ffffff"></div>
           </div>
         </div>
 
@@ -705,47 +691,7 @@ renderVec();
 const canvas = document.getElementById('inkCanvas');
 const ctx = canvas.getContext('2d');
 
-const glyphData = {
-  'A': { w: 32, path: [[2,28],[16,2],[30,28], [8,17],[24,17]] },
-  'B': { w: 30, path: [[4,2], [4,28], [4,2], [22,2], [26,8], [22,14], [4,14], [22,14], [27,21], [22,28], [4,28]] },
-  'C': { w: 28, path: [[26,6], [18,2], [8,6], [4,15], [8,24], [18,28], [26,24]] },
-  'D': { w: 30, path: [[4,2], [4,28], [4,2], [20,4], [28,15], [20,26], [4,28]] },
-  'E': { w: 28, path: [[26,2], [4,2], [4,28], [26,28], [4,15], [20,15]] },
-  'F': { w: 26, path: [[26,2], [4,2], [4,28], [4,15], [22,15]] },
-  'G': { w: 30, path: [[26,6], [18,2], [8,6], [4,15], [8,24], [18,28], [26,24], [26,16], [16,16]] },
-  'H': { w: 30, path: [[4,2], [4,28], [26,2], [26,28], [4,15], [26,15]] },
-  'I': { w: 16, path: [[8,2], [8,28], [2,2], [14,2], [2,28], [14,28]] },
-  'J': { w: 24, path: [[18,2], [18,22], [14,28], [6,28], [2,22]] },
-  'K': { w: 28, path: [[4,2], [4,28], [26,2], [4,15], [24,28]] },
-  'L': { w: 26, path: [[4,2], [4,28], [26,28]] },
-  'M': { w: 34, path: [[4,28], [4,2], [17,18], [30,2], [30,28]] },
-  'N': { w: 30, path: [[4,28], [4,2], [26,28], [26,2]] },
-  'O': { w: 30, path: [[15,2], [6,6], [2,15], [6,24], [15,28], [24,24], [28,15], [24,6], [15,2]] },
-  'P': { w: 28, path: [[4,28], [4,2], [22,2], [26,8], [22,14], [4,14]] },
-  'Q': { w: 30, path: [[15,2], [6,6], [2,15], [6,24], [15,28], [24,24], [28,15], [24,6], [15,2], [18,20], [28,30]] },
-  'R': { w: 28, path: [[4,28], [4,2], [22,2], [26,8], [22,14], [4,14], [16,14], [26,28]] },
-  'S': { w: 28, path: [[26,6], [18,2], [8,4], [4,10], [16,15], [26,20], [24,26], [14,28], [4,24]] },
-  'T': { w: 26, path: [[15,2], [15,28], [4,2], [26,2]] },
-  'U': { w: 30, path: [[4,2], [4,22], [8,28], [22,28], [26,22], [26,2]] },
-  'V': { w: 30, path: [[4,2], [15,28], [26,2]] },
-  'W': { w: 38, path: [[4,2], [10,28], [19,16], [28,28], [34,2]] },
-  'X': { w: 28, path: [[4,2], [24,28], [24,2], [4,28]] },
-  'Y': { w: 28, path: [[4,2], [15,15], [26,2], [15,15], [15,28]] },
-  'Z': { w: 28, path: [[4,2], [26,2], [4,28], [26,28]] },
-  '0': { w: 28, path: [[15,2], [6,6], [2,15], [6,24], [15,28], [24,24], [28,15], [24,6], [15,2], [4,26], [24,4]] },
-  '1': { w: 20, path: [[8,8], [14,2], [14,28], [4,28], [24,28]] },
-  '2': { w: 28, path: [[4,10], [10,2], [22,2], [26,8], [4,28], [26,28]] },
-  '3': { w: 28, path: [[4,4], [24,4], [16,15], [26,18], [26,24], [18,28], [4,24]] },
-  '4': { w: 28, path: [[20,2], [4,18], [26,18], [20,2], [20,28]] },
-  '5': { w: 28, path: [[26,2], [4,2], [4,14], [22,14], [26,20], [22,28], [4,24]] },
-  '6': { w: 28, path: [[22,4], [12,2], [4,10], [4,24], [14,28], [24,22], [24,14], [14,14], [4,20]] },
-  '7': { w: 28, path: [[4,2], [26,2], [14,28]] },
-  '8': { w: 28, path: [[15,15], [8,8], [15,2], [22,8], [15,15], [6,22], [15,28], [24,22], [15,15]] },
-  '9': { w: 28, path: [[26,14], [16,2], [6,8], [6,14], [16,18], [26,14], [24,24], [14,28], [4,24]] },
-  '.': { w: 12, path: [[6,24], [8,26], [6,28], [4,26]] },
-  ',': { w: 12, path: [[6,24], [8,26], [6,28], [2,32]] },
-  '!': { w: 16, path: [[8,2], [8,20], [8,26], [8,30]] }
-};
+let fontSeed = Math.floor(Math.random() * 100000);
 
 const ARCHETYPES = [
   { name: 'Modernist Geometric Sans', style: 'sans', width: 1.0, xh: 1.0, nibWidth: 7, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
@@ -755,23 +701,33 @@ const ARCHETYPES = [
   { name: 'Ultra-Condensed Technical', style: 'condensed', width: 0.55, xh: 1.2, nibWidth: 5, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
   { name: 'Extended Modern Art-Deco', style: 'artdeco', width: 1.6, xh: 0.65, nibWidth: 7, angle: 15, slant: 0, contrast: 'medium', jitter: 0 },
   { name: 'Organic Bubble Display', style: 'bubble', width: 1.1, xh: 1.1, nibWidth: 26, angle: 0, slant: 0, contrast: 'none', jitter: 2 },
-  { name: 'Expressive Calligraphic Italic', style: 'script', width: 0.95, xh: 0.9, nibWidth: 14, angle: 35, slant: 18, contrast: 'high', jitter: 3 }
+  { name: 'Expressive Calligraphic Italic', style: 'script', width: 0.95, xh: 0.9, nibWidth: 14, angle: 35, slant: 18, contrast: 'high', jitter: 3 },
+  { name: 'Cyberpunk Glitch Neon', style: 'cyber', width: 1.1, xh: 1.05, nibWidth: 6, angle: 10, slant: -5, contrast: 'none', jitter: 4 },
+  { name: 'Brutalist Monospace Block', style: 'brutal', width: 1.3, xh: 1.2, nibWidth: 20, angle: 0, slant: 0, contrast: 'low', jitter: 1 },
+  { name: 'Whimsical Comic Marker', style: 'comic', width: 1.0, xh: 1.1, nibWidth: 12, angle: 20, slant: 8, contrast: 'medium', jitter: 5 },
+  { name: 'Victorian Ornamental Script', style: 'victorian', width: 0.9, xh: 0.8, nibWidth: 10, angle: 50, slant: 12, contrast: 'extreme', jitter: 2 }
 ];
 
-let fontSeed = Math.floor(Math.random() * 100000);
+let currentDNA = ARCHETYPES[0];
 
 function pickRandomDNA() {
   fontSeed = Math.floor(Math.random() * 100000);
-  const stylesList = ['cursivestyle', 'gothicstyle', 'bubblestyle', 'pixelstyle', 'serifstyle'];
-  const randomStyle = stylesList[Math.floor(Math.random() * stylesList.length)];
-  document.getElementById('fontStyleSelect').value = randomStyle;
-  
-  document.getElementById('width').value = 26;
-  document.getElementById('slant').value = 15;
-  document.getElementById('jitter').value = 0.8;
-  document.getElementById('dnaLabel').textContent = `✦ Style: ${randomStyle.toUpperCase()}`;
-  document.getElementById('dnaDetail').textContent = `id: ${Math.floor(Math.random() * 899) + 100} | procedural font foundry`;
-  renderInk();
+  const base = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
+  currentDNA = { ...base,
+    id: Math.floor(Math.random() * 899) + 100,
+    width: Math.round((base.width + (Math.random() * 0.35 - 0.17)) * 100) / 100,
+    xh: Math.round((base.xh + (Math.random() * 0.25 - 0.12)) * 100) / 100,
+    slant: Math.random() > 0.6 ? Math.floor(Math.random() * 24 - 6) : base.slant,
+    nibWidth: Math.max(3, Math.min(30, base.nibWidth + Math.floor(Math.random() * 6 - 3)))
+  };
+  document.getElementById('width').value = currentDNA.nibWidth;
+  document.getElementById('angle').value = currentDNA.angle;
+  document.getElementById('aspect').value = Math.round(currentDNA.width * 100);
+  document.getElementById('xheight').value = Math.round(currentDNA.xh * 100);
+  document.getElementById('slant').value = currentDNA.slant;
+  document.getElementById('jitter').value = currentDNA.jitter;
+  document.getElementById('dnaLabel').textContent = `✦ ${currentDNA.name}`;
+  document.getElementById('dnaDetail').textContent = `id: ${currentDNA.id} | style: ${currentDNA.style} · width: ${currentDNA.width}×`;
 }
 
 function random(seed) { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
@@ -789,122 +745,125 @@ function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, 
   ctx.save();
 
   if (material === 'watercolor') {
-    ctx.beginPath(); ctx.lineWidth = nibW * 1.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.18);
-    ctx.moveTo(points[0][0], points[0][1]);
-    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
-    ctx.stroke();
-    for (let layer = 0; layer < 3; layer++) {
-      ctx.beginPath(); ctx.lineWidth = nibW * (0.8 + layer * 0.2);
-      ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.25);
+    for (let layer = 0; layer < 4; layer++) {
+      ctx.beginPath();
+      ctx.lineWidth = nibW * (1.2 + layer * 0.5);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * (0.08 / (layer + 1)));
       ctx.moveTo(points[0][0], points[0][1]);
       for (let i = 1; i < points.length; i++) {
-        let px = points[i][0] + (random(fontSeed + i * 5 + layer * 17) - 0.5) * (jitterAmt + 3);
-        let py = points[i][1] + (random(fontSeed + i * 11 + layer * 23) - 0.5) * (jitterAmt + 3);
+        let px = points[i][0] + (random(fontSeed + i * 3 + layer * 19) - 0.5) * (nibW * 0.8);
+        let py = points[i][1] + (random(fontSeed + i * 7 + layer * 23) - 0.5) * (nibW * 0.8);
         ctx.lineTo(px, py);
       }
       ctx.stroke();
     }
-    ctx.beginPath(); ctx.lineWidth = Math.max(1, nibW * 0.25); ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.65);
+    ctx.beginPath();
+    ctx.lineWidth = Math.max(2, nibW * 0.7);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.55);
     ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
     ctx.stroke();
-    for (let i = 0; i < points.length; i++) {
-      if (random(fontSeed + i * 31) > 0.68) {
-        const dropRadius = random(fontSeed + i * 43) * (nibW * 0.45) + 0.8;
-        const offsetX = (random(fontSeed + i * 53) - 0.5) * (nibW * 3.8);
-        const offsetY = (random(fontSeed + i * 61) - 0.5) * (nibW * 3.8);
-        const cx = points[i][0] + offsetX;
-        const cy = points[i][1] + offsetY;
-        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.3 + random(fontSeed + i) * 0.4));
-        ctx.beginPath(); ctx.arc(cx, cy, dropRadius, 0, Math.PI * 2); ctx.fill();
+    for (let i = 0; i < points.length; i += 2) {
+      if (random(fontSeed + i * 31) > 0.5) {
+        const dropRadius = random(fontSeed + i * 43) * (nibW * 0.6) + 1;
+        const offsetX = (random(fontSeed + i * 53) - 0.5) * (nibW * 2.5);
+        const offsetY = (random(fontSeed + i * 61) - 0.5) * (nibW * 2.5);
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.15 + random(fontSeed + i) * 0.3));
+        ctx.beginPath();
+        ctx.arc(points[i][0] + offsetX, points[i][1] + offsetY, dropRadius, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
   } else if (material === 'paint') {
-    ctx.beginPath(); ctx.lineWidth = nibW; ctx.lineCap = 'square'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.lineWidth = nibW;
+    ctx.lineCap = 'square';
+    ctx.lineJoin = 'miter';
     ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
     ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
     ctx.stroke();
-    const bristleCount = Math.max(4, Math.floor(nibW * 0.8));
+
+    const bristleCount = Math.max(3, Math.floor(nibW * 0.7));
     for (let b = 0; b < bristleCount; b++) {
-      const offset = (b / bristleCount - 0.5) * (nibW * 0.85);
-      ctx.beginPath(); ctx.lineWidth = Math.max(1, nibW / bristleCount);
-      ctx.strokeStyle = b % 2 === 0 ? hexToRgba('#ffffff', baseAlpha * 0.22) : hexToRgba('#000000', baseAlpha * 0.28);
+      const offset = (b / bristleCount - 0.5) * (nibW * 0.8);
+      ctx.beginPath();
+      ctx.lineWidth = Math.max(1, nibW / (bristleCount * 1.5));
+      ctx.strokeStyle = b % 2 === 0 ? hexToRgba('#ffffff', baseAlpha * 0.35) : hexToRgba('#000000', baseAlpha * 0.4);
       ctx.moveTo(points[0][0] + offset, points[0][1] + offset);
       for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0] + offset, points[i][1] + offset);
       ctx.stroke();
     }
-    [points[0], points[points.length - 1]].forEach(pt => {
-      ctx.fillStyle = hexToRgba(colorHex, baseAlpha);
-      ctx.beginPath(); ctx.arc(pt[0], pt[1], nibW * 0.55, 0, Math.PI * 2); ctx.fill();
-    });
   } else if (material === 'spray') {
     for (let i = 0; i < points.length - 1; i++) {
-      const p1 = points[i]; const p2 = points[i+1];
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      const steps = Math.max(6, Math.floor(dist * 1.5));
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        const cx = p1[0] + (p2[0] - p1[0]) * t;
+        const cy = p1[1] + (p2[1] - p1[1]) * t;
+        const particleCount = Math.floor(nibW * 5);
+        for (let p = 0; p < particleCount; p++) {
+          const angle = random(fontSeed + p * 7 + s * 13) * Math.PI * 2;
+          const radius = Math.pow(random(fontSeed + p * 17 + s * 3), 1.8) * (nibW * 1.2);
+          const px = cx + Math.cos(angle) * radius;
+          const py = cy + Math.sin(angle) * radius;
+          const dotSize = random(fontSeed + p) * 1.6 + 0.5;
+          ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (1 - radius / (nibW * 1.3)));
+          ctx.fillRect(px, py, dotSize, dotSize);
+        }
+      }
+      if (random(fontSeed + i * 97) > 0.82) {
+        const dripX = points[i][0];
+        const dripY = points[i][1];
+        const dripLen = random(fontSeed + i * 41) * 32 + 10;
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * 0.9);
+        ctx.beginPath();
+        ctx.rect(dripX - 1, dripY, 2, dripLen);
+        ctx.arc(dripX, dripY + dripLen, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (material === 'charcoal') {
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i];
+      const p2 = points[i+1];
       const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
       const steps = Math.max(5, Math.floor(dist * 1.2));
       for (let s = 0; s < steps; s++) {
         const t = s / steps;
         const cx = p1[0] + (p2[0] - p1[0]) * t;
         const cy = p1[1] + (p2[1] - p1[1]) * t;
-        const totalParticles = Math.floor(nibW * 4.5);
-        for (let p = 0; p < totalParticles; p++) {
-          const angle = random(fontSeed + p * 7 + s * 13) * Math.PI * 2;
-          const rPow = Math.pow(random(fontSeed + p * 17 + s * 3), 2.2);
-          const radius = rPow * (nibW * 1.5);
-          const px = cx + Math.cos(angle) * radius;
-          const py = cy + Math.sin(angle) * radius;
-          const dotSize = random(fontSeed + p) * 1.8 + 0.4;
-          ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (1 - radius / (nibW * 1.6)));
-          ctx.fillRect(px, py, dotSize, dotSize);
-        }
-      }
-      if (random(fontSeed + i * 97) > 0.88) {
-        const dripX = points[i][0]; const dripY = points[i][1];
-        const dripLen = random(fontSeed + i * 41) * 28 + 8;
-        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * 0.85);
-        ctx.beginPath(); ctx.rect(dripX - 1, dripY, 2, dripLen);
-        ctx.arc(dripX, dripY + dripLen, 2.5, 0, Math.PI * 2); ctx.fill();
-      }
-    }
-  } else if (material === 'charcoal') {
-    for (let i = 0; i < points.length - 1; i++) {
-      const p1 = points[i]; const p2 = points[i+1];
-      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
-      const steps = Math.max(4, Math.floor(dist));
-      for (let s = 0; s < steps; s++) {
-        const t = s / steps;
-        const cx = p1[0] + (p2[0] - p1[0]) * t;
-        const cy = p1[1] + (p2[1] - p1[1]) * t;
-        for (let p = 0; p < nibW * 3; p++) {
-          const rx = (random(fontSeed + p * 5 + s) - 0.5) * nibW;
-          const ry = (random(fontSeed + p * 11 + s) - 0.5) * nibW;
-          if (random(fontSeed + p * 19) > 0.3) {
-            ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.15 + random(fontSeed + p) * 0.45));
-            ctx.fillRect(cx + rx, cy + ry, 1.4, 1.4);
+        for (let p = 0; p < nibW * 3.5; p++) {
+          const rx = (random(fontSeed + p * 5 + s * 7) - 0.5) * (nibW * 1.2);
+          const ry = (random(fontSeed + p * 11 + s * 13) - 0.5) * (nibW * 1.2);
+          if (random(fontSeed + p * 19) > 0.25) {
+            ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.2 + random(fontSeed + p) * 0.6));
+            ctx.fillRect(cx + rx, cy + ry, 1.5, 1.5);
           }
         }
       }
     }
-  } else if (material === 'gold') {
-    const grad = ctx.createLinearGradient(0, 0, 40, 40);
-    grad.addColorStop(0, '#ffe875');
-    grad.addColorStop(0.5, '#c89d25');
-    grad.addColorStop(1, '#f9df6e');
-    ctx.strokeStyle = grad;
-    ctx.fillStyle = grad;
-    ctx.beginPath(); ctx.lineWidth = nibW * 0.85; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.moveTo(points[0][0], points[0][1]);
-    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
-    ctx.stroke();
   } else {
-    ctx.beginPath(); ctx.lineWidth = nibW; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.lineWidth = nibW;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
     ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) {
-      let px = points[i][0]; let py = points[i][1];
-      if (jitterAmt > 0) { px += (random(fontSeed + i * 7) - 0.5) * jitterAmt; py += (random(fontSeed + i * 13) - 0.5) * jitterAmt; }
+      let px = points[i][0];
+      let py = points[i][1];
+      if (jitterAmt > 0) {
+        px += (random(fontSeed + i * 7) - 0.5) * jitterAmt;
+        py += (random(fontSeed + i * 13) - 0.5) * jitterAmt;
+      }
       ctx.lineTo(px, py);
     }
     ctx.stroke();
@@ -912,190 +871,136 @@ function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, 
   ctx.restore();
 }
 
-function drawStyledGlyph(ctx, glyph, style, material, nibW, jitter, inkColor, index, opacityVal) {
-  const pts = glyph.path;
-  if (!pts || pts.length === 0) return;
-  const baseAlpha = opacityVal / 100;
-
-  ctx.save();
-  if (material === 'gold') {
-    const grad = ctx.createLinearGradient(0, 0, 30, 30);
-    grad.addColorStop(0, '#ffe875');
-    grad.addColorStop(0.5, '#c89d25');
-    grad.addColorStop(1, '#f9df6e');
-    ctx.strokeStyle = grad;
-    ctx.fillStyle = grad;
-  } else if (material === 'watercolor') {
-    ctx.strokeStyle = hexToRgba(inkColor, baseAlpha);
-    ctx.fillStyle = hexToRgba(inkColor, baseAlpha);
-    ctx.globalAlpha = 0.55;
-    ctx.shadowColor = inkColor;
-    ctx.shadowBlur = 6;
-  } else if (material === 'chalk') {
-    ctx.strokeStyle = '#ffffff';
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = inkColor;
-    ctx.shadowBlur = 2;
-  } else {
-    ctx.strokeStyle = hexToRgba(inkColor, baseAlpha);
-    ctx.fillStyle = hexToRgba(inkColor, baseAlpha);
+function arcPoints(cx, cy, rx, ry, startA, endA, steps) {
+  steps = steps || 14;
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const a = startA + (endA - startA) * (i / steps);
+    pts.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]);
   }
+  return pts;
+}
 
-  if (style === 'cursivestyle') {
-    ctx.lineWidth = nibW * 0.7;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    pts.forEach((p, idx) => {
-      const jx = (Math.sin(index * 9 + idx) * jitter * 2);
-      const jy = (Math.cos(index * 7 + idx) * jitter * 2);
-      const px = p[0] * (nibW / 22) + jx;
-      const py = p[1] * (nibW / 22) + jy;
-      if (idx === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    });
-    ctx.stroke();
-  } else if (style === 'gothicstyle') {
-    ctx.lineWidth = nibW * 1.1;
-    ctx.lineCap = 'square';
-    ctx.lineJoin = 'miter';
-    ctx.beginPath();
-    pts.forEach((p, idx) => {
-      const px = p[0] * (nibW / 20);
-      const py = p[1] * (nibW / 20);
-      if (idx === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    });
-    ctx.stroke();
-    pts.slice(0, 3).forEach(p => {
-      ctx.fillRect(p[0]*(nibW/20)-2, p[1]*(nibW/20)-2, 4, 4);
-    });
-  } else if (style === 'bubblestyle') {
-    pts.forEach((p, idx) => {
-      const px = p[0] * (nibW / 18);
-      const py = p[1] * (nibW / 18);
-      ctx.beginPath();
-      ctx.arc(px, py, nibW * 0.65, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
-  } else if (style === 'pixelstyle') {
-    const scale = nibW / 22;
-    pts.forEach(p => {
-      const px = Math.round(p[0] * scale / 4) * 4;
-      const py = Math.round(p[1] * scale / 4) * 4;
-      ctx.fillRect(px, py, 7 * scale, 7 * scale);
-    });
-  } else if (style === 'serifstyle') {
-    ctx.lineWidth = nibW * 0.85;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    pts.forEach((p, idx) => {
-      const px = p[0] * (nibW / 22);
-      const py = p[1] * (nibW / 22);
-      if (idx === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    });
-    ctx.stroke();
-    pts.forEach(p => {
-      if (p[1] <= 4 || p[1] >= 26) {
-        ctx.fillRect(p[0]*(nibW/22) - 4, p[1]*(nibW/22) - 1, 8, 2);
-      }
-    });
+function getGlyphStrokes(char, w, h, xh) {
+  const baseW = 44 * w; const baseH = 70 * h;
+  const xHeight = baseH * 0.55 * xh; const capTop = 10;
+  const baseline = capTop + baseH; const xTop = baseline - xHeight;
+  const midY = xTop + xHeight / 2; const stem = Math.round(baseW * 0.18);
+  const cx = Math.round(baseW / 2);
+  const c = char.toLowerCase();
+  const strokes = [];
+  const line = (x1, y1, x2, y2) => [[x1, y1], [x2, y2]];
+
+  switch(c) {
+    case 'a': strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, Math.PI*2)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'b': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2)); break;
+    case 'c': strokes.push(arcPoints(cx, midY, baseW*0.35, xHeight*0.42, Math.PI*0.22, Math.PI*1.78)); break;
+    case 'd': strokes.push(line(baseW-stem, capTop, baseW-stem, baseline)); strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5)); break;
+    case 'e': strokes.push(line(stem+2, midY, baseW-stem, midY)); strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, -Math.PI * 1.75, 16)); break;
+    case 'f': strokes.push(line(cx, capTop+10, cx, baseline)); strokes.push(arcPoints(cx+8, capTop+10, 8, 10, Math.PI, Math.PI*1.8)); strokes.push(line(cx-8, xTop+4, cx+10, xTop+4)); break;
+    case 'g': strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.4, 0, Math.PI*2)); strokes.push(line(baseW-stem, midY, baseW-stem, baseline+14)); strokes.push(arcPoints(cx, baseline+14, baseW*0.34, 8, 0, Math.PI)); break;
+    case 'h': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(arcPoints(cx+2, xTop, baseW*0.34, xHeight*0.38, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'i': strokes.push(line(cx, xTop, cx, baseline)); strokes.push(line(cx, capTop+2, cx, capTop+6)); break;
+    case 'j': strokes.push(line(cx+4, xTop, cx+4, baseline+14)); strokes.push(arcPoints(cx-2, baseline+14, 6, 6, 0, Math.PI)); strokes.push(line(cx+4, capTop+2, cx+4, capTop+6)); break;
+    case 'k': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(line(stem+4, midY, baseW-stem, xTop+4)); strokes.push(line(stem+4, midY, baseW-stem, baseline)); break;
+    case 'l': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(line(stem, baseline, stem+10, baseline)); break;
+    case 'm': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(stem + baseW*0.24, xTop, baseW*0.22, xHeight*0.3, -Math.PI, 0)); strokes.push(arcPoints(baseW - baseW*0.24, xTop, baseW*0.22, xHeight*0.3, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'n': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(cx+2, xTop, baseW*0.34, xHeight*0.38, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'o': strokes.push(arcPoints(cx, midY, baseW*0.36, xHeight*0.42, 0, Math.PI*2)); break;
+    case 'p': strokes.push(line(stem, xTop, stem, baseline+18)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2)); break;
+    case 'q': strokes.push(line(baseW-stem, xTop, baseW-stem, baseline+18)); strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5)); break;
+    case 'r': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(cx-2, xTop+8, baseW*0.28, 8, Math.PI*1.2, Math.PI*1.9)); break;
+    case 's': strokes.push(arcPoints(cx, xTop+8, baseW*0.32, 8, Math.PI*0.5, Math.PI*1.9)); strokes.push(arcPoints(cx, baseline-8, baseW*0.32, 8, Math.PI*2.5, Math.PI*3.9)); break;
+    case 't': strokes.push(line(cx, capTop+4, cx, baseline)); strokes.push(line(cx-8, xTop+4, cx+8, xTop+4)); break;
+    case 'u': strokes.push(line(stem, xTop, stem, baseline-8)); strokes.push(arcPoints(cx, baseline-8, baseW*0.34, 8, Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'v': strokes.push(line(stem, xTop, cx, baseline)); strokes.push(line(cx, baseline, baseW-stem, xTop)); break;
+    case 'w': strokes.push(line(stem, xTop, stem+6, baseline)); strokes.push(line(stem+6, baseline, cx, midY)); strokes.push(line(cx, midY, baseW-stem-6, baseline)); strokes.push(line(baseW-stem-6, baseline, baseW-stem, xTop)); break;
+    case 'x': strokes.push(line(stem, xTop, baseW-stem, baseline)); strokes.push(line(baseW-stem, xTop, stem, baseline)); break;
+    case 'y': strokes.push(line(stem, xTop, cx, midY)); strokes.push(line(baseW-stem, xTop, cx, midY)); strokes.push(line(cx, midY, cx, baseline+16)); break;
+    case 'z': strokes.push(line(stem, xTop, baseW-stem, xTop)); strokes.push(line(baseW-stem, xTop, stem, baseline)); strokes.push(line(stem, baseline, baseW-stem, baseline)); break;
+    case '0': strokes.push(arcPoints(cx, (capTop+baseline)/2, baseW*0.34, baseH*0.45, 0, Math.PI*2)); break;
+    case '1': strokes.push(line(cx-6, capTop+10, cx, capTop)); strokes.push(line(cx, capTop, cx, baseline)); strokes.push(line(cx-10, baseline, cx+10, baseline)); break;
+    case '2': strokes.push(arcPoints(cx, capTop+12, baseW*0.32, 12, -Math.PI, 0)); strokes.push(line(baseW-stem, capTop+12, stem, baseline)); strokes.push(line(stem, baseline, baseW-stem, baseline)); break;
+    case '3': strokes.push(arcPoints(cx, capTop+12, baseW*0.3, 12, -Math.PI, 0)); strokes.push(arcPoints(cx, baseline-12, baseW*0.34, 12, 0, Math.PI)); break;
+    case '4': strokes.push(line(baseW-stem-4, capTop, stem, (capTop+baseline)/2)); strokes.push(line(stem, (capTop+baseline)/2, baseW-stem, (capTop+baseline)/2)); strokes.push(line(baseW-stem-4, capTop, baseW-stem-4, baseline)); break;
+    case '5': strokes.push(line(baseW-stem, capTop, stem+4, capTop)); strokes.push(line(stem+4, capTop, stem+2, (capTop+baseline)/2 - 2)); strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8)); break;
+    case '6': strokes.push(arcPoints(cx, baseline-16, baseW*0.32, 14, 0, Math.PI*2)); strokes.push(line(stem+2, baseline-16, cx+4, capTop)); break;
+    case '7': strokes.push(line(stem, capTop, baseW-stem, capTop)); strokes.push(line(baseW-stem, capTop, stem+4, baseline)); break;
+    case '8': strokes.push(arcPoints(cx, capTop+18, baseW*0.28, 16, 0, Math.PI*2)); strokes.push(arcPoints(cx, baseline-18, baseW*0.32, 16, 0, Math.PI*2)); break;
+    case '9': strokes.push(arcPoints(cx, capTop+16, baseW*0.32, 14, 0, Math.PI*2)); strokes.push(line(baseW-stem-2, capTop+16, cx-4, baseline)); break;
+    default: strokes.push(line(cx, xTop, cx, baseline)); break;
   }
-  ctx.restore();
+  return { strokes, width: baseW + 16 };
 }
 
 function renderInk() {
-  const fontStyle = document.getElementById('fontStyleSelect').value;
-  const text = document.getElementById('inkTextInput').value.toUpperCase() || 'INKFORM';
+  const text = document.getElementById('inkTextInput').value;
   const material = document.getElementById('materialType').value;
   const opacityVal = parseInt(document.getElementById('opacity').value, 10);
   const nibW = parseInt(document.getElementById('width').value, 10);
   const slant = parseInt(document.getElementById('slant').value, 10);
   const spacing = parseInt(document.getElementById('spacing').value, 10) / 100;
-  const jitter = parseFloat(document.getElementById('jitter').value);
+  const jitter = parseInt(document.getElementById('jitter').value, 10);
   const inkColor = document.getElementById('inkColor').value;
   const paperColor = document.getElementById('paperColor').value;
 
   document.getElementById('v-opacity').textContent = `${opacityVal}%`;
-  document.getElementById('v-width').textContent = `${nibW}px`;
+  document.getElementById('v-width').textContent = nibW;
   document.getElementById('v-angle').textContent = `${document.getElementById('angle').value}°`;
   document.getElementById('v-aspect').textContent = `${(document.getElementById('aspect').value/100).toFixed(1)}×`;
   document.getElementById('v-xheight').textContent = `${(document.getElementById('xheight').value/100).toFixed(1)}×`;
   document.getElementById('v-slant').textContent = `${slant}°`;
-  document.getElementById('v-spacing').textContent = `${spacing.toFixed(2)}×`;
+  document.getElementById('v-spacing').textContent = `${spacing.toFixed(1)}×`;
   document.getElementById('v-jitter').textContent = jitter;
   document.getElementById('v-bleed').textContent = `${document.getElementById('bleed').value}%`;
 
-  canvas.width = Math.max(900, text.length * 48 + 80);
+  const aspect = parseInt(document.getElementById('aspect').value, 10) / 100;
+  const xh = parseInt(document.getElementById('xheight').value, 10) / 100;
+
+  canvas.width = 900;
   canvas.height = 350;
 
   ctx.fillStyle = paperColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Paper guide lines
-  ctx.strokeStyle = '#e2dfd4';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(40, 100); ctx.lineTo(canvas.width - 40, 100);
-  ctx.moveTo(40, 200); ctx.lineTo(canvas.width - 40, 200);
-  ctx.stroke();
-
-  let cursorX = 50;
-  let cursorY = 150;
+  let cursorX = 38;
+  let cursorY = 115;
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
-    if (char === ' ') { cursorX += 24 * spacing; continue; }
+    if (char === ' ') { cursorX += 22 * spacing; continue; }
 
-    const glyph = glyphData[char] || glyphData['A'];
-    
+    const glyph = getGlyphStrokes(char, aspect, 1.0, xh);
     ctx.save();
-    ctx.translate(cursorX, cursorY - 40);
+    ctx.translate(cursorX, cursorY);
     if (slant !== 0) ctx.transform(1, 0, Math.tan((slant * Math.PI) / 180), 1, 0, 0);
 
-    if (fontStyle === 'procedural') {
-      const aspect = parseInt(document.getElementById('aspect').value, 10) / 100;
-      const xh = parseInt(document.getElementById('xheight').value, 10) / 100;
-      // Fallback procedural renderer mapping
-      const strokes = [[[4,2],[4,28]]];
-      strokes.forEach(stroke => {
-        drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor);
-      });
-    } else {
-      drawStyledGlyph(ctx, glyph, fontStyle, material, nibW, jitter, inkColor, i, opacityVal);
-    }
+    glyph.strokes.forEach(stroke => {
+      drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor);
+    });
 
     ctx.restore();
-    cursorX += glyph.w * spacing * (nibW / 22);
-    if (cursorX > canvas.width - 60) { cursorX = 50; cursorY += 90; }
+    cursorX += glyph.width * spacing;
+
+    if (cursorX > canvas.width - 60) { cursorX = 38; cursorY += 98; }
   }
 
-  document.getElementById('footInfoInk').textContent = `Style: ${fontStyle.toUpperCase()} · Material: ${material.toUpperCase()} · Nib: ${nibW}px`;
+  document.getElementById('footInfoInk').textContent = `${currentDNA.name} · material: ${material} · ${nibW}px nib`;
 }
 
-document.getElementById('generateBtn').addEventListener('click', () => { pickRandomDNA(); });
-document.getElementById('fontStyleSelect').addEventListener('change', (e) => {
-  document.getElementById('dnaLabel').textContent = `✦ Style: ${e.target.value.toUpperCase()}`;
-  renderInk();
-});
-
+document.getElementById('generateBtn').addEventListener('click', () => { pickRandomDNA(); renderInk(); });
 ['materialType','opacity','width','angle','aspect','xheight','slant','spacing','jitter','bleed','inkColor','paperColor'].forEach(id => {
   document.getElementById(id).addEventListener('input', renderInk);
 });
 document.getElementById('inkTextInput').addEventListener('input', renderInk);
-
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const link = document.createElement('a');
-  link.download = 'inkform-studio.png';
+  link.download = `${currentDNA.name.toLowerCase().replace(/\s+/g, '-')}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
 });
 
+pickRandomDNA();
 renderInk();
 })();
 </script>
