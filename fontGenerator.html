@@ -3,854 +3,676 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unified Studio Hub</title>
+<title>Inkform — Procedural Type Foundry</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --window-border: #4d6d80;
-    --header-bg: #AECCE4;
-    --tab-inactive: #e0ecf3;
-    --tab-active: #b4dfdb;
-    --card-bg: rgba(244, 249, 252, 0.95);
-    --panel: #ffffff;
-    --text-dark: #4d6770;
-    --text-dim: #81a0aa;
-    --accent-blue: #81a0aa;
-    --accent-hover: #466e82;
+  :root{
+    --bg: #100e14; --panel: #1a1720; --panel-2: #211d29;
+    --paper: #efe6d0; --paper-edge: #ddcda2;
+    --brass: #c39456; --brass-dim: #8a6a42; --vermillion: #a83a2c;
+    --text: #ece7da; --text-dim: #978f7d; --line: #2d2735;
   }
+  *{ box-sizing: border-box; }
+  body{ margin:0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding: 28px 16px 60px; }
+  .wrap{ max-width: 960px; margin: 0 auto; }
+  header{ margin-bottom: 22px; }
+  .eyebrow{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass); margin: 0 0 8px; }
+  h1{ font-family: 'Fraunces', serif; font-weight: 500; font-size: clamp(26px, 4.6vw, 38px); margin: 0 0 8px; letter-spacing: -0.01em; }
+  p.sub{ color: var(--text-dim); font-size: 14.5px; line-height: 1.6; margin: 0; max-width: 65ch; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .textrow{ display:flex; gap:10px; margin-bottom: 12px; }
+  input[type=text]{ flex:1; background: var(--panel); border: 1px solid var(--line); color: var(--text);
+    font-family: 'Fraunces', serif; font-size: 16px; padding: 12px 14px; border-radius: 6px; outline: none; }
+  input[type=text]:focus{ border-color: var(--brass-dim); }
 
-  body {
-    background-color: #dbeafe;
-    background-image: 
-      linear-gradient(90deg, rgba(255, 255, 255, 0.6) 50%, transparent 50%),
-      linear-gradient(rgba(255, 255, 255, 0.6) 50%, transparent 50%);
-    background-size: 40px 40px;
-    font-family: 'Fredoka', 'Nunito', sans-serif;
-    color: var(--text-dark);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 24px 16px 50px;
-  }
+  button, select{ font-family: 'Inter', sans-serif; font-weight: 500; font-size: 13px; background: var(--panel); color: var(--text);
+    border: 1px solid var(--line); border-radius: 6px; padding: 0 14px; cursor: pointer; white-space: nowrap; }
+  button:hover, select:hover{ border-color: var(--brass-dim); background: var(--panel-2); }
+  button:active{ transform: scale(0.98); }
+  button.primary{ background: var(--brass); border-color: var(--brass); color: #1b1509; font-weight: 600; }
+  button.primary:hover{ background: #d5a666; }
+  button.chip{ font-size:12.5px; padding: 7px 12px; border-radius: 20px; }
 
-  .wrap {
-    width: 100%;
-    max-width: 960px;
-  }
+  select{ padding: 8px 12px; outline: none; }
 
-  .browser-window {
-    background: var(--card-bg);
-    border: 4px solid var(--window-border);
-    border-radius: 20px;
-    box-shadow: 0 12px 32px rgba(44, 62, 71, 0.3);
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-  }
+  .examplerow{ display:flex; gap:8px; margin-bottom: 18px; flex-wrap:wrap; }
 
-  .title-bar {
-    background: var(--header-bg);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 3px solid var(--window-border);
-  }
+  .stage{ background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 4px; margin: 0 0 18px; position: relative; overflow: hidden; }
+  .stage canvas{ display:block; width:100%; height:auto; }
+  .stage-foot{ display:flex; align-items:center; justify-content:space-between; padding: 10px 16px; background: var(--panel-2);
+    border: 1px solid var(--line); border-top: none; border-radius: 0 0 8px 8px; margin-top: -1px; flex-wrap: wrap; gap: 10px; }
+  .foot-info{ font-family:'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--text-dim); }
 
-  .window-dots {
-    display: flex;
-    gap: 6px;
-  }
+  .panel{ background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px 12px; margin-bottom: 16px; }
+  .panel-title{ font-family:'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin: 0 0 14px; }
 
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 2px solid var(--window-border);
-  }
+  .dna-bar{ display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+  .dna-bar .dna-label{ font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--brass); font-weight: 500; }
+  .dna-bar .dna-detail{ font-size:12px; color:var(--text-dim); }
 
-  /* App Tab System Container */
-  .tab-nav {
-    display: flex;
-    background: var(--header-bg);
-    padding: 0 16px;
-    gap: 8px;
-    border-bottom: 3px solid var(--window-border);
-  }
+  .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 28px; }
+  .field{ margin-bottom: 14px; }
+  .field-label{ display:flex; justify-content:space-between; font-size: 13px; margin-bottom: 6px; color: var(--text); }
+  .field-label span:last-child{ font-family:'IBM Plex Mono', monospace; color: var(--brass); font-size: 12px; }
+  input[type=range]{ width: 100%; accent-color: var(--brass); height: 4px; }
 
-  .tab-btn {
-    background: var(--tab-inactive);
-    border: 2px solid var(--window-border);
-    border-bottom: none;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 8px 16px;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--text-dark);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tab-btn.active {
-    background: var(--card-bg);
-    color: var(--accent-hover);
-    border-bottom: 3px solid var(--card-bg);
-    margin-bottom: -3px;
-  }
-
-  .tab-content {
-    display: none;
-  }
-
-  .tab-content.active {
-    display: block;
-  }
-
-  header {
-    padding: 20px 24px 10px;
-    text-align: center;
-  }
-
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent-blue);
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  h1 {
-    font-size: clamp(24px, 4vw, 34px);
-    font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: 6px;
-  }
-
-  p.sub {
-    color: var(--text-dim);
-    font-size: 14px;
-    line-height: 1.4;
-    max-width: 60ch;
-    margin: 0 auto;
-  }
-
-  .app-body {
-    padding: 16px 24px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .prompt-box {
-    background: var(--panel);
-    border: 3px solid var(--window-border);
-    border-radius: 16px;
-    padding: 18px;
-  }
-
-  .prompt-row {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-
-  .input-group {
-    flex: 1;
-    min-width: 220px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .input-group label {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent-blue);
-    font-weight: 700;
-  }
-
-  input[type=text], select {
-    background: #eef5f9;
-    border: 2px solid var(--window-border);
-    color: var(--text-dark);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 14px;
-    border-radius: 10px;
-    outline: none;
-    transition: all 0.2s;
-  }
-
-  input[type=text]:focus, select:focus {
-    border-color: var(--accent-blue);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(91, 137, 158, 0.25);
-  }
-
-  .preset-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .preset-label {
-    font-size: 12px;
-    color: var(--text-dim);
-    font-weight: 700;
-    margin-right: 4px;
-  }
-
-  button {
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 13px;
-    background: var(--tab-inactive);
-    color: var(--text-dark);
-    border: 2px solid var(--window-border);
-    border-radius: 10px;
-    padding: 8px 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-
-  button:hover {
-    background: var(--tab-active);
-    color: var(--text-dark);
-  }
-
-  button:active {
-    transform: scale(0.96);
-  }
-
-  button.primary {
-    background: var(--accent-blue);
-    color: #ffffff;
-    border-color: var(--window-border);
-    padding: 9px 18px;
-    box-shadow: 0 4px 10px rgba(91, 137, 158, 0.3);
-  }
-
-  button.primary:hover {
-    background: var(--accent-hover);
-    color: #ffffff;
-  }
-
-  button.chip {
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 20px;
-  }
-
-  .grid-stage {
-    background: #d8e6ef;
-    border: 3px solid var(--window-border);
-    border-radius: 16px;
-    padding: 24px 16px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
-  }
-
-  .tiles-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-    align-items: center;
-    min-height: 220px;
-  }
-
-  .tile {
-    width: 140px;
-    height: 140px;
-    border-radius: 24px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 18px rgba(44, 62, 71, 0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
-  }
-
-  .tile:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(44, 62, 71, 0.35);
-  }
-
-  .tile svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .stage-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 18px;
-    background: var(--panel);
-    border: 3px solid var(--window-border);
-    border-radius: 12px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .foot-info {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-blue);
-  }
-
-  .panel {
-    background: var(--panel);
-    border: 3px solid var(--window-border);
-    border-radius: 16px;
-    padding: 16px 20px 8px;
-  }
-
-  .panel-title {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px 24px;
-  }
-
-  .field {
-    margin-bottom: 12px;
-  }
-
-  .field-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    color: var(--text-dark);
-  }
-
-  .field-label span:last-child {
-    color: var(--accent-blue);
-  }
-
-  input[type=range] {
-    width: 100%;
-    accent-color: var(--accent-blue);
-    height: 6px;
-    background: #d0e1ec;
-    border-radius: 4px;
-  }
-
-  /* Inkform Tab Styles Unified to match Light Blue Hub */
-  #tab2 {
-    font-family: inherit;
-    color: var(--text-dark);
-  }
-  
-  #tab2 .inkform-wrap {
-    color: var(--text-dark);
-    background: transparent;
-    padding: 20px 24px 24px;
-    border: none;
-    border-radius: 0;
-  }
-  
-  #tab2 h1 {
-    font-family: inherit;
-    color: var(--text-dark);
-  }
-  
-  #tab2 .sub {
-    color: var(--text-dim);
-  }
-  
-  #tab2 .eyebrow {
-    color: var(--accent-blue);
-  }
-
-  #tab2 .ink-panel {
-    background: var(--panel);
-    border: 3px solid var(--window-border);
-    border-radius: 16px;
-    padding: 16px 20px 12px;
-    margin-bottom: 16px;
-  }
-
-  #tab2 .panel-title {
-    color: var(--text-dim);
-    font-family: inherit;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin: 0 0 12px;
-  }
-
-  #tab2 select, 
-  #tab2 input[type=color],
-  #tab2 input[type=text] {
-    background: #eef5f9;
-    color: var(--text-dark);
-    border: 2px solid var(--window-border);
-    border-radius: 10px;
-    font-family: inherit;
-    font-weight: 600;
-  }
-
-  #tab2 input[type=text]:focus,
-  #tab2 select:focus {
-    border-color: var(--accent-blue);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(91, 137, 158, 0.25);
-  }
-
-  #tab2 input[type=color] {
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  #tab2 .stage {
-    background: #d8e6ef;
-    border: 3px solid var(--window-border);
-    border-radius: 16px;
-    margin-bottom: 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
-  }
-
-  #tab2 .stage canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  #tab2 .stage-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 18px;
-    background: var(--panel);
-    border: 3px solid var(--window-border);
-    border-radius: 12px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  #tab2 .foot-info {
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-blue);
-  }
-
-  #tab2 button {
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 13px;
-    background: var(--tab-inactive);
-    color: var(--text-dark);
-    border: 2px solid var(--window-border);
-    border-radius: 10px;
-    padding: 8px 14px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  #tab2 button:hover {
-    background: var(--tab-active);
-    color: var(--text-dark);
-  }
-
-  #tab2 button.primary {
-    background: var(--accent-blue);
-    color: #ffffff;
-    border-color: var(--window-border);
-    padding: 9px 18px;
-    box-shadow: 0 4px 10px rgba(91, 137, 158, 0.3);
-  }
-
-  #tab2 button.primary:hover {
-    background: var(--accent-hover);
-    color: #ffffff;
-  }
-
-  #tab2 button.chip {
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 20px;
-  }
-
-  #tab2 input[type=range] {
-    accent-color: var(--accent-blue);
-    background: #d0e1ec;
-    height: 6px;
-    border-radius: 4px;
-  }
-
-  #tab2 span[id^="v-"] {
-    font-family: inherit;
-    color: var(--accent-blue);
-    font-weight: 700;
-    font-size: 12px;
-  }
-
-  #tab2 .field-label {
-    color: var(--text-dark);
-    font-weight: 700;
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
+  .colorrow{ display:flex; gap: 18px; align-items:center; margin: 8px 0 12px; flex-wrap:wrap; }
+  .colorfield{ display:flex; align-items:center; gap:8px; }
+  .colorfield label{ font-size: 13px; color: var(--text-dim); }
+  input[type=color]{ width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--line); background: none; cursor: pointer; padding: 0; }
 </style>
 </head>
 <body>
-
 <div class="wrap">
-  <div class="browser-window">
-    
-    <div class="title-bar">
-      <div class="window-dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-      <div style="width: 48px;"></div>
+
+  <header>
+    <p class="eyebrow">Inkform / procedural type foundry</p>
+    <h1>Procedural Type Generator</h1>
+    <p class="sub">Click "Generate New Font" to create distinct, wildly unique typefaces engineered with realistic material textures, stroke geometry, and pen physics.</p>
+  </header>
+
+  <div class="panel">
+    <div class="dna-bar">
+      <span class="dna-label" id="dnaLabel">✦ Modernist Sans</span>
+      <span class="dna-detail" id="dnaDetail">id: 001 | uniform strokes · medium x-height</span>
+      <button id="generateBtn" class="primary">✦ Generate New Font</button>
     </div>
-
-    <div class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('tab1', event)">Vector Studio</button>
-      <button class="tab-btn" onclick="switchTab('tab2', event)">Inkform Foundry</button>
-    </div>
-
-    <div id="tab1" class="tab-content active">
-      <header>
-        <p class="eyebrow">Vector Typography Studio</p>
-        <h1>2D Vectorized Typography</h1>
-        <p class="sub">Type any prompt, word, numbers, or symbols to build clean vectorized 2D typography tiles.</p>
-      </header>
-
-      <div class="app-body">
-        <div class="prompt-box">
-          <div class="prompt-row">
-            <div class="input-group" style="flex: 1.3;">
-              <label>1. Visual Prompt / Material</label>
-              <input type="text" id="promptInput" value="Dark green leaf vector" placeholder="e.g. Flowers, Fire flames, Coffee beans...">
-            </div>
-            <div class="input-group" style="flex: 1;">
-              <label>2. Text / Symbols</label>
-              <input type="text" id="textInput" value="LEAF" spellcheck="false">
-            </div>
-          </div>
-
-          <div class="preset-row">
-            <span class="preset-label">Presets:</span>
-            <button class="chip" data-prompt="Dark green leaf vector" data-text="LEAF">Leaf</button>
-            <button class="chip" data-prompt="Cute pink blossom flowers" data-text="FLOWER">Flower</button>
-            <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE!">Fire</button>
-            <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE">Coffee</button>
-            <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD">Gold</button>
-            <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON">Neon</button>
-            <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="GLACIER">Glacier</button>
-          </div>
-        </div>
-
-        <div class="grid-stage">
-          <div class="tiles-wrapper" id="tilesWrapper"></div>
-        </div>
-
-        <div class="stage-foot">
-          <div class="foot-info" id="footInfo">Vector Engine Ready</div>
-          <div style="display: flex; gap: 8px;">
-            <button id="downloadSvgBtn">Export SVG</button>
-            <button id="downloadPngBtn" class="primary">Export High-Res PNG</button>
-          </div>
-        </div>
-
-        <div class="panel">
-          <p class="panel-title">Vector Geometry, Layout & Lighting Controls</p>
-          <div class="grid">
-            <div class="field"><div class="field-label"><span>Tile Box Size</span><span id="v-tileSize">140px</span></div><input type="range" id="tileSize" min="80" max="220" value="140"></div>
-            <div class="field"><div class="field-label"><span>Box Spacing (Gap)</span><span id="v-tileGap">16px</span></div><input type="range" id="tileGap" min="0" max="40" value="16"></div>
-            <div class="field"><div class="field-label"><span>Scatter Density</span><span id="v-density">55%</span></div><input type="range" id="density" min="20" max="90" value="55"></div>
-            <div class="field"><div class="field-label"><span>Vector Pattern Scale</span><span id="v-scale">1.0×</span></div><input type="range" id="scale" min="60" max="150" value="100"></div>
-            <div class="field"><div class="field-label"><span>Tile Corner Radius</span><span id="v-radius">24px</span></div><input type="range" id="radius" min="8" max="40" value="24"></div>
-            <div class="field"><div class="field-label"><span>Path Alignment Strictness</span><span id="v-bevel">85%</span></div><input type="range" id="bevel" min="0" max="100" value="85"></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div id="tab2" class="tab-content">
-      <div class="inkform-wrap">
-        <header>
-          <p class="eyebrow">Inkform / procedural type foundry</p>
-          <h1>Procedural Type Generator</h1>
-          <p class="sub">Click "Generate New Font" to create distinct, wildly unique typefaces engineered with realistic material textures, stroke geometry, and pen physics.</p>
-        </header>
-
-        <div class="ink-panel">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px; flex-wrap:wrap;">
-            <span style="font-size:14px; color:var(--text-dark); font-weight:700;" id="dnaLabel">✦ Modernist Sans</span>
-            <span style="font-size:12px; color:var(--text-dim);" id="dnaDetail">id: 001 | uniform strokes · medium x-height</span>
-            <button id="generateBtn" class="primary" style="margin-left:auto;">✦ Generate New Font</button>
-          </div>
-        </div>
-
-        <div class="ink-panel">
-          <p class="panel-title">Material Physics & Medium Texture</p>
-          <div class="grid">
-            <div class="field">
-              <div class="field-label"><span>Medium Material</span></div>
-              <select id="materialType" style="width:100%; padding:8px 12px; outline:none;">
-                <option value="watercolor">Watercolor Bleed & Splash Drops</option>
-                <option value="paint">Thick Acrylic Paint (Bristle Impasto)</option>
-                <option value="spray">Spray Paint Splatter & Drips</option>
-                <option value="charcoal">Charcoal / Textured Graphite Pencil</option>
-                <option value="ink">Classic Fountain Ink</option>
-              </select>
-            </div>
-            <div class="field">
-              <div class="field-label"><span>Material Opacity / Wetness</span><span id="v-opacity">100%</span></div>
-              <input type="range" id="opacity" min="20" max="100" value="100">
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex; gap:10px; margin-bottom:12px;">
-          <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="flex:1; padding:12px 14px;">
-          <button id="fullSetBtn">A–z Set</button>
-          <button id="shuffleBtn">Reseed Wobble</button>
-        </div>
-        <div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
-          <button class="chip" id="exEn">Aa Sample</button>
-          <button class="chip" id="exLig">Ligatures / Text</button>
-          <button class="chip" id="exNum">0–9 Numbers</button>
-        </div>
-
-        <div class="ink-panel">
-          <p class="panel-title">Shape & Physics Controls</p>
-          <div class="grid">
-            <div class="field"><div class="field-label"><span>Nib Width</span><span id="v-width">8</span></div><input type="range" id="width" min="1" max="32" value="8"></div>
-            <div class="field"><div class="field-label"><span>Nib Angle</span><span id="v-angle">45°</span></div><input type="range" id="angle" min="0" max="180" value="45"></div>
-            <div class="field"><div class="field-label"><span>Aspect Ratio (Width)</span><span id="v-aspect">1.0×</span></div><input type="range" id="aspect" min="50" max="220" value="100"></div>
-            <div class="field"><div class="field-label"><span>X-Height</span><span id="v-xheight">1.0×</span></div><input type="range" id="xheight" min="50" max="150" value="100"></div>
-            <div class="field"><div class="field-label"><span>Slant Angle</span><span id="v-slant">0°</span></div><input type="range" id="slant" min="-20" max="30" value="0"></div>
-            <div class="field"><div class="field-label"><span>Letter Spacing</span><span id="v-spacing">1.0×</span></div><input type="range" id="spacing" min="60" max="220" value="100"></div>
-            <div class="field"><div class="field-label"><span>Hand Wobble</span><span id="v-jitter">0</span></div><input type="range" id="jitter" min="0" max="12" value="0"></div>
-            <div class="field"><div class="field-label"><span>Ink Bleed / Wetness</span><span id="v-bleed">20%</span></div><input type="range" id="bleed" min="0" max="100" value="20"></div>
-          </div>
-
-          <div style="display:flex; gap:18px; align-items:center; margin:8px 0 12px; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Ink / Paint Color</label><input type="color" id="inkColor" value="#4d6770"></div>
-            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Paper Color</label><input type="color" id="paperColor" value="#ffffff"></div>
-          </div>
-        </div>
-
-        <div class="stage">
-          <canvas id="inkCanvas" width="900" height="350"></canvas>
-          <div class="stage-foot">
-            <div class="foot-info" id="footInfoInk">procedural font engine active</div>
-            <button id="downloadBtn">Download PNG</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="panel">
+    <p class="panel-title">Material Physics & Medium Texture</p>
+    <div class="grid">
+      <div class="field">
+        <div class="field-label"><span>Medium Material</span></div>
+        <select id="materialType">
+          <option value="watercolor">Watercolor Bleed & Splash Drops</option>
+          <option value="paint">Thick Acrylic Paint (Bristle Impasto)</option>
+          <option value="spray">Spray Paint Splatter & Drips</option>
+          <option value="charcoal">Charcoal / Textured Graphite Pencil</option>
+          <option value="ink">Classic Fountain Ink</option>
+        </select>
+      </div>
+      <div class="field"><div class="field-label"><span>Material Opacity / Wetness</span><span id="v-opacity">100%</span></div><input type="range" id="opacity" min="20" max="100" value="100"></div>
+    </div>
+  </div>
+
+  <div class="textrow">
+    <input type="text" id="textInput" value="the quick brown fox" maxlength="80" spellcheck="false">
+    <button id="fullSetBtn">A–z Set</button>
+    <button id="shuffleBtn">Reseed Wobble</button>
+  </div>
+  <div class="examplerow">
+    <button class="chip" id="exEn">Aa Sample</button>
+    <button class="chip" id="exLig">Ligatures / Text</button>
+    <button class="chip" id="exNum">0–9 Numbers</button>
+  </div>
+
+  <div class="panel">
+    <p class="panel-title">Shape & Physics Controls</p>
+    <div class="grid">
+      <div class="field"><div class="field-label"><span>Nib Width</span><span id="v-width">8</span></div><input type="range" id="width" min="1" max="32" value="8"></div>
+      <div class="field"><div class="field-label"><span>Nib Angle</span><span id="v-angle">45°</span></div><input type="range" id="angle" min="0" max="180" value="45"></div>
+      <div class="field"><div class="field-label"><span>Aspect Ratio (Width)</span><span id="v-aspect">1.0×</span></div><input type="range" id="aspect" min="50" max="220" value="100"></div>
+      <div class="field"><div class="field-label"><span>X-Height</span><span id="v-xheight">1.0×</span></div><input type="range" id="xheight" min="50" max="150" value="100"></div>
+      <div class="field"><div class="field-label"><span>Slant Angle</span><span id="v-slant">0°</span></div><input type="range" id="slant" min="-20" max="30" value="0"></div>
+      <div class="field"><div class="field-label"><span>Letter Spacing</span><span id="v-spacing">1.0×</span></div><input type="range" id="spacing" min="60" max="220" value="100"></div>
+      <div class="field"><div class="field-label"><span>Hand Wobble</span><span id="v-jitter">0</span></div><input type="range" id="jitter" min="0" max="12" value="0"></div>
+      <div class="field"><div class="field-label"><span>Ink Bleed / Wetness</span><span id="v-bleed">20%</span></div><input type="range" id="bleed" min="0" max="100" value="20"></div>
+    </div>
+
+    <div class="colorrow">
+      <div class="colorfield"><label>Ink / Paint Color</label><input type="color" id="inkColor" value="#1c1613"></div>
+      <div class="colorfield"><label>Paper Color</label><input type="color" id="paperColor" value="#efe6d0"></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <canvas id="canvas" width="900" height="350"></canvas>
+    <div class="stage-foot">
+      <div class="foot-info" id="footInfo">procedural font engine active</div>
+      <button id="downloadBtn">Download PNG</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// Tab Navigation Controller Switcher
-function switchTab(tabId, evt) {
-  document.querySelectorAll('.tab-content').forEach(content => {
-    content.classList.remove('active');
-  });
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  document.getElementById(tabId).classList.add('active');
-  evt.currentTarget.classList.add('active');
-}
-
-// Vector Typography Studio Engine
 (function(){
-  const tilesWrapper = document.getElementById('tilesWrapper');
-  const promptInput = document.getElementById('promptInput');
-  const textInput = document.getElementById('textInput');
-  const tileSizeRange = document.getElementById('tileSize');
-  const tileGapRange = document.getElementById('tileGap');
-  const densityRange = document.getElementById('density');
-  const scaleRange = document.getElementById('scale');
-  const radiusRange = document.getElementById('radius');
-  const bevelRange = document.getElementById('bevel');
-  const footInfo = document.getElementById('footInfo');
 
-  const characterPaths = {
-    'A': 'M25,85 L50,20 L75,85 M35,62 L65,62',
-    'B': 'M28,20 L28,85 M28,20 L58,20 C72,20 72,50 58,50 L28,50 M28,50 L62,50 C78,50 78,85 62,85 L28,85',
-    'C': 'M75,32 C65,18 32,18 32,52.5 C32,87 65,87 75,73',
-    'D': 'M28,20 L28,85 M28,20 L52,20 C78,20 78,85 52,85 L28,85',
-    'E': 'M75,20 L28,20 L28,85 L75,85 M28,52.5 L65,52.5',
-    'F': 'M75,20 L28,20 L28,85 M28,52.5 L65,52.5',
-    'G': 'M75,32 C65,18 32,18 32,52.5 C32,87 65,87 75,73 L75,52.5 L55,52.5',
-    'H': 'M28,20 L28,85 M72,20 L72,85 M28,52.5 L72,52.5',
-    'I': 'M50,20 L50,85 M32,20 L68,20 M32,85 L68,85',
-    'J': 'M68,20 L68,65 C68,85 45,88 32,75',
-    'K': 'M28,20 L28,85 M70,20 L28,52.5 L72,85',
-    'L': 'M28,20 L28,85 L75,85',
-    'M': 'M25,85 L25,20 L50,58 L75,20 L75,85',
-    'N': 'M28,85 L28,20 L72,85 L72,20',
-    'O': 'M50,20 C28,20 28,85 50,85 C72,85 72,20 50,20 Z',
-    'P': 'M28,20 L28,85 M28,20 L58,20 C74,20 74,52.5 58,52.5 L28,52.5',
-    'Q': 'M50,20 C28,20 28,80 50,80 C72,80 72,20 50,20 Z M58,62 L78,85',
-    'R': 'M28,20 L28,85 M28,20 L58,20 C74,20 74,50 58,50 L28,50 M52,50 L75,85',
-    'S': 'M72,32 C65,18 32,20 35,42 C38,62 72,55 70,75 C68,90 32,88 25,72',
-    'T': 'M25,20 L75,20 M50,20 L50,85',
-    'U': 'M28,20 L28,62 C28,85 72,85 72,62 L72,20',
-    'V': 'M25,20 L50,85 L75,20',
-    'W': 'M22,20 L35,85 L50,45 L65,85 L78,20',
-    'X': 'M25,20 L75,85 M75,20 L25,85',
-    'Y': 'M25,20 L50,52.5 L75,20 M50,52.5 L50,85',
-    'Z': 'M25,20 L75,20 L25,85 L75,85'
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const ARCHETYPES = [
+  { name: 'Modernist Geometric Sans', style: 'sans', width: 1.0, xh: 1.0, nibWidth: 7, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Didone High-Contrast Serif', style: 'serif', width: 0.85, xh: 0.85, nibWidth: 16, angle: 90, slant: 0, contrast: 'extreme', jitter: 0 },
+  { name: 'Heavy Poster Slab Serif', style: 'slab', width: 1.25, xh: 1.1, nibWidth: 22, angle: 0, slant: 0, contrast: 'low', jitter: 0 },
+  { name: 'Gothic Blackletter Display', style: 'blackletter', width: 0.8, xh: 1.15, nibWidth: 18, angle: 45, slant: 0, contrast: 'high', jitter: 1 },
+  { name: 'Ultra-Condensed Technical', style: 'condensed', width: 0.55, xh: 1.2, nibWidth: 5, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Extended Modern Art-Deco', style: 'artdeco', width: 1.6, xh: 0.65, nibWidth: 7, angle: 15, slant: 0, contrast: 'medium', jitter: 0 },
+  { name: 'Organic Bubble Display', style: 'bubble', width: 1.1, xh: 1.1, nibWidth: 26, angle: 0, slant: 0, contrast: 'none', jitter: 2 },
+  { name: 'Expressive Calligraphic Italic', style: 'script', width: 0.95, xh: 0.9, nibWidth: 14, angle: 35, slant: 18, contrast: 'high', jitter: 3 }
+];
+
+let currentDNA = ARCHETYPES[0];
+let fontSeed = Math.floor(Math.random() * 100000);
+
+function pickRandomDNA() {
+  fontSeed = Math.floor(Math.random() * 100000);
+  const base = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
+ 
+  currentDNA = {
+    ...base,
+    id: Math.floor(Math.random() * 899) + 100,
+    width: Math.round((base.width + (Math.random() * 0.35 - 0.17)) * 100) / 100,
+    xh: Math.round((base.xh + (Math.random() * 0.25 - 0.12)) * 100) / 100,
+    slant: Math.random() > 0.6 ? Math.floor(Math.random() * 24 - 6) : base.slant,
+    nibWidth: Math.max(3, Math.min(30, base.nibWidth + Math.floor(Math.random() * 6 - 3)))
   };
 
-  function parsePrompt(prompt) {
-    const p = prompt.toLowerCase();
-    let config = { primary: '#5a8f35', secondary: '#3b6620', highlight: '#8cc853', shape: 'leaf' };
-    if (p.includes('flower') || p.includes('bloom')) {
-      config = { primary: '#ffb3d1', secondary: '#c28b9d', highlight: '#fff5fa', shape: 'flower' };
-    } else if (p.includes('fire') || p.includes('flame')) {
-      config = { primary: '#ff2a00', secondary: '#ff8800', highlight: '#ffea00', shape: 'flame' };
-    } else if (p.includes('coffee') || p.includes('bean')) {
-      config = { primary: '#5c351b', secondary: '#2e180a', highlight: '#d49a63', shape: 'bean' };
-    } else if (p.includes('gold')) {
-      config = { primary: '#ffd700', secondary: '#c48a10', highlight: '#fffde6', shape: 'nugget' };
+  document.getElementById('width').value = currentDNA.nibWidth;
+  document.getElementById('angle').value = currentDNA.angle;
+  document.getElementById('aspect').value = Math.round(currentDNA.width * 100);
+  document.getElementById('xheight').value = Math.round(currentDNA.xh * 100);
+  document.getElementById('slant').value = currentDNA.slant;
+  document.getElementById('jitter').value = currentDNA.jitter;
+
+  document.getElementById('dnaLabel').textContent = `✦ ${currentDNA.name}`;
+  document.getElementById('dnaDetail').textContent = `id: ${currentDNA.id} | style: ${currentDNA.style} · width: ${currentDNA.width}×`;
+}
+
+function random(seed) {
+  let x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
+// Convert hex color to RGBA string helper
+function hexToRgba(hex, alpha) {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+}
+
+// --- ADVANCED MATERIAL ENGINE ---
+function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, colorHex) {
+  if (points.length < 2) return;
+
+  const baseAlpha = opacityVal / 100;
+  ctx.save();
+
+  if (material === 'watercolor') {
+    // WATERCOLOR: Organic wet-edge pooling, layered washes & splatter droplets
+   
+    // 1. Wide, soft wet wash background
+    ctx.beginPath();
+    ctx.lineWidth = nibW * 1.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.18);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+
+    // 2. Layered pigment washes with irregular bleeding borders
+    for (let layer = 0; layer < 3; layer++) {
+      ctx.beginPath();
+      ctx.lineWidth = nibW * (0.8 + layer * 0.2);
+      ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.25);
+      ctx.moveTo(points[0][0], points[0][1]);
+
+      for (let i = 1; i < points.length; i++) {
+        let px = points[i][0] + (random(fontSeed + i * 5 + layer * 17) - 0.5) * (jitterAmt + 3);
+        let py = points[i][1] + (random(fontSeed + i * 11 + layer * 23) - 0.5) * (jitterAmt + 3);
+        ctx.lineTo(px, py);
+      }
+      ctx.stroke();
     }
-    return config;
-  }
 
-  function updateVectorStudio() {
-    const text = textInput.value.toUpperCase();
-    const prompt = promptInput.value;
-    const config = parsePrompt(prompt);
-    
-    const tileSize = tileSizeRange.value;
-    const tileGap = tileGapRange.value;
-    const radius = radiusRange.value;
-    
-    document.getElementById('v-tileSize').textContent = tileSize + 'px';
-    document.getElementById('v-tileGap').textContent = tileGap + 'px';
-    document.getElementById('v-density').textContent = densityRange.value + '%';
-    document.getElementById('v-scale').textContent = (scaleRange.value / 100).toFixed(1) + '×';
-    document.getElementById('v-radius').textContent = radius + 'px';
-    document.getElementById('v-bevel').textContent = bevelRange.value + '%';
+    // 3. Dark Edge Pooling (Fringe drying effect along outer stroke borders)
+    ctx.beginPath();
+    ctx.lineWidth = Math.max(1, nibW * 0.25);
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.65);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
 
-    tilesWrapper.style.gap = tileGap + 'px';
-    tilesWrapper.innerHTML = '';
+    // 4. Watercolor Splash & Splatter Drops surrounding strokes
+    for (let i = 0; i < points.length; i++) {
+      if (random(fontSeed + i * 31) > 0.68) {
+        const dropRadius = random(fontSeed + i * 43) * (nibW * 0.45) + 0.8;
+        const offsetX = (random(fontSeed + i * 53) - 0.5) * (nibW * 3.8);
+        const offsetY = (random(fontSeed + i * 61) - 0.5) * (nibW * 3.8);
+        const cx = points[i][0] + offsetX;
+        const cy = points[i][1] + offsetY;
 
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      const pathData = characterPaths[char] || characterPaths['A'];
-      
-      const tile = document.createElement('div');
-      tile.className = 'tile';
-      tile.style.width = tileSize + 'px';
-      tile.style.height = tileSize + 'px';
-      tile.style.borderRadius = radius + 'px';
-
-      tile.innerHTML = `
-        <svg viewBox="0 0 100 100">
-          <defs>
-            <linearGradient id="bgGrad-${i}" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="${config.primary}"/>
-              <stop offset="100%" stop-color="${config.secondary}"/>
-            </linearGradient>
-          </defs>
-          <rect width="100" height="100" fill="url(#bgGrad-${i})"/>
-          <path d="${pathData}" fill="none" stroke="${config.highlight}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      `;
-      tilesWrapper.appendChild(tile);
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.3 + random(fontSeed + i) * 0.4));
+        ctx.beginPath();
+        ctx.arc(cx, cy, dropRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
-    footInfo.textContent = `Rendered ${text.length} Vector Tiles Successfully`;
-  }
 
-  [promptInput, textInput, tileSizeRange, tileGapRange, densityRange, scaleRange, radiusRange, bevelRange].forEach(el => {
-    el.addEventListener('input', updateVectorStudio);
-  });
+  } else if (material === 'paint') {
+    // THICK ACRYLIC PAINT: Multi-bristle streaks & 3D impasto highlights/shadows
 
-  document.querySelectorAll('.preset-row .chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      promptInput.value = btn.getAttribute('data-prompt');
-      textInput.value = btn.getAttribute('data-text');
-      updateVectorStudio();
+    // 1. Base thick paint laydown
+    ctx.beginPath();
+    ctx.lineWidth = nibW;
+    ctx.lineCap = 'square';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+
+    // 2. Parallel Brush Bristle Streaks
+    const bristleCount = Math.max(4, Math.floor(nibW * 0.8));
+    for (let b = 0; b < bristleCount; b++) {
+      const offset = (b / bristleCount - 0.5) * (nibW * 0.85);
+      const isHighlight = b % 2 === 0;
+
+      ctx.beginPath();
+      ctx.lineWidth = Math.max(1, nibW / bristleCount);
+      ctx.strokeStyle = isHighlight
+        ? hexToRgba('#ffffff', baseAlpha * 0.22)
+        : hexToRgba('#000000', baseAlpha * 0.28);
+
+      ctx.moveTo(points[0][0] + offset, points[0][1] + offset);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0] + offset, points[i][1] + offset);
+      }
+      ctx.stroke();
+    }
+
+    // 3. Thick Paint Turn Blobs at stroke endpoints
+    [points[0], points[points.length - 1]].forEach(pt => {
+      ctx.fillStyle = hexToRgba(colorHex, baseAlpha);
+      ctx.beginPath();
+      ctx.arc(pt[0], pt[1], nibW * 0.55, 0, Math.PI * 2);
+      ctx.fill();
     });
-  });
 
-  updateVectorStudio();
-})();
+  } else if (material === 'spray') {
+    // SPRAY PAINT: Atomized particle scatter, wide soft overspray, & drips
 
-// Inkform Foundry Procedural Engine Stub
-(function() {
-  const canvas = document.getElementById('inkCanvas');
-  const ctx = canvas.getContext('2d');
-  const inkTextInput = document.getElementById('inkTextInput');
-  const widthRange = document.getElementById('width');
-  const angleRange = document.getElementById('angle');
-  const opacityRange = document.getElementById('opacity');
-  const inkColorPicker = document.getElementById('inkColor');
-  const paperColorPicker = document.getElementById('paperColor');
-  const generateBtn = document.getElementById('generateBtn');
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      const steps = Math.max(5, Math.floor(dist * 1.2));
 
-  function renderInk() {
-    const text = inkTextInput.value;
-    const inkColor = inkColorPicker.value;
-    const paperColor = paperColorPicker.value;
-    const widthVal = widthRange.value;
-    const opacityVal = opacityRange.value / 100;
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        const cx = p1[0] + (p2[0] - p1[0]) * t;
+        const cy = p1[1] + (p2[1] - p1[1]) * t;
 
-    // Background fill
-    ctx.fillStyle = paperColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Particle spray physics density distribution
+        const totalParticles = Math.floor(nibW * 4.5);
+        for (let p = 0; p < totalParticles; p++) {
+          const angle = random(fontSeed + p * 7 + s * 13) * Math.PI * 2;
+          const rPow = Math.pow(random(fontSeed + p * 17 + s * 3), 2.2); // Core-dense falloff
+          const radius = rPow * (nibW * 1.5);
+          const px = cx + Math.cos(angle) * radius;
+          const py = cy + Math.sin(angle) * radius;
+          const dotSize = random(fontSeed + p) * 1.8 + 0.4;
 
-    // Draw text preview
-    ctx.fillStyle = inkColor;
-    ctx.globalAlpha = opacityVal;
-    ctx.font = `bold ${Math.max(24, widthVal * 4)}px sans-serif`;
-    ctx.fillText(text, 50, 200);
-    ctx.globalAlpha = 1.0;
+          ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (1 - radius / (nibW * 1.6)));
+          ctx.fillRect(px, py, dotSize, dotSize);
+        }
+      }
+
+      // Occasional Street-Art Dripping Paint physics
+      if (random(fontSeed + i * 97) > 0.88) {
+        const dripX = points[i][0];
+        const dripY = points[i][1];
+        const dripLen = random(fontSeed + i * 41) * 28 + 8;
+       
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * 0.85);
+        ctx.beginPath();
+        ctx.rect(dripX - 1, dripY, 2, dripLen);
+        ctx.arc(dripX, dripY + dripLen, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+  } else if (material === 'charcoal') {
+    // CHARCOAL / PENCIL: Rough paper grain tooth texture
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      const steps = Math.max(4, Math.floor(dist));
+
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        const cx = p1[0] + (p2[0] - p1[0]) * t;
+        const cy = p1[1] + (p2[1] - p1[1]) * t;
+
+        for (let p = 0; p < nibW * 3; p++) {
+          const rx = (random(fontSeed + p * 5 + s) - 0.5) * nibW;
+          const ry = (random(fontSeed + p * 11 + s) - 0.5) * nibW;
+          if (random(fontSeed + p * 19) > 0.3) {
+            ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.15 + random(fontSeed + p) * 0.45));
+            ctx.fillRect(cx + rx, cy + ry, 1.4, 1.4);
+          }
+        }
+      }
+    }
+
+  } else {
+    // CLASSIC FOUNTAIN INK
+    ctx.beginPath();
+    ctx.lineWidth = nibW;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
+
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) {
+      let px = points[i][0];
+      let py = points[i][1];
+      if (jitterAmt > 0) {
+        px += (random(fontSeed + i * 7) - 0.5) * jitterAmt;
+        py += (random(fontSeed + i * 13) - 0.5) * jitterAmt;
+      }
+      ctx.lineTo(px, py);
+    }
+    ctx.stroke();
   }
 
-  [inkTextInput, widthRange, angleRange, opacityRange, inkColorPicker, paperColorPicker].forEach(el => {
-    el.addEventListener('input', renderInk);
-  });
+  ctx.restore();
+}
 
-  if(generateBtn) {
-    generateBtn.addEventListener('click', () => {
-      renderInk();
+// Parametric Arc Curve Helper
+function arcPoints(cx, cy, rx, ry, startA, endA, steps = 14) {
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const a = startA + (endA - startA) * (i / steps);
+    pts.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]);
+  }
+  return pts;
+}
+
+// Complete Stroke Library for A-Z and 0-9
+function getGlyphStrokes(char, w, h, xh) {
+  const baseW = 44 * w;
+  const baseH = 70 * h;
+  const xHeight = baseH * 0.55 * xh;
+  const capTop = 10;
+  const baseline = capTop + baseH;
+  const xTop = baseline - xHeight;
+  const midY = xTop + xHeight / 2;
+  const stem = Math.round(baseW * 0.18);
+  const cx = Math.round(baseW / 2);
+
+  const c = char.toLowerCase();
+  const strokes = [];
+  const line = (x1, y1, x2, y2) => [[x1, y1], [x2, y2]];
+
+  switch(c) {
+    // --- LOWERCASE LETTERS ---
+    case 'a':
+      strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, Math.PI*2));
+      strokes.push(line(baseW-stem, xTop, baseW-stem, baseline));
+      break;
+    case 'b':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2));
+      break;
+    case 'c':
+      strokes.push(arcPoints(cx, midY, baseW*0.35, xHeight*0.42, Math.PI*0.22, Math.PI*1.78));
+      break;
+    case 'd':
+      strokes.push(line(baseW-stem, capTop, baseW-stem, baseline));
+      strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5));
+      break;
+    case 'e':
+      strokes.push(line(stem+2, midY, baseW-stem, midY));
+      strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, -Math.PI * 1.75, 16));
+      break;
+    case 'f':
+      strokes.push(line(cx, capTop+10, cx, baseline));
+      strokes.push(arcPoints(cx+8, capTop+10, 8, 10, Math.PI, Math.PI*1.8));
+      strokes.push(line(cx-8, xTop+4, cx+10, xTop+4));
+      break;
+    case 'g':
+      strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.4, 0, Math.PI*2));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline+14));
+      strokes.push(arcPoints(cx, baseline+14, baseW*0.34, 8, 0, Math.PI));
+      break;
+    case 'h':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI, 0));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline));
+      break;
+    case 'i':
+      strokes.push(line(cx, xTop, cx, baseline));
+      strokes.push(line(cx, capTop+2, cx, capTop+6));
+      break;
+    case 'j':
+      strokes.push(line(cx+4, xTop, cx+4, baseline+14));
+      strokes.push(arcPoints(cx-2, baseline+14, 6, 6, 0, Math.PI));
+      strokes.push(line(cx+4, capTop+2, cx+4, capTop+6));
+      break;
+    case 'k':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(line(stem+4, midY, baseW-stem, xTop+4));
+      strokes.push(line(stem+4, midY, baseW-stem, baseline));
+      break;
+    case 'l':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(line(stem, baseline, stem+10, baseline));
+      break;
+    case 'm':
+      strokes.push(line(stem, xTop, stem, baseline));
+      strokes.push(arcPoints(stem + (baseW*0.24), baseline - xHeight/2, baseW*0.22, xHeight/2, Math.PI, 0));
+      strokes.push(arcPoints(baseW - (baseW*0.24), baseline - xHeight/2, baseW*0.22, xHeight/2, Math.PI, 0));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline));
+      break;
+    case 'n':
+      strokes.push(line(stem, xTop, stem, baseline));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI, 0));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline));
+      break;
+    case 'o':
+      strokes.push(arcPoints(cx, midY, baseW*0.36, xHeight*0.42, 0, Math.PI*2));
+      break;
+    case 'p':
+      strokes.push(line(stem, xTop, stem, baseline+18));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2));
+      break;
+    case 'q':
+      strokes.push(line(baseW-stem, xTop, baseW-stem, baseline+18));
+      strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5));
+      break;
+    case 'r':
+      strokes.push(line(stem, xTop, stem, baseline));
+      strokes.push(arcPoints(cx-2, xTop+8, baseW*0.28, 8, Math.PI*1.2, Math.PI*1.9));
+      break;
+    case 's':
+      strokes.push(arcPoints(cx, xTop+8, baseW*0.32, 8, Math.PI*0.5, Math.PI*1.9));
+      strokes.push(arcPoints(cx, baseline-8, baseW*0.32, 8, Math.PI*2.5, Math.PI*3.9));
+      break;
+    case 't':
+      strokes.push(line(cx, capTop+4, cx, baseline));
+      strokes.push(line(cx-8, xTop+4, cx+8, xTop+4));
+      break;
+    case 'u':
+      strokes.push(line(stem, xTop, stem, baseline-8));
+      strokes.push(arcPoints(cx, baseline-8, baseW*0.34, 8, Math.PI, 0));
+      strokes.push(line(baseW-stem, xTop, baseW-stem, baseline));
+      break;
+    case 'v':
+      strokes.push(line(stem, xTop, cx, baseline));
+      strokes.push(line(cx, baseline, baseW-stem, xTop));
+      break;
+    case 'w':
+      strokes.push(line(stem, xTop, stem+6, baseline));
+      strokes.push(line(stem+6, baseline, cx, midY));
+      strokes.push(line(cx, midY, baseW-stem-6, baseline));
+      strokes.push(line(baseW-stem-6, baseline, baseW-stem, xTop));
+      break;
+    case 'x':
+      strokes.push(line(stem, xTop, baseW-stem, baseline));
+      strokes.push(line(baseW-stem, xTop, stem, baseline));
+      break;
+    case 'y':
+      strokes.push(line(stem, xTop, cx, midY));
+      strokes.push(line(baseW-stem, xTop, cx, midY));
+      strokes.push(line(cx, midY, cx, baseline+16));
+      break;
+    case 'z':
+      strokes.push(line(stem, xTop, baseW-stem, xTop));
+      strokes.push(line(baseW-stem, xTop, stem, baseline));
+      strokes.push(line(stem, baseline, baseW-stem, baseline));
+      break;
+
+    // --- NUMBERS ---
+    case '0':
+      strokes.push(arcPoints(cx, (capTop+baseline)/2, baseW*0.34, baseH*0.45, 0, Math.PI*2));
+      break;
+    case '1':
+      strokes.push(line(cx-6, capTop+10, cx, capTop));
+      strokes.push(line(cx, capTop, cx, baseline));
+      strokes.push(line(cx-10, baseline, cx+10, baseline));
+      break;
+    case '2':
+      strokes.push(arcPoints(cx, capTop+12, baseW*0.32, 12, Math.PI, 0));
+      strokes.push(line(baseW-stem, capTop+12, stem, baseline));
+      strokes.push(line(stem, baseline, baseW-stem, baseline));
+      break;
+    case '3':
+      strokes.push(arcPoints(cx, capTop+12, baseW*0.3, 10, Math.PI*1.2, 0));
+      strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8));
+      break;
+    case '4':
+      strokes.push(line(baseW-stem-4, capTop, stem, (capTop+baseline)/2));
+      strokes.push(line(stem, (capTop+baseline)/2, baseW-stem, (capTop+baseline)/2));
+      strokes.push(line(baseW-stem-4, capTop, baseW-stem-4, baseline));
+      break;
+    case '5':
+      strokes.push(line(baseW-stem, capTop, stem+4, capTop));
+      strokes.push(line(stem+4, capTop, stem+2, (capTop+baseline)/2 - 2));
+      strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8));
+      break;
+    case '6':
+      strokes.push(arcPoints(cx, baseline-16, baseW*0.32, 14, 0, Math.PI*2));
+      strokes.push(line(stem+2, baseline-16, cx+4, capTop));
+      break;
+    case '7':
+      strokes.push(line(stem, capTop, baseW-stem, capTop));
+      strokes.push(line(baseW-stem, capTop, stem+4, baseline));
+      break;
+    case '8':
+      strokes.push(arcPoints(cx, capTop+14, baseW*0.28, 11, 0, Math.PI*2));
+      strokes.push(arcPoints(cx, baseline-16, baseW*0.34, 14, 0, Math.PI*2));
+      break;
+    case '9':
+      strokes.push(arcPoints(cx, capTop+16, baseW*0.32, 14, 0, Math.PI*2));
+      strokes.push(line(baseW-stem-2, capTop+16, cx-4, baseline));
+      break;
+
+    default:
+      strokes.push(line(cx, xTop, cx, baseline));
+      break;
+  }
+
+  return { strokes, width: baseW + 16 };
+}
+
+function render() {
+  const text = document.getElementById('textInput').value;
+  const material = document.getElementById('materialType').value;
+  const opacityVal = parseFloat(document.getElementById('opacity').value);
+  const nibW = parseFloat(document.getElementById('width').value);
+  const aspect = parseFloat(document.getElementById('aspect').value) / 100;
+  const xh = parseFloat(document.getElementById('xheight').value) / 100;
+  const slant = parseFloat(document.getElementById('slant').value);
+  const spacing = parseFloat(document.getElementById('spacing').value) / 100;
+  const jitter = parseFloat(document.getElementById('jitter').value);
+  const inkColor = document.getElementById('inkColor').value;
+  const paperColor = document.getElementById('paperColor').value;
+
+  // Update UI values
+  document.getElementById('v-opacity').textContent = opacityVal + '%';
+  document.getElementById('v-width').textContent = nibW;
+  document.getElementById('v-angle').textContent = document.getElementById('angle').value + '°';
+  document.getElementById('v-aspect').textContent = aspect.toFixed(1) + '×';
+  document.getElementById('v-xheight').textContent = xh.toFixed(1) + '×';
+  document.getElementById('v-slant').textContent = slant + '°';
+  document.getElementById('v-spacing').textContent = spacing.toFixed(1) + '×';
+  document.getElementById('v-jitter').textContent = jitter;
+  document.getElementById('v-bleed').textContent = document.getElementById('bleed').value + '%';
+
+  ctx.fillStyle = paperColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  let cursorX = 38;
+  let cursorY = 115;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === ' ') {
+      cursorX += 22 * aspect * spacing;
+      continue;
+    }
+
+    const glyph = getGlyphStrokes(char, aspect, 1.0, xh);
+
+    ctx.save();
+    ctx.translate(cursorX, cursorY);
+    if (slant !== 0) ctx.transform(1, 0, Math.tan((slant * Math.PI) / 180), 1, 0, 0);
+
+    glyph.strokes.forEach(stroke => {
+      drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor);
     });
+
+    ctx.restore();
+    cursorX += glyph.width * spacing;
+
+    if (cursorX > canvas.width - 60) {
+      cursorX = 38;
+      cursorY += 98;
+    }
   }
 
-  renderInk();
+  document.getElementById('footInfo').textContent = `${currentDNA.name} · material: ${material} · ${nibW}px nib`;
+}
+
+// Event Listeners
+document.getElementById('generateBtn').addEventListener('click', () => { pickRandomDNA(); render(); });
+document.getElementById('materialType').addEventListener('change', render);
+document.getElementById('opacity').addEventListener('input', render);
+document.getElementById('textInput').addEventListener('input', render);
+document.getElementById('width').addEventListener('input', render);
+document.getElementById('angle').addEventListener('input', render);
+document.getElementById('aspect').addEventListener('input', render);
+document.getElementById('xheight').addEventListener('input', render);
+document.getElementById('slant').addEventListener('input', render);
+document.getElementById('spacing').addEventListener('input', render);
+document.getElementById('jitter').addEventListener('input', render);
+document.getElementById('bleed').addEventListener('input', render);
+document.getElementById('inkColor').addEventListener('input', render);
+document.getElementById('paperColor').addEventListener('input', render);
+
+document.getElementById('shuffleBtn').addEventListener('click', () => { fontSeed = Math.floor(Math.random()*90000); render(); });
+document.getElementById('exEn').addEventListener('click', () => { document.getElementById('textInput').value = 'the quick brown fox'; render(); });
+document.getElementById('exLig').addEventListener('click', () => { document.getElementById('textInput').value = 'headache offset title'; render(); });
+document.getElementById('exNum').addEventListener('click', () => { document.getElementById('textInput').value = '0123456789'; render(); });
+document.getElementById('fullSetBtn').addEventListener('click', () => { document.getElementById('textInput').value = 'abcdefghijklmnopqrstuvwxyz'; render(); });
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = `${currentDNA.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+// Setup Initial View
+pickRandomDNA();
+render();
+
 })();
 </script>
 </body>
