@@ -1,126 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<style>
-  :root {
-    --bg-outer: #dbeafe;
-    --window-border: #6b8b9e;
-    --header-bg: #b3d4e5;
-    --tab-inactive: #eaf2f6;
-    --tab-active: #8bbad1;
-    --card-bg: #f9fcff;
-    --text-color: #3b4e58;
-    --accent-blue: #709fb0;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Light Blue Cute App UI</title>
+  <style>
+    /* ==========================================
+       LIGHT BLUE THEME VARIABLES 
+       ========================================== */
+    :root {
+      --bg-outer: #d1e8f2;          /* Outer page background */
+      --window-border: #6b8b9e;     /* Main frame & component borders */
+      --header-bg: #a3c9db;         /* Navigation header background */
+      --address-bg: #f2f7fa;        /* URL bar background */
+      --tab-inactive: #e0eef5;      /* Unselected tab color */
+      --tab-active: #7db1cb;        /* Active tab color */
+      --card-bg: #f7fbfe;           /* Main content card background */
+      --accent-blue: #88b7ce;       /* Badge & button accent color */
+      --accent-hover: #6e9fba;      /* Button hover state */
+      --text-dark: #3b4e58;         /* Primary text color */
+      --text-muted: #627783;        /* Secondary/sub-heading text color */
+      --dashed-line: #a0bed0;       /* Divider line color */
+    }
 
-  body {
-    background-color: var(--bg-outer);
-    font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    color: var(--text-color);
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Main Browser Window */
-  .browser-window {
-    width: 600px;
-    background: var(--card-bg);
-    border: 4px solid var(--window-border);
-    border-radius: 16px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
+    body {
+      background-color: var(--bg-outer);
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka', cursive, sans-serif;
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-  /* Title Bar */
-  .title-bar {
-    background: var(--header-bg);
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 3px solid var(--window-border);
-  }
+    /* ==========================================
+       MAIN APP WINDOW FRAME
+       ========================================== */
+    .app-window {
+      width: 100%;
+      max-width: 650px;
+      background: var(--card-bg);
+      border: 4px solid var(--window-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(107, 139, 158, 0.2);
+      overflow: hidden;
+    }
 
-  .url-bar {
-    background: #ffffff;
-    border: 2px solid var(--window-border);
-    border-radius: 12px;
-    padding: 4px 12px;
-    width: 70%;
-    font-size: 14px;
-    text-align: center;
-  }
+    /* ==========================================
+       HEADER & NAVIGATION BAR
+       ========================================== */
+    .app-header {
+      background-color: var(--header-bg);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid var(--window-border);
+    }
 
-  /* Tabs */
-  .tabs-container {
-    display: flex;
-    gap: 8px;
-    background: #e1eef5;
-    padding: 6px 12px 0 12px;
-    border-bottom: 2px dashed var(--window-border);
-  }
+    .nav-buttons {
+      display: flex;
+      gap: 6px;
+    }
 
-  .tab {
-    background: var(--tab-inactive);
-    padding: 6px 16px;
-    border-radius: 10px 10px 0 0;
-    border: 2px solid var(--window-border);
-    border-bottom: none;
-    font-size: 14px;
-    font-weight: bold;
-  }
+    .nav-btn {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: 2px solid var(--window-border);
+    }
 
-  .tab.active {
-    background: var(--tab-active);
-    color: white;
-  }
+    .url-bar {
+      background-color: var(--address-bg);
+      border: 2px solid var(--window-border);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      width: 60%;
+      text-align: center;
+      font-weight: bold;
+    }
 
-  /* Main Content Area */
-  .content {
-    padding: 16px;
-  }
+    /* ==========================================
+       TABS SYSTEM
+       ========================================== */
+    .tabs-bar {
+      display: flex;
+      gap: 6px;
+      background-color: #c4e0ed;
+      padding: 8px 16px 0 16px;
+      border-bottom: 3px dashed var(--dashed-line);
+    }
 
-  .info-box {
-    background: #ffffff;
-    border: 2px solid var(--window-border);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
-  }
+    .tab {
+      background-color: var(--tab-inactive);
+      color: var(--text-dark);
+      padding: 8px 18px;
+      border-radius: 12px 12px 0 0;
+      border: 2px solid var(--window-border);
+      border-bottom: none;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-  .badge {
-    background: var(--accent-blue);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 8px;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: bold;
-  }
-</style>
+    .tab.active {
+      background-color: var(--tab-active);
+      color: #ffffff;
+    }
+
+    /* ==========================================
+       CONTENT AREA
+       ========================================== */
+    .app-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      border: 1.5px solid var(--window-border);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .info-box {
+      background-color: #ffffff;
+      border: 2.5px solid var(--window-border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .info-box h3 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+
+    .info-box p {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================
+       LINKS & BUTTONS
+       ========================================== */
+    .link-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .link-item {
+      background-color: var(--accent-blue);
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 2px solid var(--window-border);
+      transition: background 0.2s ease;
+    }
+
+    .link-item:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Vector/Image container that leaves artwork 100% untouched */
+    .vector-art-container img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
-<div class="browser-window">
-  <div class="title-bar">
-    <div class="url-bar">https://titlehere.com</div>
-  </div>
-
-  <div class="tabs-container">
-    <div class="tab active">about</div>
-    <div class="tab">comms</div>
-    <div class="tab">T.o.S</div>
-  </div>
-
-  <div class="content">
-    <div class="info-box">
-      <span class="badge">Find Me Here!</span>
-      <p style="margin-top: 8px;">Place your original text and vector icons here.</p>
+  <div class="app-window">
+    
+    <div class="app-header">
+      <div class="nav-buttons">
+        <div class="nav-btn"></div>
+        <div class="nav-btn"></div>
+        <div class="nav-btn"></div>
+      </div>
+      <div class="url-bar">https://mywebsite.com</div>
+      <div style="width: 50px;"></div>
     </div>
+
+    <div class="tabs-bar">
+      <button class="tab active">about</button>
+      <button class="tab">comms</button>
+      <button class="tab">T.o.S</button>
+    </div>
+
+    <div class="app-content">
+      
+      <div class="profile-card">
+        <span class="badge">NAME (@user)</span>
+        <span class="badge" style="background-color: #a0bed0;">info/info/info</span>
+      </div>
+
+      <div class="info-grid">
+        
+        <div class="info-box">
+          <h3>Welcome!</h3>
+          <p>
+            Your original text content goes right here without any modifications. 
+          </p>
+          
+          <div class="vector-art-container" style="margin-top: 10px;">
+             </div>
+        </div>
+
+        <div class="info-box">
+          <span class="badge" style="margin-bottom: 8px;">Find Me Here!</span>
+          <div class="link-list">
+            <a href="#" class="link-item"><span>link one</span> ➔</a>
+            <a href="#" class="link-item"><span>link two</span> ➔</a>
+            <a href="#" class="link-item"><span>link three</span> ➔</a>
+            <a href="#" class="link-item"><span>link four</span> ➔</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
-</div>
 
 </body>
 </html>
