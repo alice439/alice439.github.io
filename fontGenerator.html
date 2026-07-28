@@ -8,24 +8,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-outer: #dbeafe;
-    --window-border: #6b8b9e;
-    --header-bg: #b3d4e5;
-    --tab-inactive: #eaf2f6;
-    --tab-active: #8bbad1;
-    --card-bg: #f9fcff;
+    --window-border: #4d6d80;
+    --header-bg: #9bbccf;
+    --tab-inactive: #e0ecf3;
+    --tab-active: #78a2b7;
+    --card-bg: rgba(244, 249, 252, 0.95);
     --panel: #ffffff;
-    --text-dark: #3b4e58;
-    --text-dim: #627783;
-    --accent-blue: #709fb0;
-    --accent-hover: #5b899a;
-    --dashed-line: #a0bed0;
+    --text-dark: #2c3e47;
+    --text-dim: #526773;
+    --accent-blue: #5b899e;
+    --accent-hover: #466e82;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background-color: var(--bg-outer);
+    /* Custom Background Image Settings */
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     font-family: 'Fredoka', 'Nunito', sans-serif;
     color: var(--text-dark);
     display: flex;
@@ -45,8 +48,9 @@
     background: var(--card-bg);
     border: 4px solid var(--window-border);
     border-radius: 20px;
-    box-shadow: 0 10px 24px rgba(107, 139, 158, 0.25);
+    box-shadow: 0 12px 32px rgba(44, 62, 71, 0.3);
     overflow: hidden;
+    backdrop-filter: blur(8px);
   }
 
   /* Top Browser Bar */
@@ -84,7 +88,6 @@
     text-align: center;
   }
 
-  /* Cute Main Header Inside Window */
   header {
     padding: 20px 24px 10px;
     text-align: center;
@@ -153,7 +156,7 @@
   }
 
   input[type=text] {
-    background: #f0f7fb;
+    background: #eef5f9;
     border: 2px solid var(--window-border);
     color: var(--text-dark);
     font-family: inherit;
@@ -168,7 +171,7 @@
   input[type=text]:focus {
     border-color: var(--accent-blue);
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(112, 159, 176, 0.25);
+    box-shadow: 0 0 0 3px rgba(91, 137, 158, 0.25);
   }
 
   .preset-row {
@@ -213,7 +216,7 @@
     color: #ffffff;
     border-color: var(--window-border);
     padding: 9px 18px;
-    box-shadow: 0 4px 10px rgba(112, 159, 176, 0.3);
+    box-shadow: 0 4px 10px rgba(91, 137, 158, 0.3);
   }
 
   button.primary:hover {
@@ -228,11 +231,11 @@
 
   /* Grid Tile Stage */
   .grid-stage {
-    background: #edf5fa;
+    background: #d8e6ef;
     border: 3px solid var(--window-border);
     border-radius: 16px;
     padding: 24px 16px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
   }
 
   .tiles-wrapper {
@@ -250,14 +253,14 @@
     border-radius: 24px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 16px rgba(107, 139, 158, 0.2);
+    box-shadow: 0 8px 18px rgba(44, 62, 71, 0.25);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
   }
 
   .tile:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 22px rgba(107, 139, 158, 0.3);
+    box-shadow: 0 12px 24px rgba(44, 62, 71, 0.35);
   }
 
   .tile svg {
@@ -328,7 +331,7 @@
     width: 100%;
     accent-color: var(--accent-blue);
     height: 6px;
-    background: #e0eef5;
+    background: #d0e1ec;
     border-radius: 4px;
   }
 </style>
@@ -504,8 +507,9 @@ function random(seed) {
 function parsePrompt(prompt) {
   const p = prompt.toLowerCase();
 
+  /* Darker Tile Box Gradients for Better Contrast */
   let config = {
-    bgGrad: ['#a2cce3', '#79a1b8'], 
+    bgGrad: ['#547e96', '#36586c'], 
     primary: '#5a8f35',
     secondary: '#3b6620',
     highlight: '#8cc853',
@@ -514,31 +518,31 @@ function parsePrompt(prompt) {
   };
 
   if (p.includes('flower') || p.includes('bloom') || p.includes('petal') || p.includes('rose') || p.includes('blossom')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ffb3d1'; config.secondary = '#c28b9d'; config.highlight = '#fff5fa';
     config.shape = 'flower'; config.glow = '#ff91c1';
   } else if (p.includes('fire') || p.includes('flame') || p.includes('burn') || p.includes('ember')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ff2a00'; config.secondary = '#ff8800'; config.highlight = '#ffea00';
     config.shape = 'flame'; config.glow = '#ff4400';
   } else if (p.includes('coffee') || p.includes('bean') || p.includes('espresso')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#5c351b'; config.secondary = '#2e180a'; config.highlight = '#d49a63';
     config.shape = 'bean'; config.glow = '#b37746';
   } else if (p.includes('gold') || p.includes('luxe') || p.includes('jewel') || p.includes('nugget')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ffd700'; config.secondary = '#c48a10'; config.highlight = '#fffde6';
     config.shape = 'nugget'; config.glow = '#ffca28';
   } else if (p.includes('leaf') || p.includes('leaves') || p.includes('plant') || p.includes('foliage') || p.includes('green')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#5a8f35'; config.secondary = '#3b6620'; config.highlight = '#8cc853';
     config.shape = 'leaf'; config.glow = '#5a8f35';
   } else if (p.includes('neon') || p.includes('cyber') || p.includes('laser')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ff007f'; config.secondary = '#7900ff'; config.highlight = '#00f0ff';
     config.shape = 'orb'; config.glow = '#00f0ff';
   } else if (p.includes('glacier') || p.includes('ice') || p.includes('frost') || p.includes('crystal')) {
-    config.bgGrad = ['#a2cce3', '#79a1b8'];
+    config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#7cd8f7'; config.secondary = '#1b6b93'; config.highlight = '#ffffff';
     config.shape = 'crystal'; config.glow = '#9be3fb';
   }
@@ -551,7 +555,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
   if (type === 'flower') {
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/32})">
-        <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.15)"/>
+        <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.2)"/>
         <g fill="#c0a8a0">
           <circle cx="0" cy="-9" r="8.5"/>
           <circle cx="8.5" cy="-2.8" r="8.5"/>
@@ -588,7 +592,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
   } else if (type === 'bean') {
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
-        <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.2)"/>
+        <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.3)"/>
         <ellipse cx="0" cy="0" rx="14" ry="10" fill="#3a1b0c"/>
         <ellipse cx="-0.5" cy="-0.5" rx="12.5" ry="8.8" fill="url(#beanGrad-${id})"/>
         <path d="M-12,-1 C-5,5 4,-6 12,0" stroke="#1f0c04" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -695,8 +699,8 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
       <rect width="100" height="100" rx="${radiusVal / 2.4}" fill="url(#bg-${tileIdx})"/>
       
-      <path d="${pathD}" stroke="#51788f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.3"/>
-      <path d="${pathD}" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.8"/>
+      <path d="${pathD}" stroke="#233a47" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.4"/>
+      <path d="${pathD}" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85"/>
 
       <g>
         ${shapesSVG}
@@ -767,7 +771,7 @@ document.getElementById('downloadSvgBtn').addEventListener('click', () => {
   const svgs = tilesWrapper.querySelectorAll('svg');
   if (!svgs.length) return;
 
-  const combinedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tilesWrapper.clientWidth}" height="${tilesWrapper.clientHeight}" style="background:#edf5fa;">` +
+  const combinedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tilesWrapper.clientWidth}" height="${tilesWrapper.clientHeight}" style="background:#d8e6ef;">` +
     Array.from(svgs).map((svg, idx) => {
       const rect = svg.parentElement.getBoundingClientRect();
       const parentRect = tilesWrapper.getBoundingClientRect();
@@ -796,14 +800,13 @@ document.getElementById('downloadPngBtn').addEventListener('click', () => {
   
   const width = tilesWrapper.scrollWidth + 40;
   const height = tilesWrapper.scrollHeight + 40;
-  const scale = 2; // High DPI
+  const scale = 2;
 
   canvas.width = width * scale;
   canvas.height = height * scale;
   ctx.scale(scale, scale);
 
-  // Background
-  ctx.fillStyle = '#edf5fa';
+  ctx.fillStyle = '#d8e6ef';
   ctx.fillRect(0, 0, width, height);
 
   let loadedCount = 0;
