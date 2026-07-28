@@ -1,0 +1,974 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unified Studio Hub - Client Career Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --window-border: #4d6d80;
+    --header-bg: #AECCE4;
+    --tab-inactive: #e0ecf3;
+    --tab-active: #b4dfdb;
+    --card-bg: rgba(244, 249, 252, 0.95);
+    --panel: #ffffff;
+    --text-dark: #4d6770;
+    --text-dim: #81a0aa;
+    --accent-blue: #81a0aa;
+    --accent-hover: #466e82;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: #dbeafe;
+    background-image: 
+      linear-gradient(90deg, rgba(255, 255, 255, 0.6) 50%, transparent 50%),
+      linear-gradient(rgba(255, 255, 255, 0.6) 50%, transparent 50%);
+    background-size: 40px 40px;
+    font-family: 'Fredoka', 'Nunito', sans-serif;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px 16px 50px;
+  }
+
+  .wrap { width: 100%; max-width: 960px; }
+
+  .browser-window {
+    background: var(--card-bg);
+    border: 4px solid var(--window-border);
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(44, 62, 71, 0.3);
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+
+  .title-bar {
+    background: var(--header-bg);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--window-border);
+  }
+
+  .window-dots { display: flex; gap: 6px; }
+
+  .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #ffffff; border: 2px solid var(--window-border);
+  }
+
+  .stats-bar {
+    display: flex; align-items: center; gap: 16px; font-weight: 700; font-size: 13px; color: var(--text-dark);
+  }
+  .stat-badge {
+    background: #ffffff; padding: 4px 10px; border: 2px solid var(--window-border); border-radius: 8px; display: flex; align-items: center; gap: 6px;
+  }
+
+  .tab-nav {
+    display: flex; background: var(--header-bg); padding: 0 16px; gap: 8px;
+    border-bottom: 3px solid var(--window-border);
+  }
+
+  .tab-btn {
+    background: var(--tab-inactive);
+    border: 2px solid var(--window-border); border-bottom: none;
+    border-top-left-radius: 10px; border-top-right-radius: 10px;
+    padding: 8px 16px;
+    font-family: inherit; font-weight: 700; font-size: 13px;
+    color: var(--text-dark); cursor: pointer; transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--card-bg); color: var(--accent-hover);
+    border-bottom: 3px solid var(--card-bg); margin-bottom: -3px;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  header { padding: 20px 24px 10px; text-align: center; }
+
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-blue); font-weight: 700; margin-bottom: 4px;
+  }
+
+  h1 { font-size: clamp(24px, 4vw, 34px); font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+
+  p.sub { color: var(--text-dim); font-size: 14px; line-height: 1.4; max-width: 60ch; margin: 0 auto; }
+
+  .app-body { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 18px; }
+
+  /* Client Interaction Overlay / Screen */
+  .client-overlay {
+    background: var(--panel); border: 3px solid var(--window-border); border-radius: 16px;
+    padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;
+    box-shadow: 0 6px 16px rgba(44, 62, 71, 0.1);
+  }
+
+  .client-avatar {
+    width: 84px; height: 84px; border-radius: 50%; background: var(--header-bg);
+    border: 3px solid var(--window-border); display: flex; align-items: center; justify-content: center;
+    font-size: 38px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+
+  .client-bubble {
+    background: #eef5f9; border: 3px solid var(--window-border); border-radius: 16px;
+    padding: 16px 20px; max-width: 500px; font-size: 15px; font-weight: 600; line-height: 1.5;
+    position: relative; color: var(--text-dark); text-align: left;
+  }
+
+  .client-bubble::after {
+    content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    border-width: 0 10px 10px 10px; border-style: solid; border-color: transparent transparent var(--window-border) transparent;
+  }
+
+  .prompt-box {
+    background: var(--panel); border: 3px solid var(--window-border); border-radius: 16px; padding: 18px;
+  }
+
+  .prompt-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+
+  .input-group { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
+
+  .input-group label {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent-blue); font-weight: 700;
+  }
+
+  input[type=text], select {
+    background: #eef5f9; border: 2px solid var(--window-border); color: var(--text-dark);
+    font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 14px;
+    border-radius: 10px; outline: none; transition: all 0.2s;
+  }
+
+  input[type=text]:focus, select:focus {
+    border-color: var(--accent-blue); background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(91, 137, 158, 0.25);
+  }
+
+  .preset-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .preset-label { font-size: 12px; color: var(--text-dim); font-weight: 700; margin-right: 4px; }
+
+  button {
+    font-family: inherit; font-weight: 700; font-size: 13px;
+    background: var(--tab-inactive); color: var(--text-dark);
+    border: 2px solid var(--window-border); border-radius: 10px;
+    padding: 8px 14px; cursor: pointer; white-space: nowrap; transition: all 0.15s ease;
+  }
+
+  button:hover { background: var(--tab-active); color: var(--text-dark); }
+  button:active { transform: scale(0.96); }
+
+  button.primary {
+    background: var(--accent-blue); color: #ffffff; border-color: var(--window-border);
+    padding: 9px 18px; box-shadow: 0 4px 10px rgba(91, 137, 158, 0.3);
+  }
+
+  button.primary:hover { background: var(--accent-hover); color: #ffffff; }
+
+  button.chip { font-size: 12px; padding: 5px 12px; border-radius: 20px; }
+
+  .grid-stage {
+    background: #d8e6ef; border: 3px solid var(--window-border); border-radius: 16px;
+    padding: 24px 16px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .tiles-wrapper {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    justify-content: center; align-items: center; min-height: 220px;
+  }
+
+  .tile {
+    width: 140px; height: 140px; border-radius: 24px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 18px rgba(44, 62, 71, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer;
+  }
+
+  .tile:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 24px rgba(44, 62, 71, 0.35); }
+
+  .tile svg { width: 100%; height: 100%; display: block; }
+
+  .stage-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px; background: var(--panel);
+    border: 3px solid var(--window-border); border-radius: 12px;
+    flex-wrap: wrap; gap: 10px;
+  }
+
+  .foot-info { font-size: 12px; font-weight: 700; color: var(--accent-blue); }
+
+  .panel { background: var(--panel); border: 3px solid var(--window-border); border-radius: 16px; padding: 16px 20px 8px; }
+
+  .panel-title {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-dim); font-weight: 700; margin-bottom: 12px;
+  }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 24px; }
+
+  .field { margin-bottom: 12px; }
+
+  .field-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 4px; color: var(--text-dark); }
+
+  .field-label span:last-child { color: var(--accent-blue); }
+
+  input[type=range] { width: 100%; accent-color: var(--accent-blue); height: 6px; background: #d0e1ec; border-radius: 4px; }
+
+  /* Inkform Tab overrides */
+  #tab2 .ink-panel { background: var(--panel); border: 3px solid var(--window-border); border-radius: 16px; padding: 16px 20px 12px; margin-bottom: 16px; }
+  #tab2 .panel-title { margin: 0 0 12px; }
+  #tab2 .stage { background: #d8e6ef; border: 3px solid var(--window-border); border-radius: 16px; margin-bottom: 0; position: relative; overflow: hidden; box-shadow: inset 0 2px 6px rgba(0,0,0,0.05); }
+  #tab2 .stage canvas { display: block; width: 100%; height: auto; }
+  #tab2 input[type=color] { width: 38px; height: 38px; padding: 0; border: 2px solid var(--window-border); border-radius: 10px; background: none; cursor: pointer; }
+
+  /* Game Over Overlay */
+  .game-over-screen {
+    display: none; position: absolute; inset: 0; background: rgba(77, 103, 112, 0.9);
+    z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: #ffffff; text-align: center; padding: 24px;
+  }
+  .game-over-screen h2 { font-size: 32px; font-weight: 900; }
+  .game-over-screen p { font-size: 16px; opacity: 0.9; max-width: 400px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="browser-window" style="position:relative;">
+    
+    <div class="title-bar">
+      <div class="window-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-badge">🪙 <span id="coinCount">0</span> Coins</div>
+        <div class="stat-badge">❤️ <span id="lifeCount">1</span> Life</div>
+      </div>
+      <div style="width: 24px;"></div>
+    </div>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('tab1', event)">Vector Studio</button>
+      <button class="tab-btn" onclick="switchTab('tab2', event)">Inkform Foundry</button>
+    </div>
+
+    <div id="clientOverlayContainer" style="padding: 24px;">
+      <div class="client-overlay">
+        <div class="client-avatar" id="clientAvatar">🎨</div>
+        <div class="client-bubble" id="clientDialogue">Waiting for client...</div>
+        <button id="acceptClientBtn" class="primary" style="font-size: 15px; padding: 10px 24px;">Accept Job & Open Studio!</button>
+      </div>
+    </div>
+
+    <div id="workspaceContainer" style="display: none;">
+      
+      <div id="tab1" class="tab-content active">
+        <header>
+          <p class="eyebrow" id="v-missionTitle">Client Brief Active</p>
+          <h1 id="v-missionHeader">Fulfill Client Request</h1>
+          <p class="sub" id="v-missionSub">Follow the client's specifications precisely to earn coins and continue.</p>
+        </header>
+
+        <div class="app-body">
+          <div class="prompt-box">
+            <div class="prompt-row">
+              <div class="input-group" style="flex: 1.3;">
+                <label>1. Visual Prompt / Material</label>
+                <input type="text" id="promptInput" value="Dark green leaf vector" placeholder="e.g. Flowers, Fire flames, Coffee beans...">
+              </div>
+              <div class="input-group" style="flex: 1;">
+                <label>2. Text / Symbols</label>
+                <input type="text" id="textInput" value="LEAF" spellcheck="false">
+              </div>
+            </div>
+
+            <div class="preset-row">
+              <span class="preset-label">Presets:</span>
+              <button class="chip" data-prompt="Dark green leaf vector" data-text="LEAF">Leaf</button>
+              <button class="chip" data-prompt="Cute pink blossom flowers" data-text="FLOWER">Flower</button>
+              <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE!">Fire</button>
+              <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE">Coffee</button>
+              <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD">Gold</button>
+              <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON">Neon</button>
+              <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="GLACIER">Glacier</button>
+            </div>
+          </div>
+
+          <div class="grid-stage">
+            <div class="tiles-wrapper" id="tilesWrapper"></div>
+          </div>
+
+          <div class="stage-foot">
+            <div class="foot-info" id="footInfo">Vector Engine Ready</div>
+            <div style="display: flex; gap: 8px;">
+              <button id="submitVectorBtn" class="primary">✦ Submit Work to Client</button>
+              <button id="downloadSvgBtn">Export SVG</button>
+              <button id="downloadPngBtn">Export PNG</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <p class="panel-title">Vector Geometry, Layout & Lighting Controls</p>
+            <div class="grid">
+              <div class="field"><div class="field-label"><span>Tile Box Size</span><span id="v-tileSize">140px</span></div><input type="range" id="tileSize" min="80" max="220" value="140"></div>
+              <div class="field"><div class="field-label"><span>Box Spacing (Gap)</span><span id="v-tileGap">16px</span></div><input type="range" id="tileGap" min="0" max="40" value="16"></div>
+              <div class="field"><div class="field-label"><span>Scatter Density</span><span id="v-density">55%</span></div><input type="range" id="density" min="20" max="90" value="55"></div>
+              <div class="field"><div class="field-label"><span>Vector Pattern Scale</span><span id="v-scale">1.0×</span></div><input type="range" id="scale" min="60" max="150" value="100"></div>
+              <div class="field"><div class="field-label"><span>Tile Corner Radius</span><span id="v-radius">24px</span></div><input type="range" id="radius" min="8" max="40" value="24"></div>
+              <div class="field"><div class="field-label"><span>Path Alignment Strictness</span><span id="v-bevel">85%</span></div><input type="range" id="bevel" min="0" max="100" value="85"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab2" class="tab-content">
+        <div class="app-body">
+          <header style="padding: 0 0 10px;">
+            <p class="eyebrow" id="i-missionTitle">Inkform Studio Brief</p>
+            <h1 id="i-missionHeader">Procedural Type Generator</h1>
+            <p class="sub" id="i-missionSub">Surprise the client by generating their custom name in the Inkform studio.</p>
+          </header>
+
+          <div class="ink-panel">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px; flex-wrap:wrap;">
+              <span style="font-size:14px; color:var(--text-dark); font-weight:700;" id="dnaLabel">✦ Modernist Sans</span>
+              <span style="font-size:12px; color:var(--text-dim);" id="dnaDetail">id: 001 | uniform strokes · medium x-height</span>
+              <button id="generateBtn" class="primary" style="margin-left:auto;">✦ Generate New Font</button>
+            </div>
+          </div>
+
+          <div class="ink-panel">
+            <p class="panel-title">Material Physics & Medium Texture</p>
+            <div class="grid">
+              <div class="field">
+                <div class="field-label"><span>Medium Material</span></div>
+                <select id="materialType" style="width:100%; padding:8px 12px; outline:none;">
+                  <option value="watercolor">Watercolor Bleed & Splash Drops</option>
+                  <option value="paint">Thick Acrylic Paint (Bristle Impasto)</option>
+                  <option value="spray">Spray Paint Splatter & Drips</option>
+                  <option value="charcoal">Charcoal / Textured Graphite Pencil</option>
+                  <option value="ink">Classic Fountain Ink</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Material Opacity / Wetness</span><span id="v-opacity">100%</span></div>
+                <input type="range" id="opacity" min="20" max="100" value="100">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:2px;">
+            <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="width:100%; padding:12px 14px;">
+          </div>
+
+          <div class="stage">
+            <canvas id="inkCanvas" width="900" height="350"></canvas>
+            <div class="stage-foot">
+              <div class="foot-info" id="footInfoInk">procedural font engine active</div>
+              <div style="display:flex; gap:8px;">
+                <button id="submitInkBtn" class="primary">✦ Submit Work to Client</button>
+                <button id="downloadBtn">Download PNG</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ink-panel" style="margin-top: 16px;">
+            <p class="panel-title">Shape & Physics Controls</p>
+            <div class="grid">
+              <div class="field"><div class="field-label"><span>Nib Width</span><span id="v-width">8</span></div><input type="range" id="width" min="1" max="32" value="8"></div>
+              <div class="field"><div class="field-label"><span>Nib Angle</span><span id="v-angle">45°</span></div><input type="range" id="angle" min="0" max="180" value="45"></div>
+              <div class="field"><div class="field-label"><span>Aspect Ratio (Width)</span><span id="v-aspect">1.0×</span></div><input type="range" id="aspect" min="50" max="220" value="100"></div>
+              <div class="field"><div class="field-label"><span>X-Height</span><span id="v-xheight">1.0×</span></div><input type="range" id="xheight" min="50" max="150" value="100"></div>
+              <div class="field"><div class="field-label"><span>Slant Angle</span><span id="v-slant">0°</span></div><input type="range" id="slant" min="-20" max="30" value="0"></div>
+              <div class="field"><div class="field-label"><span>Letter Spacing</span><span id="v-spacing">1.0×</span></div><input type="range" id="spacing" min="60" max="220" value="100"></div>
+              <div class="field"><div class="field-label"><span>Hand Wobble</span><span id="v-jitter">0</span></div><input type="range" id="jitter" min="0" max="12" value="0"></div>
+              <div class="field"><div class="field-label"><span>Ink Bleed / Wetness</span><span id="v-bleed">20%</span></div><input type="range" id="bleed" min="0" max="100" value="20"></div>
+            </div>
+
+            <div style="display:flex; gap:18px; align-items:center; margin:8px 0 12px; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Ink / Paint Color</label><input type="color" id="inkColor" value="#4d6770"></div>
+              <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:var(--text-dark); font-weight:700;">Paper Color</label><input type="color" id="paperColor" value="#ffffff"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div id="gameOverScreen" class="game-over-screen">
+      <h2>💥 Job Failed!</h2>
+      <p id="gameOverReason">You didn't follow the client's instructions correctly, and you ran out of lives!</p>
+      <button id="restartGameBtn" class="primary" style="font-size: 16px; padding: 12px 28px;">Play Again / Restart</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Game State Manager
+let gameState = {
+  coins: 0,
+  lives: 1,
+  currentClient: null,
+  activeTabTarget: 'tab1' // 'tab1' for Vector, 'tab2' for Inkform
+};
+
+const NAMES_POOL = ['Luna', 'Jax', 'Milo', 'Kiki', 'Orion', 'Zoe', 'Felix', 'Nova', 'Jasper', 'Chloe', 'Leo', 'Maya'];
+const AVATARS_POOL = ['🦊', '🐼', '🦄', '🦁', '🐸', '🐨', '🐱', '🐰', '🐯', '🐵'];
+
+function generateNewClient() {
+  const name = NAMES_POOL[Math.floor(Math.random() * NAMES_POOL.length)];
+  const avatar = AVATARS_POOL[Math.floor(Math.random() * AVATARS_POOL.length)];
+  const type = Math.random() > 0.5 ? 'vector' : 'inkform';
+  
+  let clientObj = { name, avatar, type };
+
+  if (type === 'vector') {
+    const flowerNames = ['FLOWER', 'BLOSSOM', 'ROSE'];
+    clientObj.targetText = name.toUpperCase();
+    clientObj.targetPrompt = 'Cute pink blossom flowers';
+    clientObj.studioTab = 'tab1';
+    clientObj.dialogue = `Hi! My name is ${name}. Can you write my name in a vector art style with flowers?`;
+  } else {
+    clientObj.targetText = name.toLowerCase();
+    clientObj.studioTab = 'tab2';
+    clientObj.dialogue = `Hi! My name is ${name}. Can you surprise me and write my name in the Inkform studio?`;
+  }
+
+  return clientObj;
+}
+
+function showNextClientPrompt() {
+  gameState.currentClient = generateNewClient();
+  document.getElementById('clientAvatar').textContent = gameState.currentClient.avatar;
+  document.getElementById('clientDialogue').textContent = gameState.currentClient.dialogue;
+  
+  document.getElementById('clientOverlayContainer').style.display = 'block';
+  document.getElementById('workspaceContainer').style.display = 'none';
+}
+
+document.getElementById('acceptClientBtn').addEventListener('click', () => {
+  const client = gameState.currentClient;
+  document.getElementById('clientOverlayContainer').style.display = 'none';
+  document.getElementById('workspaceContainer').style.display = 'block';
+
+  // Switch to correct tab requested by client
+  const targetBtn = document.querySelector(`.tab-btn[onclick*="${client.studioTab}"]`);
+  switchTab(client.studioTab, { currentTarget: targetBtn });
+
+  if (client.type === 'vector') {
+    document.getElementById('promptInput').value = client.targetPrompt;
+    document.getElementById('textInput').value = client.targetText;
+    renderVec();
+  } else {
+    document.getElementById('inkTextInput').value = client.targetText;
+    renderInk();
+  }
+});
+
+function switchTab(tabId, evt) {
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+}
+
+// Submission validation logic
+function handleSubmission() {
+  const client = gameState.currentClient;
+  let isCorrect = false;
+
+  if (client.type === 'vector') {
+    const currentText = document.getElementById('textInput').value.trim().toUpperCase();
+    const currentPrompt = document.getElementById('promptInput').value.toLowerCase();
+    if (currentText === client.targetText && currentPrompt.includes('flower')) {
+      isCorrect = true;
+    }
+  } else {
+    const currentInkText = document.getElementById('inkTextInput').value.trim().toLowerCase();
+    const activeTab = document.getElementById('tab2').classList.contains('active');
+    if (activeTab && currentInkText === client.targetText) {
+      isCorrect = true;
+    }
+  }
+
+  if (isCorrect) {
+    gameState.coins += 100;
+    document.getElementById('coinCount').textContent = gameState.coins;
+    alert(`🎉 Success! ${client.name} loved the work and tipped you 100 coins!`);
+    showNextClientPrompt();
+  } else {
+    gameState.lives -= 1;
+    document.getElementById('lifeCount').textContent = gameState.lives;
+    if (gameState.lives <= 0) {
+      document.getElementById('gameOverReason').textContent = `Oh no! ${client.name} asked for "${client.targetText}" with specific settings, but your submission didn't match!`;
+      document.getElementById('gameOverScreen').style.display = 'flex';
+    } else {
+      alert(`⚠️ Incorrect! That wasn't what ${client.name} asked for! Check your lives.`);
+    }
+  }
+}
+
+document.getElementById('submitVectorBtn').addEventListener('click', handleSubmission);
+document.getElementById('submitInkBtn').addEventListener('click', handleSubmission);
+
+document.getElementById('restartGameBtn').addEventListener('click', () => {
+  gameState.coins = 0;
+  gameState.lives = 1;
+  document.getElementById('coinCount').textContent = gameState.coins;
+  document.getElementById('lifeCount').textContent = gameState.lives;
+  document.getElementById('gameOverScreen').style.display = 'none';
+  showNextClientPrompt();
+});
+</script>
+
+<script>
+(function(){
+const tilesWrapper = document.getElementById('tilesWrapper');
+
+const characterPaths = {
+  'A': 'M25,85 L50,20 L75,85 M35,62 L65,62',
+  'B': 'M28,20 L28,85 M28,20 L58,20 C72,20 72,50 58,50 L28,50 M28,50 L62,50 C78,50 78,85 62,85 L28,85',
+  'C': 'M75,32 C65,18 32,18 32,52.5 C32,87 65,87 75,73',
+  'D': 'M28,20 L28,85 M28,20 L52,20 C78,20 78,85 52,85 L28,85',
+  'E': 'M75,20 L28,20 L28,85 L75,85 M28,52.5 L65,52.5',
+  'F': 'M75,20 L28,20 L28,85 M28,52.5 L65,52.5',
+  'G': 'M75,32 C65,18 32,18 32,52.5 C32,87 65,87 75,73 L75,52.5 L55,52.5',
+  'H': 'M28,20 L28,85 M72,20 L72,85 M28,52.5 L72,52.5',
+  'I': 'M50,20 L50,85 M32,20 L68,20 M32,85 L68,85',
+  'J': 'M68,20 L68,65 C68,85 45,88 32,75',
+  'K': 'M28,20 L28,85 M70,20 L28,52.5 L72,85',
+  'L': 'M28,20 L28,85 L75,85',
+  'M': 'M25,85 L25,20 L50,58 L75,20 L75,85',
+  'N': 'M28,85 L28,20 L72,85 L72,20',
+  'O': 'M50,20 C28,20 28,85 50,85 C72,85 72,20 50,20 Z',
+  'P': 'M28,20 L28,85 M28,20 L58,20 C74,20 74,52.5 58,52.5 L28,52.5',
+  'Q': 'M50,20 C28,20 28,80 50,80 C72,80 72,20 50,20 Z M58,62 L78,85',
+  'R': 'M28,20 L28,85 M28,20 L58,20 C74,20 74,50 58,50 L28,50 M52,50 L75,85',
+  'S': 'M72,32 C65,18 32,20 35,42 C38,62 72,55 70,75 C68,90 32,88 25,72',
+  'T': 'M25,20 L75,20 M50,20 L50,85',
+  'U': 'M28,20 L28,62 C28,85 72,85 72,62 L72,20',
+  'V': 'M25,20 L50,85 L75,20',
+  'W': 'M22,20 L35,85 L50,45 L65,85 L78,20',
+  'X': 'M25,20 L75,85 M75,20 L25,85',
+  'Y': 'M25,20 L50,52.5 L75,20 M50,52.5 L50,85',
+  'Z': 'M25,20 L75,20 L25,85 L75,85',
+  '0': 'M50,20 C28,20 28,85 50,85 C72,85 72,20 50,20 Z M32,75 L68,30',
+  '1': 'M35,32 L50,20 L50,85 M35,85 L65,85',
+  '2': 'M28,32 C28,18 72,18 72,38 C72,58 28,85 28,85 L75,85',
+  '3': 'M28,20 L72,20 L48,48 C68,48 75,60 75,70 C75,85 50,88 28,80',
+  '4': 'M60,85 L60,20 L25,60 L75,60',
+  '5': 'M70,20 L30,20 L28,45 C35,40 50,40 68,48 C78,58 74,85 50,85 C32,85 28,75 25,68',
+  '6': 'M68,28 C58,18 35,22 30,50 C38,42 60,42 70,52 C78,65 74,85 50,85 C30,85 25,65 30,50',
+  '7': 'M25,20 L75,20 L45,85',
+  '8': 'M50,20 C32,20 32,48 50,50 C70,52 72,85 50,85 C28,85 30,52 50,50 C68,48 68,20 50,20 Z',
+  '9': 'M70,50 C62,58 40,58 30,48 C22,35 26,15 50,15 C70,15 75,35 70,50 C65,78 42,82 32,85',
+  '.': 'M50,78 L50,84',
+  ',': 'M52,75 C52,85 45,90 40,92',
+  '/': 'M70,18 L30,88',
+  '\\': 'M30,18 L70,88',
+  ':': 'M50,32 L50,38 M50,68 L50,74',
+  ';': 'M50,32 L50,38 M52,68 C52,78 45,83 40,85',
+  '"': 'M40,20 L40,38 M60,20 L60,38',
+  "'": 'M50,20 L50,38',
+  '[': 'M65,18 L35,18 L35,88 L65,88',
+  ']': 'M35,18 L65,18 L65,88 L35,88',
+  '(': 'M65,18 C40,35 40,70 65,88',
+  ')': 'M35,18 C60,35 60,70 35,88',
+  '{': 'M65,18 C45,18 45,45 35,53 C45,61 45,88 65,88',
+  '}': 'M35,18 C55,18 55,45 65,53 C55,61 55,88 35,88',
+  '*': 'M50,30 L50,70 M30,40 L70,60 M30,60 L70,40',
+  '&': 'M70,82 C55,88 45,70 58,58 C68,48 40,15 32,32 C25,48 70,85 70,85',
+  '%': 'M28,25 A5,5 0 1,1 28,25.1 M72,80 A5,5 0 1,1 72,80.1 M75,20 L25,85',
+  '$': 'M50,12 L50,90 M72,32 C65,18 32,20 35,42 C38,62 72,55 70,75 C68,90 32,88 25,72',
+  '#': 'M38,18 L28,88 M72,18 L62,88 M20,38 L85,38 M15,68 L80,68',
+  '@': 'M65,72 C55,82 30,80 25,52 C20,25 50,18 72,32 C82,45 82,75 62,75 C52,75 50,62 50,52 C50,35 68,35 68,52',
+  '!': 'M50,18 L50,62 M50,78 L50,84',
+  '?': 'M30,32 C30,15 70,15 70,35 C70,52 50,50 50,65 M50,78 L50,84',
+  '-': 'M25,52 L75,52',
+  '+': 'M50,25 L50,75 M25,50 L75,50',
+  '=': 'M25,38 L75,38 M25,64 L75,64',
+  '<': 'M70,22 L30,52 L70,82',
+  '>': 'M30,22 L70,52 L30,82',
+  '~': 'M22,50 Q38,32 50,50 T78,50',
+  '^': 'M25,58 L50,28 L75,58',
+  '_': 'M15,88 L85,88'
+};
+
+function stringHash(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) { hash = (hash << 5) - hash + str.charCodeAt(i); hash |= 0; }
+  return Math.abs(hash);
+}
+
+function random(seed) {
+  let x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
+function parsePrompt(prompt) {
+  const p = prompt.toLowerCase();
+  let config = {
+    bgGrad: ['#547e96', '#36586c'], primary: '#5a8f35', secondary: '#3b6620',
+    highlight: '#8cc853', shape: 'leaf', glow: '#5a8f35'
+  };
+  if (p.includes('flower') || p.includes('bloom') || p.includes('petal') || p.includes('rose') || p.includes('blossom')) {
+    config.primary = '#ffb3d1'; config.secondary = '#c28b9d'; config.highlight = '#fff5fa'; config.shape = 'flower'; config.glow = '#ff91c1';
+  } else if (p.includes('fire') || p.includes('flame') || p.includes('burn') || p.includes('ember')) {
+    config.primary = '#ff2a00'; config.secondary = '#ff8800'; config.highlight = '#ffea00'; config.shape = 'flame'; config.glow = '#ff4400';
+  } else if (p.includes('coffee') || p.includes('bean') || p.includes('espresso')) {
+    config.primary = '#5c351b'; config.secondary = '#2e180a'; config.highlight = '#d49a63'; config.shape = 'bean'; config.glow = '#b37746';
+  } else if (p.includes('gold') || p.includes('luxe') || p.includes('jewel') || p.includes('nugget')) {
+    config.primary = '#ffd700'; config.secondary = '#c48a10'; config.highlight = '#fffde6'; config.shape = 'nugget'; config.glow = '#ffca28';
+  } else if (p.includes('leaf') || p.includes('leaves') || p.includes('plant') || p.includes('foliage') || p.includes('green')) {
+    config.primary = '#5a8f35'; config.secondary = '#3b6620'; config.highlight = '#8cc853'; config.shape = 'leaf'; config.glow = '#5a8f35';
+  } else if (p.includes('neon') || p.includes('cyber') || p.includes('laser')) {
+    config.primary = '#ff007f'; config.secondary = '#7900ff'; config.highlight = '#00f0ff'; config.shape = 'orb'; config.glow = '#00f0ff';
+  } else if (p.includes('glacier') || p.includes('ice') || p.includes('frost') || p.includes('crystal')) {
+    config.primary = '#7cd8f7'; config.secondary = '#1b6b93'; config.highlight = '#ffffff'; config.shape = 'crystal'; config.glow = '#9be3fb';
+  }
+  return config;
+}
+
+function renderVectorShape(type, x, y, size, angle, config, id) {
+  if (type === 'flower') {
+    return `<g transform="translate(${x},${y}) rotate(${angle}) scale(${size/32})">
+      <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.2)"/>
+      <g fill="#c0a8a0"><circle cx="0" cy="-9" r="8.5"/><circle cx="8.5" cy="-2.8" r="8.5"/><circle cx="5.3" cy="7.3" r="8.5"/><circle cx="-5.3" cy="7.3" r="8.5"/><circle cx="-8.5" cy="-2.8" r="8.5"/></g>
+      <g fill="#ffc2d9"><circle cx="0" cy="-9" r="7"/><circle cx="8.5" cy="-2.8" r="7"/><circle cx="5.3" cy="7.3" r="7"/><circle cx="-5.3" cy="7.3" r="7"/><circle cx="-8.5" cy="-2.8" r="7"/></g>
+      <circle cx="0" cy="0" r="5.5" fill="#c0a8a0"/><circle cx="0" cy="0" r="4.2" fill="#fffdf2"/>
+    </g>`;
+  } else if (type === 'flame') {
+    return `<g transform="translate(${x},${y}) rotate(${angle}) scale(${size/30})">
+      <path d="M-1,-24 C-8,-16 -16,-6 -14,8 C-12,20 -1,24 0,24 C2,24 14,20 16,8 C18,-4 8,-12 4,-18 C1,-23 5,-28 -1,-24 Z" fill="#e62200"/>
+      <path d="M0,-16 C-5,-10 -11,-2 -9,7 C-7,15 0,18 0,18 C0,18 9,15 10,7 C12,-1 5,-8 3,-12 C1,-16 3,-19 0,-16 Z" fill="#ff7700"/>
+    </g>`;
+  } else if (type === 'bean') {
+    return `<g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
+      <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.3)"/>
+      <ellipse cx="0" cy="0" rx="14" ry="10" fill="#3a1b0c"/>
+    </g>`;
+  } else if (type === 'nugget') {
+    return `<g transform="translate(${x},${y}) rotate(${angle}) scale(${size/26})">
+      <polygon points="0,-14 11,-5 7,11 -7,11 -11,-5" fill="#8f5d0a"/>
+      <polygon points="0,-12 9,-4 0,-1 -9,-4" fill="#fff9d6"/>
+    </g>`;
+  } else if (type === 'leaf') {
+    return `<g transform="translate(${x},${y}) rotate(${angle}) scale(${size/32})">
+      <path d="M-22,20 C-30,2 -16,-18 20,-24 C28,0 16,22 -10,25 C-16,26 -20,24 -22,20 Z" fill="#5a8f35"/>
+    </g>`;
+  } else {
+    return `<g transform="translate(${x},${y}) rotate(${angle}) scale(${size/24})">
+      <polygon points="0,-12 10,-4 6,10 -6,10 -10,-4" fill="${config.primary}"/>
+    </g>`;
+  }
+}
+
+function getSampledPathPoints(pathD, numSamples) {
+  const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  pathEl.setAttribute('d', pathD);
+  const totalLen = pathEl.getTotalLength() || 1;
+  const points = [];
+  for (let i = 0; i < numSamples; i++) {
+    const distance = (i / (numSamples - 1 || 1)) * totalLen;
+    const pt = pathEl.getPointAtLength(distance);
+    const ptNext = pathEl.getPointAtLength(Math.min(distance + 1, totalLen));
+    const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x) * (180 / Math.PI);
+    points.push({ x: pt.x, y: pt.y, angle: angle });
+  }
+  return points;
+}
+
+function getCharacterPath(char) {
+  const upper = char.toUpperCase();
+  return characterPaths[upper] || 'M50,20 C30,20 30,80 50,80 C70,80 70,20 50,20 Z';
+}
+
+function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, tileIdx) {
+  const pathD = getCharacterPath(char);
+  const hash = stringHash(char + tileIdx);
+  const jitterAmount = (100 - bevelVal) * 0.12;
+  const count = Math.max(8, Math.floor(22 * (density / 50)));
+  const sampledPoints = getSampledPathPoints(pathD, count);
+  let shapesSVG = '';
+
+  sampledPoints.forEach((pt, i) => {
+    const seed = hash + i * 19;
+    const size = (18 + random(seed * 3) * 10) * (scaleVal / 100);
+    const offsetX = (random(seed * 5) - 0.5) * jitterAmount;
+    const offsetY = (random(seed * 7) - 0.5) * jitterAmount;
+    shapesSVG += renderVectorShape(config.shape, pt.x + offsetX, pt.y + offsetY, size, pt.angle, config, `${tileIdx}-${i}`);
+  });
+
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${config.bgGrad[0]}"/>
+        <stop offset="100%" stop-color="${config.bgGrad[1]}"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="${radiusVal / 2.4}" fill="url(#bg-${tileIdx})"/>
+    <path d="${pathD}" stroke="#233a47" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.4"/>
+    <path d="${pathD}" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85"/>
+    <g>${shapesSVG}</g>
+  </svg>`;
+}
+
+function renderVec() {
+  const prompt = document.getElementById('promptInput').value.trim();
+  const text = document.getElementById('textInput').value || 'LEAF';
+  const tileSizeVal = parseInt(document.getElementById('tileSize').value, 10);
+  const tileGapVal = parseInt(document.getElementById('tileGap').value, 10);
+  const density = parseInt(document.getElementById('density').value, 10);
+  const scaleVal = parseInt(document.getElementById('scale').value, 10);
+  const radiusVal = parseInt(document.getElementById('radius').value, 10);
+  const bevelVal = parseInt(document.getElementById('bevel').value, 10);
+
+  document.getElementById('v-tileSize').textContent = `${tileSizeVal}px`;
+  document.getElementById('v-tileGap').textContent = `${tileGapVal}px`;
+  document.getElementById('v-density').textContent = `${density}%`;
+  document.getElementById('v-scale').textContent = `${(scaleVal/100).toFixed(1)}×`;
+  document.getElementById('v-radius').textContent = `${radiusVal}px`;
+  document.getElementById('v-bevel').textContent = `${bevelVal}%`;
+
+  tilesWrapper.style.gap = `${tileGapVal}px`;
+  const config = parsePrompt(prompt);
+  tilesWrapper.innerHTML = '';
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === ' ') continue;
+    const tileDiv = document.createElement('div');
+    tileDiv.className = 'tile';
+    tileDiv.style.width = `${tileSizeVal}px`;
+    tileDiv.style.height = `${tileSizeVal}px`;
+    tileDiv.style.borderRadius = `${radiusVal}px`;
+    tileDiv.innerHTML = createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, i);
+    tilesWrapper.appendChild(tileDiv);
+  }
+}
+
+document.querySelectorAll('#tab1 .preset-row button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('promptInput').value = btn.getAttribute('data-prompt');
+    document.getElementById('textInput').value = btn.getAttribute('data-text');
+    renderVec();
+  });
+});
+
+['promptInput','textInput','tileSize','tileGap','density','scale','radius','bevel'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderVec);
+});
+
+document.getElementById('downloadSvgBtn').addEventListener('click', () => {
+  const svgs = tilesWrapper.querySelectorAll('svg');
+  if (!svgs.length) return;
+  const combinedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tilesWrapper.clientWidth}" height="${tilesWrapper.clientHeight}" style="background:#d8e6ef;">` +
+    Array.from(svgs).map((svg, idx) => {
+      const rect = svg.parentElement.getBoundingClientRect();
+      const parentRect = tilesWrapper.getBoundingClientRect();
+      return `<g transform="translate(${rect.left-parentRect.left},${rect.top-parentRect.top}) scale(${rect.width/100},${rect.height/100})">${svg.innerHTML}</g>`;
+    }).join('') + `</svg>`;
+  const blob = new Blob([combinedSvg], {type: 'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url; link.download = 'gentype-tiles.svg'; link.click();
+});
+
+document.getElementById('downloadPngBtn').addEventListener('click', () => {
+  const svgs = tilesWrapper.querySelectorAll('svg');
+  if (!svgs.length) return;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const width = tilesWrapper.scrollWidth + 40;
+  const height = tilesWrapper.scrollHeight + 40;
+  canvas.width = width * 2; canvas.height = height * 2;
+  ctx.scale(2, 2);
+  ctx.fillStyle = '#d8e6ef'; ctx.fillRect(0, 0, width, height);
+  let loadedCount = 0;
+  svgs.forEach((svg) => {
+    const parent = svg.parentElement;
+    const parentRect = tilesWrapper.getBoundingClientRect();
+    const rect = parent.getBoundingClientRect();
+    const x = rect.left - parentRect.left + 20;
+    const y = rect.top - parentRect.top + 20;
+    const size = rect.width;
+    const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, x, y, size, size);
+      URL.revokeObjectURL(url);
+      if (++loadedCount === svgs.length) {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png'); link.download = 'gentype-tiles.png'; link.click();
+      }
+    };
+    img.src = url;
+  });
+});
+
+renderVec();
+})();
+</script>
+
+<script>
+(function(){
+const canvas = document.getElementById('inkCanvas');
+const ctx = canvas.getContext('2d');
+let fontSeed = Math.floor(Math.random() * 100000);
+
+const ARCHETYPES = [
+  { name: 'Modernist Geometric Sans', style: 'sans', width: 1.0, xh: 1.0, nibWidth: 7, angle: 0, slant: 0 },
+  { name: 'Didone High-Contrast Serif', style: 'serif', width: 0.85, xh: 0.85, nibWidth: 16, angle: 90, slant: 0 },
+  { name: 'Heavy Poster Slab Serif', style: 'slab', width: 1.25, xh: 1.1, nibWidth: 22, angle: 0, slant: 0 }
+];
+
+let currentDNA = ARCHETYPES[0];
+
+function pickRandomDNA() {
+  fontSeed = Math.floor(Math.random() * 100000);
+  const base = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
+  currentDNA = { ...base, id: Math.floor(Math.random() * 899) + 100 };
+  document.getElementById('width').value = currentDNA.nibWidth;
+  document.getElementById('angle').value = currentDNA.angle;
+  document.getElementById('dnaLabel').textContent = `✦ ${currentDNA.name}`;
+}
+
+function hexToRgba(hex, alpha) {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+}
+
+function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, colorHex) {
+  if (points.length < 2) return;
+  const baseAlpha = opacityVal / 100;
+  ctx.save();
+  ctx.beginPath();
+  ctx.lineWidth = nibW;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function arcPoints(cx, cy, rx, ry, startA, endA, steps) {
+  steps = steps || 14;
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const a = startA + (endA - startA) * (i / steps);
+    pts.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]);
+  }
+  return pts;
+}
+
+function getGlyphStrokes(char, w, h, xh) {
+  const baseW = 44 * w; const baseH = 70 * h;
+  const xHeight = baseH * 0.55 * xh; const capTop = 10;
+  const baseline = capTop + baseH; const xTop = baseline - xHeight;
+  const midY = xTop + xHeight / 2; const stem = Math.round(baseW * 0.18);
+  const cx = Math.round(baseW / 2);
+  const c = char.toLowerCase();
+  const strokes = [];
+  const line = (x1, y1, x2, y2) => [[x1, y1], [x2, y2]];
+
+  switch(c) {
+    case 'a': strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, Math.PI*2)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'b': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2)); break;
+    case 'c': strokes.push(arcPoints(cx, midY, baseW*0.35, xHeight*0.42, Math.PI*0.22, Math.PI*1.78)); break;
+    case 'd': strokes.push(line(baseW-stem, capTop, baseW-stem, baseline)); strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5)); break;
+    case 'e': strokes.push(line(stem+2, midY, baseW-stem, midY)); strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, -Math.PI * 1.75, 16)); break;
+    case 'f': strokes.push(line(cx, capTop+10, cx, baseline)); strokes.push(arcPoints(cx+8, capTop+10, 8, 10, Math.PI, Math.PI*1.8)); strokes.push(line(cx-8, xTop+4, cx+10, xTop+4)); break;
+    case 'g': strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.4, 0, Math.PI*2)); strokes.push(line(baseW-stem, midY, baseW-stem, baseline+14)); break;
+    case 'h': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(arcPoints(cx+2, xTop, baseW*0.34, xHeight*0.38, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'i': strokes.push(line(cx, xTop, cx, baseline)); break;
+    case 'j': strokes.push(line(cx+4, xTop, cx+4, baseline+14)); break;
+    case 'k': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(line(stem+4, midY, baseW-stem, xTop+4)); strokes.push(line(stem+4, midY, baseW-stem, baseline)); break;
+    case 'l': strokes.push(line(stem, capTop, stem, baseline)); break;
+    case 'm': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(stem + baseW*0.24, xTop, baseW*0.22, xHeight*0.3, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'n': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(cx+2, xTop, baseW*0.34, xHeight*0.38, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'o': strokes.push(arcPoints(cx, midY, baseW*0.36, xHeight*0.42, 0, Math.PI*2)); break;
+    case 'p': strokes.push(line(stem, xTop, stem, baseline+18)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2)); break;
+    case 'q': strokes.push(line(baseW-stem, xTop, baseW-stem, baseline+18)); strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5)); break;
+    case 'r': strokes.push(line(stem, xTop, stem, baseline)); break;
+    case 's': strokes.push(arcPoints(cx, xTop+8, baseW*0.32, 8, Math.PI*0.5, Math.PI*1.9)); strokes.push(arcPoints(cx, baseline-8, baseW*0.32, 8, Math.PI*2.5, Math.PI*3.9)); break;
+    case 't': strokes.push(line(cx, capTop+4, cx, baseline)); strokes.push(line(cx-8, xTop+4, cx+8, xTop+4)); break;
+    case 'u': strokes.push(line(stem, xTop, stem, baseline-8)); strokes.push(arcPoints(cx, baseline-8, baseW*0.34, 8, Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'v': strokes.push(line(stem, xTop, cx, baseline)); strokes.push(line(cx, baseline, baseW-stem, xTop)); break;
+    case 'w': strokes.push(line(stem, xTop, stem+6, baseline)); strokes.push(line(stem+6, baseline, baseW-stem, xTop)); break;
+    case 'x': strokes.push(line(stem, xTop, baseW-stem, baseline)); strokes.push(line(baseW-stem, xTop, stem, baseline)); break;
+    case 'y': strokes.push(line(stem, xTop, cx, midY)); strokes.push(line(baseW-stem, xTop, cx, midY)); strokes.push(line(cx, midY, cx, baseline+16)); break;
+    case 'z': strokes.push(line(stem, xTop, baseW-stem, xTop)); strokes.push(line(baseW-stem, xTop, stem, baseline)); strokes.push(line(stem, baseline, baseW-stem, baseline)); break;
+    default: strokes.push(line(cx, xTop, cx, baseline)); break;
+  }
+  return { strokes, width: baseW + 16 };
+}
+
+function renderInk() {
+  const text = document.getElementById('inkTextInput').value;
+  const material = document.getElementById('materialType').value;
+  const opacityVal = parseInt(document.getElementById('opacity').value, 10);
+  const nibW = parseInt(document.getElementById('width').value, 10);
+  const slant = parseInt(document.getElementById('slant').value, 10);
+  const spacing = parseInt(document.getElementById('spacing').value, 10) / 100;
+  const jitter = parseInt(document.getElementById('jitter').value, 10);
+  const inkColor = document.getElementById('inkColor').value;
+  const paperColor = document.getElementById('paperColor').value;
+
+  const aspect = parseInt(document.getElementById('aspect').value, 10) / 100;
+  const xh = parseInt(document.getElementById('xheight').value, 10) / 100;
+
+  canvas.width = 900; canvas.height = 350;
+  ctx.fillStyle = paperColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  let cursorX = 38; let cursorY = 115;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === ' ') { cursorX += 22 * spacing; continue; }
+    const glyph = getGlyphStrokes(char, aspect, 1.0, xh);
+    ctx.save();
+    ctx.translate(cursorX, cursorY);
+    if (slant !== 0) ctx.transform(1, 0, Math.tan((slant * Math.PI) / 180), 1, 0, 0);
+    glyph.strokes.forEach(stroke => {
+      drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor);
+    });
+    ctx.restore();
+    cursorX += glyph.width * spacing;
+    if (cursorX > canvas.width - 60) { cursorX = 38; cursorY += 98; }
+  }
+}
+
+document.getElementById('generateBtn').addEventListener('click', () => { pickRandomDNA(); renderInk(); });
+['materialType','opacity','width','angle','aspect','xheight','slant','spacing','jitter','bleed','inkColor','paperColor'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderInk);
+});
+document.getElementById('inkTextInput').addEventListener('input', renderInk);
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = `${currentDNA.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+  link.href = canvas.toDataURL('image/png'); link.click();
+});
+
+pickRandomDNA();
+renderInk();
+showNextClientPrompt();
+})();
+</script>
+</body>
+</html>
