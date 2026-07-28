@@ -109,10 +109,12 @@
   </div>
 
   <div class="panel">
-    <p class="panel-title">Vector Geometry & Lighting Controls</p>
+    <p class="panel-title">Vector Geometry, Layout & Lighting Controls</p>
     <div class="grid">
+      <div class="field"><div class="field-label"><span>Tile Box Size</span><span id="v-tileSize">140px</span></div><input type="range" id="tileSize" min="80" max="220" value="140"></div>
+      <div class="field"><div class="field-label"><span>Box Spacing (Gap)</span><span id="v-tileGap">16px</span></div><input type="range" id="tileGap" min="0" max="40" value="16"></div>
       <div class="field"><div class="field-label"><span>Scatter Density</span><span id="v-density">55%</span></div><input type="range" id="density" min="20" max="90" value="55"></div>
-      <div class="field"><div class="field-label"><span>Vector Scale</span><span id="v-scale">1.0×</span></div><input type="range" id="scale" min="60" max="150" value="100"></div>
+      <div class="field"><div class="field-label"><span>Vector Pattern Scale</span><span id="v-scale">1.0×</span></div><input type="range" id="scale" min="60" max="150" value="100"></div>
       <div class="field"><div class="field-label"><span>Tile Corner Radius</span><span id="v-radius">24px</span></div><input type="range" id="radius" min="8" max="40" value="24"></div>
       <div class="field"><div class="field-label"><span>Path Alignment Strictness</span><span id="v-bevel">85%</span></div><input type="range" id="bevel" min="0" max="100" value="85"></div>
     </div>
@@ -216,10 +218,10 @@ function parsePrompt(prompt) {
   return config;
 }
 
-// Refined Vector Shape Engine based on Reference Visuals
+// Vector Shape Engine
 function renderVectorShape(type, x, y, size, angle, config, id) {
   if (type === 'flower') {
-    // Soft 5-Petal Blossom with Outer Border and Stamen Detail (Reference 🌷-icons for wugem.webp)
+    // Soft 5-Petal Blossom with Outer Border and Stamen Detail
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/32})">
         <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.3)"/>
@@ -247,7 +249,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'flame') {
-    // Layered 2D Flame Shapes (Reference image_77d376.png)
+    // Layered 2D Flame Shapes
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/30})">
         <path d="M-1,-24 C-8,-16 -16,-6 -14,8 C-12,20 -1,24 0,24 C2,24 14,20 16,8 C18,-4 8,-12 4,-18 C1,-23 5,-28 -1,-24 Z" fill="#e62200"/>
@@ -258,7 +260,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'bean') {
-    // Detailed Coffee Bean with Curved Split Crease (Reference sruerx-zzrtqe.jpg & gwxgzw-wtsdgc.jpg)
+    // Coffee Bean (Cleaned up - weird top highlight removed)
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
         <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.5)"/>
@@ -266,7 +268,6 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
         <ellipse cx="-0.5" cy="-0.5" rx="12.5" ry="8.8" fill="url(#beanGrad-${id})"/>
         <path d="M-12,-1 C-5,5 4,-6 12,0" stroke="#1f0c04" stroke-width="3" fill="none" stroke-linecap="round"/>
         <path d="M-11,-1 C-5,4.5 4,-5.5 11,0" stroke="#0a0301" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-        <path d="M-9,-5 Q-2,-8 6,-5" stroke="#e0aa78" stroke-width="1.2" fill="none" opacity="0.45" stroke-linecap="round"/>
       </g>
     `;
   } else if (type === 'nugget') {
@@ -323,7 +324,6 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
   const pathD = alphabetPaths[char.toUpperCase()] || alphabetPaths['O'];
   const hash = stringHash(char + tileIdx);
   
-  // Strictness offset jitter
   const jitterAmount = (100 - bevelVal) * 0.12;
   const count = Math.floor(22 * (density / 50));
   
@@ -334,7 +334,6 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
     const seed = hash + i * 19;
     const size = (16 + random(seed * 3) * 12) * (scaleVal / 100);
     
-    // Controlled jitter perpendicular to stroke
     const offsetX = (random(seed * 5) - 0.5) * jitterAmount;
     const offsetY = (random(seed * 7) - 0.5) * jitterAmount;
 
@@ -386,16 +385,23 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 function render() {
   const prompt = document.getElementById('promptInput').value.trim();
   const text = (document.getElementById('textInput').value || 'BLOOM').toUpperCase();
+  const tileSizeVal = parseInt(document.getElementById('tileSize').value, 10);
+  const tileGapVal = parseInt(document.getElementById('tileGap').value, 10);
   const density = parseInt(document.getElementById('density').value, 10);
   const scaleVal = parseInt(document.getElementById('scale').value, 10);
   const radiusVal = parseInt(document.getElementById('radius').value, 10);
   const bevelVal = parseInt(document.getElementById('bevel').value, 10);
 
-  // Sync labels
+  // Sync control labels
+  document.getElementById('v-tileSize').textContent = `${tileSizeVal}px`;
+  document.getElementById('v-tileGap').textContent = `${tileGapVal}px`;
   document.getElementById('v-density').textContent = `${density}%`;
   document.getElementById('v-scale').textContent = `${(scaleVal/100).toFixed(1)}×`;
   document.getElementById('v-radius').textContent = `${radiusVal}px`;
   document.getElementById('v-bevel').textContent = `${bevelVal}%`;
+
+  // Update layout wrapper gap
+  tilesWrapper.style.gap = `${tileGapVal}px`;
 
   const config = parsePrompt(prompt);
   tilesWrapper.innerHTML = '';
@@ -406,6 +412,8 @@ function render() {
 
     const tileDiv = document.createElement('div');
     tileDiv.className = 'tile';
+    tileDiv.style.width = `${tileSizeVal}px`;
+    tileDiv.style.height = `${tileSizeVal}px`;
     tileDiv.style.borderRadius = `${radiusVal}px`;
     tileDiv.innerHTML = createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, i);
     tilesWrapper.appendChild(tileDiv);
@@ -427,6 +435,8 @@ document.querySelectorAll('.preset-row button').forEach(btn => {
 document.getElementById('generateBtn').addEventListener('click', render);
 document.getElementById('promptInput').addEventListener('input', render);
 document.getElementById('textInput').addEventListener('input', render);
+document.getElementById('tileSize').addEventListener('input', render);
+document.getElementById('tileGap').addEventListener('input', render);
 document.getElementById('density').addEventListener('input', render);
 document.getElementById('scale').addEventListener('input', render);
 document.getElementById('radius').addEventListener('input', render);
