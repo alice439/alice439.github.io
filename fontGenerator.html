@@ -23,6 +23,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
+    /* Light Blue Gingham Pattern Background */
     background-color: #dbeafe;
     background-image: 
       linear-gradient(90deg, rgba(255, 255, 255, 0.6) 50%, transparent 50%),
@@ -165,11 +166,12 @@
     padding: 10px 14px;
     border-radius: 10px;
     outline: none;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.2s ease;
+    transition: all 0.2s;
   }
 
   input[type=text]:focus {
     border-color: var(--accent-blue);
+    background: #ffffff;
     box-shadow: 0 0 0 3px rgba(91, 137, 158, 0.25);
   }
 
@@ -416,6 +418,7 @@ const tilesWrapper = document.getElementById('tilesWrapper');
 
 // Letters, Numbers & Punctuation Vector Paths
 const characterPaths = {
+  // Alphabet
   'A': 'M25,85 L50,20 L75,85 M35,62 L65,62',
   'B': 'M28,20 L28,85 M28,20 L58,20 C72,20 72,50 58,50 L28,50 M28,50 L62,50 C78,50 78,85 62,85 L28,85',
   'C': 'M75,32 C65,18 32,18 32,52.5 C32,87 65,87 75,73',
@@ -442,6 +445,8 @@ const characterPaths = {
   'X': 'M25,20 L75,85 M75,20 L25,85',
   'Y': 'M25,20 L50,52.5 L75,20 M50,52.5 L50,85',
   'Z': 'M25,20 L75,20 L25,85 L75,85',
+
+  // Numbers 0 - 9
   '0': 'M50,20 C28,20 28,85 50,85 C72,85 72,20 50,20 Z M32,75 L68,30',
   '1': 'M35,32 L50,20 L50,85 M35,85 L65,85',
   '2': 'M28,32 C28,18 72,18 72,38 C72,58 28,85 28,85 L75,85',
@@ -452,6 +457,8 @@ const characterPaths = {
   '7': 'M25,20 L75,20 L45,85',
   '8': 'M50,20 C32,20 32,48 50,50 C70,52 72,85 50,85 C28,85 30,52 50,50 C68,48 68,20 50,20 Z',
   '9': 'M70,50 C62,58 40,58 30,48 C22,35 26,15 50,15 C70,15 75,35 70,50 C65,78 42,82 32,85',
+
+  // Punctuation & Symbols
   '.': 'M50,78 L50,84',
   ',': 'M52,75 C52,85 45,90 40,92',
   '/': 'M70,18 L30,88',
@@ -501,59 +508,44 @@ function random(seed) {
 function parsePrompt(prompt) {
   const p = prompt.toLowerCase();
 
+  /* Darker Tile Box Gradients for Better Contrast */
   let config = {
     bgGrad: ['#547e96', '#36586c'], 
     primary: '#5a8f35',
     secondary: '#3b6620',
     highlight: '#8cc853',
     shape: 'leaf',
-    glow: '#5a8f35',
-    inputBg: '#1e3d22',
-    inputTextColor: '#ffffff'
+    glow: '#5a8f35'
   };
 
   if (p.includes('flower') || p.includes('bloom') || p.includes('petal') || p.includes('rose') || p.includes('blossom')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ffb3d1'; config.secondary = '#c28b9d'; config.highlight = '#fff5fa';
     config.shape = 'flower'; config.glow = '#ff91c1';
-    config.inputBg = '#5e2338';
-    config.inputTextColor = '#ffdae9';
   } else if (p.includes('fire') || p.includes('flame') || p.includes('burn') || p.includes('ember')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ff2a00'; config.secondary = '#ff8800'; config.highlight = '#ffea00';
     config.shape = 'flame'; config.glow = '#ff4400';
-    config.inputBg = '#541204';
-    config.inputTextColor = '#ffca9e';
   } else if (p.includes('coffee') || p.includes('bean') || p.includes('espresso')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#5c351b'; config.secondary = '#2e180a'; config.highlight = '#d49a63';
     config.shape = 'bean'; config.glow = '#b37746';
-    config.inputBg = '#331c0e';
-    config.inputTextColor = '#ebd2be';
   } else if (p.includes('gold') || p.includes('luxe') || p.includes('jewel') || p.includes('nugget')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ffd700'; config.secondary = '#c48a10'; config.highlight = '#fffde6';
     config.shape = 'nugget'; config.glow = '#ffca28';
-    config.inputBg = '#4a3b08';
-    config.inputTextColor = '#fff2b3';
   } else if (p.includes('leaf') || p.includes('leaves') || p.includes('plant') || p.includes('foliage') || p.includes('green')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#5a8f35'; config.secondary = '#3b6620'; config.highlight = '#8cc853';
     config.shape = 'leaf'; config.glow = '#5a8f35';
-    config.inputBg = '#1e3d22';
-    config.inputTextColor = '#d2f5cd';
   } else if (p.includes('neon') || p.includes('cyber') || p.includes('laser')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#ff007f'; config.secondary = '#7900ff'; config.highlight = '#00f0ff';
     config.shape = 'orb'; config.glow = '#00f0ff';
-    config.inputBg = '#2d114d';
-    config.inputTextColor = '#00f0ff';
   } else if (p.includes('glacier') || p.includes('ice') || p.includes('frost') || p.includes('crystal')) {
     config.bgGrad = ['#547e96', '#36586c'];
     config.primary = '#7cd8f7'; config.secondary = '#1b6b93'; config.highlight = '#ffffff';
     config.shape = 'crystal'; config.glow = '#9be3fb';
-    config.inputBg = '#13394a';
-    config.inputTextColor = '#d8f4ff';
   }
 
   return config;
@@ -719,10 +711,8 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 }
 
 function render() {
-  const promptInput = document.getElementById('promptInput');
-  const textInput = document.getElementById('textInput');
-  const prompt = promptInput.value.trim();
-  const text = textInput.value || 'LEAF';
+  const prompt = document.getElementById('promptInput').value.trim();
+  const text = document.getElementById('textInput').value || 'LEAF';
   const tileSizeVal = parseInt(document.getElementById('tileSize').value, 10);
   const tileGapVal = parseInt(document.getElementById('tileGap').value, 10);
   const density = parseInt(document.getElementById('density').value, 10);
@@ -740,13 +730,6 @@ function render() {
   tilesWrapper.style.gap = `${tileGapVal}px`;
 
   const config = parsePrompt(prompt);
-
-  // Update input text box background and text colors dynamically
-  promptInput.style.backgroundColor = config.inputBg;
-  promptInput.style.color = config.inputTextColor;
-  textInput.style.backgroundColor = config.inputBg;
-  textInput.style.color = config.inputTextColor;
-
   tilesWrapper.innerHTML = '';
 
   for (let i = 0; i < text.length; i++) {
@@ -761,6 +744,8 @@ function render() {
     tileDiv.innerHTML = createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, i);
     tilesWrapper.appendChild(tileDiv);
   }
+
+//  document.getElementById('footInfo').textContent = `GenType Vector Foundry: "${prompt}" · Active Primitive: ${config.shape.toUpperCase()}`;
 }
 
 // Preset Handlers
