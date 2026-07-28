@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unified Studio Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --window-border: #4d6d80;
@@ -39,7 +39,7 @@
 
   .wrap {
     width: 100%;
-    max-width: 900px;
+    max-width: 960px;
   }
 
   .browser-window {
@@ -356,15 +356,64 @@
     border-radius: 4px;
   }
 
-  /* Dummy second tab styling placeholders */
-  .dummy-content {
-    background: var(--panel);
-    border: 3px solid var(--window-border);
-    border-radius: 16px;
-    padding: 40px;
-    text-align: center;
-    font-weight: 700;
-    color: var(--text-dim);
+  /* Inkform Tab Styles override to match hub integration */
+  #tab2 {
+    font-family: 'Inter', sans-serif;
+  }
+  #tab2 .inkform-wrap {
+    color: #ece7da;
+    background: #100e14;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #2d2735;
+  }
+  #tab2 h1 {
+    font-family: 'Fraunces', serif;
+    color: #ece7da;
+  }
+  #tab2 .ink-panel {
+    background: #1a1720;
+    border: 1px solid #2d2735;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  #tab2 select, #tab2 input[type=color] {
+    background: #1a1720;
+    color: #ece7da;
+    border: 1px solid #2d2735;
+    border-radius: 6px;
+  }
+  #tab2 .stage {
+    background: #efe6d0;
+    border: 1px solid #ddcda2;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  #tab2 .stage canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  #tab2 .stage-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #211d29;
+    border: 1px solid #2d2735;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    margin-top: -1px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  #tab2 .foot-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: #978f7d;
   }
 </style>
 </head>
@@ -384,7 +433,7 @@
 
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('tab1', event)">Vector Studio</button>
-      <button class="tab-btn" onclick="switchTab('tab2', event)">Second Tab App</button>
+      <button class="tab-btn" onclick="switchTab('tab2', event)">Inkform Foundry</button>
     </div>
 
     <div id="tab1" class="tab-content active">
@@ -447,13 +496,74 @@
     </div>
 
     <div id="tab2" class="tab-content">
-      <header>
-        <p class="eyebrow">Alternative Workspace</p>
-        <h1>Second Application Tab</h1>
-      </header>
-      <div class="app-body">
-        <div class="dummy-content">
-          Your other application components, layout, or code goes right inside this container block!
+      <div class="inkform-wrap">
+        <header>
+          <p class="eyebrow" style="color:#c39456;">Inkform / procedural type foundry</p>
+          <h1>Procedural Type Generator</h1>
+          <p class="sub" style="color:#978f7d;">Click "Generate New Font" to create distinct, wildly unique typefaces engineered with realistic material textures, stroke geometry, and pen physics.</p>
+        </header>
+
+        <div class="ink-panel" style="background:#1a1720; border:1px solid #2d2735; border-radius:10px; padding:20px 22px 12px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#c39456; font-weight:500;" id="dnaLabel">✦ Modernist Sans</span>
+            <span style="font-size:12px; color:#978f7d;" id="dnaDetail">id: 001 | uniform strokes · medium x-height</span>
+            <button id="generateBtn" class="primary" style="background:#c39456; border-color:#c39456; color:#1b1509; font-weight:600; padding:8px 14px; border-radius:6px; cursor:pointer;">✦ Generate New Font</button>
+          </div>
+        </div>
+
+        <div class="ink-panel" style="background:#1a1720; border:1px solid #2d2735; border-radius:10px; padding:20px 22px 12px; margin-bottom:16px;">
+          <p class="panel-title" style="font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#978f7d; margin:0 0 14px;">Material Physics & Medium Texture</p>
+          <div class="grid">
+            <div class="field">
+              <div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Medium Material</span></div>
+              <select id="materialType" style="width:100%; padding:8px 12px; outline:none; font-family:'Inter',sans-serif; font-size:13px;">
+                <option value="watercolor">Watercolor Bleed & Splash Drops</option>
+                <option value="paint">Thick Acrylic Paint (Bristle Impasto)</option>
+                <option value="spray">Spray Paint Splatter & Drips</option>
+                <option value="charcoal">Charcoal / Textured Graphite Pencil</option>
+                <option value="ink">Classic Fountain Ink</option>
+              </select>
+            </div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Material Opacity / Wetness</span><span id="v-opacity" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">100%</span></div><input type="range" id="opacity" min="20" max="100" value="100" style="width:100%; accent-color:#c39456; height:4px;"></div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="flex:1; background:#1a1720; border:1px solid #2d2735; color:#ece7da; font-family:'Fraunces', serif; font-size:16px; padding:12px 14px; border-radius:6px; outline:none;">
+          <button id="fullSetBtn" style="background:#1a1720; color:#ece7da; border:1px solid #2d2735;">A–z Set</button>
+          <button id="shuffleBtn" style="background:#1a1720; color:#ece7da; border:1px solid #2d2735;">Reseed Wobble</button>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+          <button class="chip" id="exEn" style="background:#1a1720; color:#ece7da; border:1px solid #2d2735;">Aa Sample</button>
+          <button class="chip" id="exLig" style="background:#1a1720; color:#ece7da; border:1px solid #2d2735;">Ligatures / Text</button>
+          <button class="chip" id="exNum" style="background:#1a1720; color:#ece7da; border:1px solid #2d2735;">0–9 Numbers</button>
+        </div>
+
+        <div class="ink-panel" style="background:#1a1720; border:1px solid #2d2735; border-radius:10px; padding:20px 22px 12px; margin-bottom:16px;">
+          <p class="panel-title" style="font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#978f7d; margin:0 0 14px;">Shape & Physics Controls</p>
+          <div class="grid">
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Nib Width</span><span id="v-width" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">8</span></div><input type="range" id="width" min="1" max="32" value="8" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Nib Angle</span><span id="v-angle" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">45°</span></div><input type="range" id="angle" min="0" max="180" value="45" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Aspect Ratio (Width)</span><span id="v-aspect" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">1.0×</span></div><input type="range" id="aspect" min="50" max="220" value="100" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>X-Height</span><span id="v-xheight" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">1.0×</span></div><input type="range" id="xheight" min="50" max="150" value="100" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Slant Angle</span><span id="v-slant" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">0°</span></div><input type="range" id="slant" min="-20" max="30" value="0" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Letter Spacing</span><span id="v-spacing" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">1.0×</span></div><input type="range" id="spacing" min="60" max="220" value="100" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Hand Wobble</span><span id="v-jitter" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">0</span></div><input type="range" id="jitter" min="0" max="12" value="0" style="width:100%; accent-color:#c39456; height:4px;"></div>
+            <div class="field"><div class="field-label" style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#ece7da;"><span>Ink Bleed / Wetness</span><span id="v-bleed" style="font-family:'IBM Plex Mono',monospace; color:#c39456; font-size:12px;">20%</span></div><input type="range" id="bleed" min="0" max="100" value="20" style="width:100%; accent-color:#c39456; height:4px;"></div>
+          </div>
+
+          <div style="display:flex; gap:18px; align-items:center; margin:8px 0 12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:#978f7d;">Ink / Paint Color</label><input type="color" id="inkColor" value="#1c1613" style="width:32px; height:32px; border-radius:6px; border:1px solid #2d2735; background:none; cursor:pointer; padding:0;"></div>
+            <div style="display:flex; align-items:center; gap:8px;"><label style="font-size:13px; color:#978f7d;">Paper Color</label><input type="color" id="paperColor" value="#efe6d0" style="width:32px; height:32px; border-radius:6px; border:1px solid #2d2735; background:none; cursor:pointer; padding:0;"></div>
+          </div>
+        </div>
+
+        <div class="stage">
+          <canvas id="inkCanvas" width="900" height="350"></canvas>
+          <div class="stage-foot">
+            <div class="foot-info" id="footInfo">procedural font engine active</div>
+            <button id="downloadBtn" style="background:#1a1720; color:#ece7da; border:1px solid #2d2735;">Download PNG</button>
+          </div>
         </div>
       </div>
     </div>
@@ -878,6 +988,513 @@ document.getElementById('downloadPngBtn').addEventListener('click', () => {
 });
 
 render();
+
+})();
+
+// Inkform Foundry Engine for Tab 2
+(function(){
+
+const canvas = document.getElementById('inkCanvas');
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+
+const ARCHETYPES = [
+  { name: 'Modernist Geometric Sans', style: 'sans', width: 1.0, xh: 1.0, nibWidth: 7, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Didone High-Contrast Serif', style: 'serif', width: 0.85, xh: 0.85, nibWidth: 16, angle: 90, slant: 0, contrast: 'extreme', jitter: 0 },
+  { name: 'Heavy Poster Slab Serif', style: 'slab', width: 1.25, xh: 1.1, nibWidth: 22, angle: 0, slant: 0, contrast: 'low', jitter: 0 },
+  { name: 'Gothic Blackletter Display', style: 'blackletter', width: 0.8, xh: 1.15, nibWidth: 18, angle: 45, slant: 0, contrast: 'high', jitter: 1 },
+  { name: 'Ultra-Condensed Technical', style: 'condensed', width: 0.55, xh: 1.2, nibWidth: 5, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Extended Modern Art-Deco', style: 'artdeco', width: 1.6, xh: 0.65, nibWidth: 7, angle: 15, slant: 0, contrast: 'medium', jitter: 0 },
+  { name: 'Organic Bubble Display', style: 'bubble', width: 1.1, xh: 1.1, nibWidth: 26, angle: 0, slant: 0, contrast: 'none', jitter: 2 },
+  { name: 'Expressive Calligraphic Italic', style: 'script', width: 0.95, xh: 0.9, nibWidth: 14, angle: 35, slant: 18, contrast: 'high', jitter: 3 }
+];
+
+let currentDNA = ARCHETYPES[0];
+let fontSeed = Math.floor(Math.random() * 100000);
+
+function pickRandomDNA() {
+  fontSeed = Math.floor(Math.random() * 100000);
+  const base = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
+ 
+  currentDNA = {
+    ...base,
+    id: Math.floor(Math.random() * 899) + 100,
+    width: Math.round((base.width + (Math.random() * 0.35 - 0.17)) * 100) / 100,
+    xh: Math.round((base.xh + (Math.random() * 0.25 - 0.12)) * 100) / 100,
+    slant: Math.random() > 0.6 ? Math.floor(Math.random() * 24 - 6) : base.slant,
+    nibWidth: Math.max(3, Math.min(30, base.nibWidth + Math.floor(Math.random() * 6 - 3)))
+  };
+
+  document.getElementById('width').value = currentDNA.nibWidth;
+  document.getElementById('angle').value = currentDNA.angle;
+  document.getElementById('aspect').value = Math.round(currentDNA.width * 100);
+  document.getElementById('xheight').value = Math.round(currentDNA.xh * 100);
+  document.getElementById('slant').value = currentDNA.slant;
+  document.getElementById('jitter').value = currentDNA.jitter;
+
+  document.getElementById('dnaLabel').textContent = `✦ ${currentDNA.name}`;
+  document.getElementById('dnaDetail').textContent = `id: ${currentDNA.id} | style: ${currentDNA.style} · width: ${currentDNA.width}×`;
+}
+
+function randomNum(seed) {
+  let x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
+function hexToRgba(hex, alpha) {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+}
+
+function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, colorHex) {
+  if (points.length < 2) return;
+
+  const baseAlpha = opacityVal / 100;
+  ctx.save();
+
+  if (material === 'watercolor') {
+    ctx.beginPath();
+    ctx.lineWidth = nibW * 1.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.18);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+
+    for (let layer = 0; layer < 3; layer++) {
+      ctx.beginPath();
+      ctx.lineWidth = nibW * (0.8 + layer * 0.2);
+      ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.25);
+      ctx.moveTo(points[0][0], points[0][1]);
+
+      for (let i = 1; i < points.length; i++) {
+        let px = points[i][0] + (randomNum(fontSeed + i * 5 + layer * 17) - 0.5) * (jitterAmt + 3);
+        let py = points[i][1] + (randomNum(fontSeed + i * 11 + layer * 23) - 0.5) * (jitterAmt + 3);
+        ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.lineWidth = Math.max(1, nibW * 0.25);
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.65);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+
+    for (let i = 0; i < points.length; i++) {
+      if (randomNum(fontSeed + i * 31) > 0.68) {
+        const dropRadius = randomNum(fontSeed + i * 43) * (nibW * 0.45) + 0.8;
+        const offsetX = (randomNum(fontSeed + i * 53) - 0.5) * (nibW * 3.8);
+        const offsetY = (randomNum(fontSeed + i * 61) - 0.5) * (nibW * 3.8);
+        const cx = points[i][0] + offsetX;
+        const cy = points[i][1] + offsetY;
+
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.3 + randomNum(fontSeed + i) * 0.4));
+        ctx.beginPath();
+        ctx.arc(cx, cy, dropRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (material === 'paint') {
+    ctx.beginPath();
+    ctx.lineWidth = nibW;
+    ctx.lineCap = 'square';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+
+    const bristleCount = Math.max(4, Math.floor(nibW * 0.8));
+    for (let b = 0; b < bristleCount; b++) {
+      const offset = (b / bristleCount - 0.5) * (nibW * 0.85);
+      const isHighlight = b % 2 === 0;
+
+      ctx.beginPath();
+      ctx.lineWidth = Math.max(1, nibW / bristleCount);
+      ctx.strokeStyle = isHighlight
+        ? hexToRgba('#ffffff', baseAlpha * 0.22)
+        : hexToRgba('#000000', baseAlpha * 0.28);
+
+      ctx.moveTo(points[0][0] + offset, points[0][1] + offset);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0] + offset, points[i][1] + offset);
+      }
+      ctx.stroke();
+    }
+
+    [points[0], points[points.length - 1]].forEach(pt => {
+      ctx.fillStyle = hexToRgba(colorHex, baseAlpha);
+      ctx.beginPath();
+      ctx.arc(pt[0], pt[1], nibW * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  } else if (material === 'spray') {
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      const steps = Math.max(5, Math.floor(dist * 1.2));
+
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        const cx = p1[0] + (p2[0] - p1[0]) * t;
+        const cy = p1[1] + (p2[1] - p1[1]) * t;
+
+        const totalParticles = Math.floor(nibW * 4.5);
+        for (let p = 0; p < totalParticles; p++) {
+          const angle = randomNum(fontSeed + p * 7 + s * 13) * Math.PI * 2;
+          const rPow = Math.pow(randomNum(fontSeed + p * 17 + s * 3), 2.2);
+          const radius = rPow * (nibW * 1.5);
+          const px = cx + Math.cos(angle) * radius;
+          const py = cy + Math.sin(angle) * radius;
+          const dotSize = randomNum(fontSeed + p) * 1.8 + 0.4;
+
+          ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (1 - radius / (nibW * 1.6)));
+          ctx.fillRect(px, py, dotSize, dotSize);
+        }
+      }
+
+      if (randomNum(fontSeed + i * 97) > 0.88) {
+        const dripX = points[i][0];
+        const dripY = points[i][1];
+        const dripLen = randomNum(fontSeed + i * 41) * 28 + 8;
+       
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * 0.85);
+        ctx.beginPath();
+        ctx.rect(dripX - 1, dripY, 2, dripLen);
+        ctx.arc(dripX, dripY + dripLen, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (material === 'charcoal') {
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      const steps = Math.max(4, Math.floor(dist));
+
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        const cx = p1[0] + (p2[0] - p1[0]) * t;
+        const cy = p1[1] + (p2[1] - p1[1]) * t;
+
+        for (let p = 0; p < nibW * 3; p++) {
+          const rx = (randomNum(fontSeed + p * 5 + s) - 0.5) * nibW;
+          const ry = (randomNum(fontSeed + p * 11 + s) - 0.5) * nibW;
+          if (randomNum(fontSeed + p * 19) > 0.3) {
+            ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.15 + randomNum(fontSeed + p) * 0.45));
+            ctx.fillRect(cx + rx, cy + ry, 1.4, 1.4);
+          }
+        }
+      }
+    }
+  } else {
+    ctx.beginPath();
+    ctx.lineWidth = nibW;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
+
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) {
+      let px = points[i][0];
+      let py = points[i][1];
+      if (jitterAmt > 0) {
+        px += (randomNum(fontSeed + i * 7) - 0.5) * jitterAmt;
+        py += (randomNum(fontSeed + i * 13) - 0.5) * jitterAmt;
+      }
+      ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function arcPoints(cx, cy, rx, ry, startA, endA, steps = 14) {
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const a = startA + (endA - startA) * (i / steps);
+    pts.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]);
+  }
+  return pts;
+}
+
+function getGlyphStrokes(char, w, h, xh) {
+  const baseW = 44 * w;
+  const baseH = 70 * h;
+  const xHeight = baseH * 0.55 * xh;
+  const capTop = 10;
+  const baseline = capTop + baseH;
+  const xTop = baseline - xHeight;
+  const midY = xTop + xHeight / 2;
+  const stem = Math.round(baseW * 0.18);
+  const cx = Math.round(baseW / 2);
+
+  const c = char.toLowerCase();
+  const strokes = [];
+  const line = (x1, y1, x2, y2) => [[x1, y1], [x2, y2]];
+
+  switch(c) {
+    case 'a':
+      strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, Math.PI*2));
+      strokes.push(line(baseW-stem, xTop, baseW-stem, baseline));
+      break;
+    case 'b':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2));
+      break;
+    case 'c':
+      strokes.push(arcPoints(cx, midY, baseW*0.35, xHeight*0.42, Math.PI*0.22, Math.PI*1.78));
+      break;
+    case 'd':
+      strokes.push(line(baseW-stem, capTop, baseW-stem, baseline));
+      strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5));
+      break;
+    case 'e':
+      strokes.push(line(stem+2, midY, baseW-stem, midY));
+      strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, -Math.PI * 1.75, 16));
+      break;
+    case 'f':
+      strokes.push(line(cx, capTop+10, cx, baseline));
+      strokes.push(arcPoints(cx+8, capTop+10, 8, 10, Math.PI, Math.PI*1.8));
+      strokes.push(line(cx-8, xTop+4, cx+10, xTop+4));
+      break;
+    case 'g':
+      strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.4, 0, Math.PI*2));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline+14));
+      strokes.push(arcPoints(cx, baseline+14, baseW*0.34, 8, 0, Math.PI));
+      break;
+    case 'h':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI, 0));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline));
+      break;
+    case 'i':
+      strokes.push(line(cx, xTop, cx, baseline));
+      strokes.push(line(cx, capTop+2, cx, capTop+6));
+      break;
+    case 'j':
+      strokes.push(line(cx+4, xTop, cx+4, baseline+14));
+      strokes.push(arcPoints(cx-2, baseline+14, 6, 6, 0, Math.PI));
+      strokes.push(line(cx+4, capTop+2, cx+4, capTop+6));
+      break;
+    case 'k':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(line(stem+4, midY, baseW-stem, xTop+4));
+      strokes.push(line(stem+4, midY, baseW-stem, baseline));
+      break;
+    case 'l':
+      strokes.push(line(stem, capTop, stem, baseline));
+      strokes.push(line(stem, baseline, stem+10, baseline));
+      break;
+    case 'm':
+      strokes.push(line(stem, xTop, stem, baseline));
+      strokes.push(arcPoints(stem + (baseW*0.24), baseline - xHeight/2, baseW*0.22, xHeight/2, Math.PI, 0));
+      strokes.push(arcPoints(baseW - (baseW*0.24), baseline - xHeight/2, baseW*0.22, xHeight/2, Math.PI, 0));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline));
+      break;
+    case 'n':
+      strokes.push(line(stem, xTop, stem, baseline));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI, 0));
+      strokes.push(line(baseW-stem, midY, baseW-stem, baseline));
+      break;
+    case 'o':
+      strokes.push(arcPoints(cx, midY, baseW*0.36, xHeight*0.42, 0, Math.PI*2));
+      break;
+    case 'p':
+      strokes.push(line(stem, xTop, stem, baseline+18));
+      strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2));
+      break;
+    case 'q':
+      strokes.push(line(baseW-stem, xTop, baseW-stem, baseline+18));
+      strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5));
+      break;
+    case 'r':
+      strokes.push(line(stem, xTop, stem, baseline));
+      strokes.push(arcPoints(cx-2, xTop+8, baseW*0.28, 8, Math.PI*1.2, Math.PI*1.9));
+      break;
+    case 's':
+      strokes.push(arcPoints(cx, xTop+8, baseW*0.32, 8, Math.PI*0.5, Math.PI*1.9));
+      strokes.push(arcPoints(cx, baseline-8, baseW*0.32, 8, Math.PI*2.5, Math.PI*3.9));
+      break;
+    case 't':
+      strokes.push(line(cx, capTop+4, cx, baseline));
+      strokes.push(line(cx-8, xTop+4, cx+8, xTop+4));
+      break;
+    case 'u':
+      strokes.push(line(stem, xTop, stem, baseline-8));
+      strokes.push(arcPoints(cx, baseline-8, baseW*0.34, 8, Math.PI, 0));
+      strokes.push(line(baseW-stem, xTop, baseW-stem, baseline));
+      break;
+    case 'v':
+      strokes.push(line(stem, xTop, cx, baseline));
+      strokes.push(line(cx, baseline, baseW-stem, xTop));
+      break;
+    case 'w':
+      strokes.push(line(stem, xTop, stem+6, baseline));
+      strokes.push(line(stem+6, baseline, cx, midY));
+      strokes.push(line(cx, midY, baseW-stem-6, baseline));
+      strokes.push(line(baseW-stem-6, baseline, baseW-stem, xTop));
+      break;
+    case 'x':
+      strokes.push(line(stem, xTop, baseW-stem, baseline));
+      strokes.push(line(baseW-stem, xTop, stem, baseline));
+      break;
+    case 'y':
+      strokes.push(line(stem, xTop, cx, midY));
+      strokes.push(line(baseW-stem, xTop, cx, midY));
+      strokes.push(line(cx, midY, cx, baseline+16));
+      break;
+    case 'z':
+      strokes.push(line(stem, xTop, baseW-stem, xTop));
+      strokes.push(line(baseW-stem, xTop, stem, baseline));
+      strokes.push(line(stem, baseline, baseW-stem, baseline));
+      break;
+    case '0':
+      strokes.push(arcPoints(cx, (capTop+baseline)/2, baseW*0.34, baseH*0.45, 0, Math.PI*2));
+      break;
+    case '1':
+      strokes.push(line(cx-6, capTop+10, cx, capTop));
+      strokes.push(line(cx, capTop, cx, baseline));
+      strokes.push(line(cx-10, baseline, cx+10, baseline));
+      break;
+    case '2':
+      strokes.push(arcPoints(cx, capTop+12, baseW*0.32, 12, Math.PI, 0));
+      strokes.push(line(baseW-stem, capTop+12, stem, baseline));
+      strokes.push(line(stem, baseline, baseW-stem, baseline));
+      break;
+    case '3':
+      strokes.push(arcPoints(cx, capTop+12, baseW*0.3, 10, Math.PI*1.2, 0));
+      strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8));
+      break;
+    case '4':
+      strokes.push(line(baseW-stem-4, capTop, stem, (capTop+baseline)/2));
+      strokes.push(line(stem, (capTop+baseline)/2, baseW-stem, (capTop+baseline)/2));
+      strokes.push(line(baseW-stem-4, capTop, baseW-stem-4, baseline));
+      break;
+    case '5':
+      strokes.push(line(baseW-stem, capTop, stem+4, capTop));
+      strokes.push(line(stem+4, capTop, stem+2, (capTop+baseline)/2 - 2));
+      strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8));
+      break;
+    case '6':
+      strokes.push(arcPoints(cx, baseline-16, baseW*0.32, 14, 0, Math.PI*2));
+      strokes.push(line(stem+2, baseline-16, cx+4, capTop));
+      break;
+    case '7':
+      strokes.push(line(stem, capTop, baseW-stem, capTop));
+      strokes.push(line(baseW-stem, capTop, stem+4, baseline));
+      break;
+    case '8':
+      strokes.push(arcPoints(cx, capTop+14, baseW*0.28, 11, 0, Math.PI*2));
+      strokes.push(arcPoints(cx, baseline-16, baseW*0.34, 14, 0, Math.PI*2));
+      break;
+    case '9':
+      strokes.push(arcPoints(cx, capTop+16, baseW*0.32, 14, 0, Math.PI*2));
+      strokes.push(line(baseW-stem-2, capTop+16, cx-4, baseline));
+      break;
+    default:
+      strokes.push(line(cx, xTop, cx, baseline));
+      break;
+  }
+
+  return { strokes, width: baseW + 16 };
+}
+
+function renderInkform() {
+  const text = document.getElementById('inkTextInput').value || 'the quick brown fox';
+  const material = document.getElementById('materialType').value;
+  const opacityVal = parseInt(document.getElementById('opacity').value, 10);
+  const nibW = parseInt(document.getElementById('width').value, 10);
+  const aspect = parseInt(document.getElementById('aspect').value, 10) / 100;
+  const xh = parseInt(document.getElementById('xheight').value, 10) / 100;
+  const slant = parseInt(document.getElementById('slant').value, 10);
+  const spacing = parseInt(document.getElementById('spacing').value, 10) / 100;
+  const jitter = parseInt(document.getElementById('jitter').value, 10);
+  const inkColor = document.getElementById('inkColor').value;
+  const paperColor = document.getElementById('paperColor').value;
+
+  document.getElementById('v-opacity').textContent = `${opacityVal}%`;
+  document.getElementById('v-width').textContent = nibW;
+  document.getElementById('v-angle').textContent = `${document.getElementById('angle').value}°`;
+  document.getElementById('v-aspect').textContent = `${document.getElementById('aspect').value}%`;
+  document.getElementById('v-xheight').textContent = `${document.getElementById('xheight').value}%`;
+  document.getElementById('v-slant').textContent = `${slant}°`;
+  document.getElementById('v-spacing').textContent = `${document.getElementById('spacing').value}%`;
+  document.getElementById('v-jitter').textContent = jitter;
+  document.getElementById('v-bleed').textContent = `${document.getElementById('bleed').value}%`;
+
+  ctx.fillStyle = paperColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  let cursorX = 38;
+  let cursorY = 115;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === ' ') {
+      cursorX += 22 * aspect * spacing;
+      continue;
+    }
+
+    const glyph = getGlyphStrokes(char, aspect, 1.0, xh);
+
+    ctx.save();
+    ctx.translate(cursorX, cursorY);
+    if (slant !== 0) ctx.transform(1, 0, Math.tan((slant * Math.PI) / 180), 1, 0, 0);
+
+    glyph.strokes.forEach(stroke => {
+      drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor);
+    });
+
+    ctx.restore();
+    cursorX += glyph.width * spacing;
+
+    if (cursorX > canvas.width - 60) {
+      cursorX = 38;
+      cursorY += 98;
+    }
+  }
+
+  document.getElementById('footInfo').textContent = `${currentDNA.name} · material: ${material} · ${nibW}px nib`;
+}
+
+document.getElementById('generateBtn').addEventListener('click', () => { pickRandomDNA(); renderInkform(); });
+document.getElementById('materialType').addEventListener('change', renderInkform);
+document.getElementById('opacity').addEventListener('input', renderInkform);
+document.getElementById('inkTextInput').addEventListener('input', renderInkform);
+document.getElementById('width').addEventListener('input', renderInkform);
+document.getElementById('angle').addEventListener('input', renderInkform);
+document.getElementById('aspect').addEventListener('input', renderInkform);
+document.getElementById('xheight').addEventListener('input', renderInkform);
+document.getElementById('slant').addEventListener('input', renderInkform);
+document.getElementById('spacing').addEventListener('input', renderInkform);
+document.getElementById('jitter').addEventListener('input', renderInkform);
+document.getElementById('bleed').addEventListener('input', renderInkform);
+document.getElementById('inkColor').addEventListener('input', renderInkform);
+document.getElementById('paperColor').addEventListener('input', renderInkform);
+
+document.getElementById('shuffleBtn').addEventListener('click', () => { fontSeed = Math.floor(Math.random()*90000); renderInkform(); });
+document.getElementById('exEn').addEventListener('click', () => { document.getElementById('inkTextInput').value = 'the quick brown fox'; renderInkform(); });
+document.getElementById('exLig').addEventListener('click', () => { document.getElementById('inkTextInput').value = 'headache offset title'; renderInkform(); });
+document.getElementById('exNum').addEventListener('click', () => { document.getElementById('inkTextInput').value = '0123456789'; renderInkform(); });
+document.getElementById('fullSetBtn').addEventListener('click', () => { document.getElementById('inkTextInput').value = 'abcdefghijklmnopqrstuvwxyz'; renderInkform(); });
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = `${currentDNA.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+pickRandomDNA();
+renderInkform();
 
 })();
 </script>
