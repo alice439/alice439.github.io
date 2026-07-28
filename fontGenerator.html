@@ -76,11 +76,11 @@
     <div class="prompt-row">
       <div class="input-group" style="flex: 1.3;">
         <label>1. Any Visual Prompt / Material</label>
-        <input type="text" id="promptInput" value="Cute pink blossom flowers" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
+        <input type="text" id="promptInput" value="Sparkling liquid gold nuggets" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
       </div>
       <div class="input-group" style="flex: 0.9;">
         <label>2. Your Text</label>
-        <input type="text" id="textInput" value="FLOWERS" maxlength="12" spellcheck="false">
+        <input type="text" id="textInput" value="GOLD" maxlength="12" spellcheck="false">
       </div>
       <div style="display: flex; align-items: flex-end;">
         <button id="generateBtn" class="primary">✦ Render GenType</button>
@@ -127,7 +127,6 @@
 
 const tilesWrapper = document.getElementById('tilesWrapper');
 
-// Full Accurate A-Z Alphabet Vector Paths
 const alphabetPaths = {
   'A': 'M25,85 L50,20 L75,85 M35,62 L65,62',
   'B': 'M28,20 L28,85 M28,20 L58,20 C72,20 72,50 58,50 L28,50 M28,50 L62,50 C78,50 78,85 62,85 L28,85',
@@ -221,7 +220,6 @@ function parsePrompt(prompt) {
 // Vector Shape Engine
 function renderVectorShape(type, x, y, size, angle, config, id) {
   if (type === 'flower') {
-    // Soft 5-Petal Blossom with Outer Border and Stamen Detail
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/32})">
         <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.3)"/>
@@ -249,7 +247,6 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'flame') {
-    // Layered 2D Flame Shapes
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/30})">
         <path d="M-1,-24 C-8,-16 -16,-6 -14,8 C-12,20 -1,24 0,24 C2,24 14,20 16,8 C18,-4 8,-12 4,-18 C1,-23 5,-28 -1,-24 Z" fill="#e62200"/>
@@ -260,7 +257,6 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'bean') {
-    // Coffee Bean
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
         <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.5)"/>
@@ -271,36 +267,30 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'nugget') {
-    // Cute Sparkling 3D Gold Nugget & Jewel
+    // Clean Faceted Gold Gem Cut Geometry (Original Style)
     return `
-      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
-        <ellipse cx="0" cy="14" rx="11" ry="5" fill="rgba(0,0,0,0.4)"/>
-        <path d="M-12,-4 Q-14,-14 0,-16 Q14,-14 12,-4 Q15,10 0,15 Q-15,10 -12,-4 Z" fill="#8f5d0a"/>
-        <path d="M-10,-3 Q-12,-12 0,-14 Q12,-12 10,-3 Q13,8 0,13 Q-13,8 -10,-3 Z" fill="url(#goldGrad-${id})"/>
-        <path d="M0,-14 Q10,-10 8,-2 L0,-4 Z" fill="#fff9d6" opacity="0.6"/>
-        <path d="M-10,-3 Q-2,-10 0,-14 L0,-4 Z" fill="#ffe266" opacity="0.7"/>
-        <path d="M0,-4 L8,-2 Q6,7 0,13 Z" fill="#e69d00" opacity="0.4"/>
-        <circle cx="-3" cy="-7" r="2.2" fill="#ffffff"/>
-        <path d="M11,-11 Q11,-6 16,-6 Q11,-6 11,-1 Q11,-6 6,-6 Q11,-6 11,-11 Z" fill="#ffffff"/>
+      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/26})">
+        <polygon points="0,-14 11,-5 7,11 -7,11 -11,-5" fill="#8f5d0a"/>
+        <polygon points="0,-12 9,-4 0,-1 -9,-4" fill="#fff9d6"/>
+        <polygon points="-9,-4 0,-1 0,9 -7,9" fill="#ffd700"/>
+        <polygon points="0,-1 9,-4 7,9 0,9" fill="#e69d00"/>
+        <polygon points="0,-12 0,-1 -9,-4" fill="#fffae6" opacity="0.9"/>
+        <polygon points="0,-1 7,9 -7,9" fill="#c48a10" opacity="0.5"/>
       </g>
     `;
   } else if (type === 'leaf') {
-    // Cute Detailed Foliage Sprig with Double Leaves & Dewdrop
+    // Clean, Vibrant Dual-Leaf Vector Design
     return `
-      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/30})">
-        <path d="M-2,18 C-2,10 12,2 14,-12 C2,2 -10,6 -2,18 Z" fill="rgba(0,0,0,0.3)"/>
-        <path d="M-1,10 C-8,4 -14,-4 -11,-12 C-4,-8 -1,0 -1,10 Z" fill="#1e5c2b"/>
-        <path d="M-1,10 C-8,4 -14,-4 -11,-12" stroke="#4caf50" stroke-width="1" fill="none" opacity="0.6"/>
-        <path d="M-3,16 C-3,6 12,-2 13,-15 C2,-1 -8,4 -3,16 Z" fill="url(#leafGrad-${id})"/>
-        <path d="M-3,16 C-3,6 12,-2 13,-15 C2,-1 -8,4 -3,16 Z" stroke="#1b4d24" stroke-width="1.2" fill="none"/>
-        <path d="M-3,16 C1,6 7,0 13,-15" stroke="#a5d6a7" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-        <path d="M1,7 Q6,5 8,1" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.7"/>
-        <path d="M-1,12 Q3,10 5,6" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.7"/>
-        <circle cx="3" cy="-1" r="2" fill="#e8f5e9" opacity="0.85"/>
-        <circle cx="2.5" cy="-1.5" r="0.7" fill="#ffffff"/>
+      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
+        <ellipse cx="1" cy="2" rx="10" ry="12" fill="rgba(0,0,0,0.25)"/>
+        <path d="M-2,8 C-10,2 -13,-8 -7,-13 C-1,-8 1,0 -2,8 Z" fill="#1e5c2b"/>
+        <path d="M2,13 C-6,3 -8,-10 3,-15 C10,-7 8,5 2,13 Z" fill="url(#leafGrad-${id})" stroke="#123d1b" stroke-width="1.2"/>
+        <path d="M2,13 Q1,-1 3,-15" stroke="#a5d6a7" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path d="M0,4 Q5,2 7,-2" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.8"/>
+        <path d="M1,-2 Q-3,-4 -5,-7" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.8"/>
       </g>
     `;
-  } else { // Glacier Crystal / Diamond / Orb
+  } else {
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/24})">
         <polygon points="0,-12 10,-4 6,10 -6,10 -10,-4" fill="${config.primary}"/>
@@ -311,7 +301,6 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
   }
 }
 
-// Sample points along SVG path dynamically for precise alignment
 function getSampledPathPoints(pathD, numSamples) {
   const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   pathEl.setAttribute('d', pathD);
@@ -322,7 +311,6 @@ function getSampledPathPoints(pathD, numSamples) {
     const distance = (i / (numSamples - 1 || 1)) * totalLen;
     const pt = pathEl.getPointAtLength(distance);
     
-    // Tangent angle
     const ptNext = pathEl.getPointAtLength(Math.min(distance + 1, totalLen));
     const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x) * (180 / Math.PI);
 
@@ -376,8 +364,8 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
         </linearGradient>
 
         <linearGradient id="leafGrad-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#a5d6a7"/>
-          <stop offset="50%" stop-color="#43a047"/>
+          <stop offset="0%" stop-color="#81c784"/>
+          <stop offset="50%" stop-color="#388e3c"/>
           <stop offset="100%" stop-color="#1b5e20"/>
         </linearGradient>
 
@@ -390,7 +378,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
       <rect width="100" height="100" rx="${radiusVal / 2.4}" fill="url(#bg-${tileIdx})"/>
       
       <path d="${pathD}" stroke="${config.secondary}" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.3"/>
-      <path d="${pathD}" stroke="${config.primary}" stroke-width="6" stroke-linecap="round" stroke-linecap="round" fill="none" opacity="0.8" filter="url(#glow-${tileIdx})"/>
+      <path d="${pathD}" stroke="${config.primary}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.8" filter="url(#glow-${tileIdx})"/>
 
       <g filter="url(#glow-${tileIdx})">
         ${shapesSVG}
@@ -401,7 +389,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
 function render() {
   const prompt = document.getElementById('promptInput').value.trim();
-  const text = (document.getElementById('textInput').value || 'BLOOM').toUpperCase();
+  const text = (document.getElementById('textInput').value || 'GOLD').toUpperCase();
   const tileSizeVal = parseInt(document.getElementById('tileSize').value, 10);
   const tileGapVal = parseInt(document.getElementById('tileGap').value, 10);
   const density = parseInt(document.getElementById('density').value, 10);
@@ -409,7 +397,6 @@ function render() {
   const radiusVal = parseInt(document.getElementById('radius').value, 10);
   const bevelVal = parseInt(document.getElementById('bevel').value, 10);
 
-  // Sync control labels
   document.getElementById('v-tileSize').textContent = `${tileSizeVal}px`;
   document.getElementById('v-tileGap').textContent = `${tileGapVal}px`;
   document.getElementById('v-density').textContent = `${density}%`;
@@ -417,7 +404,6 @@ function render() {
   document.getElementById('v-radius').textContent = `${radiusVal}px`;
   document.getElementById('v-bevel').textContent = `${bevelVal}%`;
 
-  // Update layout wrapper gap
   tilesWrapper.style.gap = `${tileGapVal}px`;
 
   const config = parsePrompt(prompt);
@@ -439,7 +425,6 @@ function render() {
   document.getElementById('footInfo').textContent = `GenType Vector Foundry: "${prompt}" · Active Primitive: ${config.shape.toUpperCase()}`;
 }
 
-// Preset Handlers
 document.querySelectorAll('.preset-row button').forEach(btn => {
   btn.addEventListener('click', (e) => {
     document.getElementById('promptInput').value = e.target.getAttribute('data-prompt');
@@ -448,7 +433,6 @@ document.querySelectorAll('.preset-row button').forEach(btn => {
   });
 });
 
-// Event Listeners
 document.getElementById('generateBtn').addEventListener('click', render);
 document.getElementById('promptInput').addEventListener('input', render);
 document.getElementById('textInput').addEventListener('input', render);
@@ -469,7 +453,6 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   link.click();
 });
 
-// Initial Render
 render();
 
 })();
