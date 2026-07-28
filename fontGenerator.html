@@ -76,11 +76,11 @@
     <div class="prompt-row">
       <div class="input-group" style="flex: 1.3;">
         <label>1. Any Visual Prompt / Material</label>
-        <input type="text" id="promptInput" value="Fire embers & red flames" placeholder="e.g. Fire flames, Coffee beans, Gold nuggets, Neon cyber...">
+        <input type="text" id="promptInput" value="Cute pink blossom flowers" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
       </div>
       <div class="input-group" style="flex: 0.9;">
         <label>2. Your Text</label>
-        <input type="text" id="textInput" value="HIGH QUALITY" maxlength="12" spellcheck="false">
+        <input type="text" id="textInput" value="FLOWERS" maxlength="12" spellcheck="false">
       </div>
       <div style="display: flex; align-items: flex-end;">
         <button id="generateBtn" class="primary">✦ Render GenType</button>
@@ -89,12 +89,13 @@
 
     <div class="preset-row">
       <span class="preset-label">Presets:</span>
+      <button class="chip" data-prompt="Cute pink blossom flowers" data-text="BLOOM">🌸 Flower</button>
       <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE">🔥 Fire</button>
       <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE">☕ Coffee</button>
       <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD">✨ Gold</button>
       <button class="chip" data-prompt="Lush green jungle leaves" data-text="LEAF">🌿 Foliage</button>
       <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON">⚡ Neon</button>
-      <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="ICE">❄️ Ice</button>
+      <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="GLACIER">🧊 Glacier</button>
     </div>
   </div>
 
@@ -124,7 +125,7 @@
 
 const tilesWrapper = document.getElementById('tilesWrapper');
 
-// Full Accurate A-Z Alphabet Vector Paths (Fixed H, Q, etc.)
+// Full Accurate A-Z Alphabet Vector Paths
 const alphabetPaths = {
   'A': 'M25,85 L50,20 L75,85 M35,62 L65,62',
   'B': 'M28,20 L28,85 M28,20 L58,20 C72,20 72,50 58,50 L28,50 M28,50 L62,50 C78,50 78,85 62,85 L28,85',
@@ -182,7 +183,11 @@ function parsePrompt(prompt) {
     glow: `hsl(${hue}, 90%, 60%)`
   };
 
-  if (p.includes('fire') || p.includes('flame') || p.includes('burn') || p.includes('ember')) {
+  if (p.includes('flower') || p.includes('bloom') || p.includes('petal') || p.includes('rose') || p.includes('blossom')) {
+    config.bgGrad = ['#280f1d', '#0c0308'];
+    config.primary = '#ff69b4'; config.secondary = '#c71585'; config.highlight = '#ffedf5';
+    config.shape = 'flower'; config.glow = '#ff1493';
+  } else if (p.includes('fire') || p.includes('flame') || p.includes('burn') || p.includes('ember')) {
     config.bgGrad = ['#2a0d05', '#0d0301'];
     config.primary = '#ff4500'; config.secondary = '#d91400'; config.highlight = '#ffea00';
     config.shape = 'flame'; config.glow = '#ff5500';
@@ -202,7 +207,7 @@ function parsePrompt(prompt) {
     config.bgGrad = ['#1a0826', '#05010a'];
     config.primary = '#ff007f'; config.secondary = '#7900ff'; config.highlight = '#00f0ff';
     config.shape = 'orb'; config.glow = '#00f0ff';
-  } else if (p.includes('ice') || p.includes('frost') || p.includes('crystal')) {
+  } else if (p.includes('glacier') || p.includes('ice') || p.includes('frost') || p.includes('crystal')) {
     config.bgGrad = ['#0f232e', '#03090d'];
     config.primary = '#7cd8f7'; config.secondary = '#1b6b93'; config.highlight = '#ffffff';
     config.shape = 'crystal'; config.glow = '#9be3fb';
@@ -211,19 +216,38 @@ function parsePrompt(prompt) {
   return config;
 }
 
-// Detailed 3D Vector Shapes
+// Cute & Extra Detailed Vector Shapes
 function renderVectorShape(type, x, y, size, angle, config, id) {
-  if (type === 'flame') {
+  if (type === 'flower') {
+    // Cute Blossom Flower with 5 Petals & Center Stamen
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
-        <path d="M0,16 C-12,5 -14,-12 0,-28 C6,-14 16,-6 14,12 C12,20 4,22 0,16 Z" fill="${config.secondary}"/>
-        <path d="M0,12 C-7,3 -9,-7 0,-20 C3,-9 11,-4 9,9 C7,15 2,17 0,12 Z" fill="${config.primary}"/>
-        <path d="M0,8 C-4,2 -5,-3 0,-12 C2,-5 6,-2 5,6 C4,10 1,11 0,8 Z" fill="${config.highlight}"/>
-        <circle cx="2" cy="-16" r="2.5" fill="${config.highlight}" opacity="0.9"/>
-        <circle cx="-4" cy="-8" r="1.5" fill="${config.primary}" opacity="0.7"/>
+        <circle cx="2" cy="3" r="13" fill="rgba(0,0,0,0.4)"/>
+        <g fill="url(#flowerGrad-${id})">
+          <circle cx="0" cy="-8" r="7"/>
+          <circle cx="7.6" cy="-2.5" r="7"/>
+          <circle cx="4.7" cy="6.5" r="7"/>
+          <circle cx="-4.7" cy="6.5" r="7"/>
+          <circle cx="-7.6" cy="-2.5" r="7"/>
+        </g>
+        <circle cx="0" cy="0" r="4.5" fill="#ffd700"/>
+        <circle cx="-1" cy="-1" r="1.5" fill="#ffffff" opacity="0.8"/>
+      </g>
+    `;
+  } else if (type === 'flame') {
+    // Extra Cute & Detailed Fire Flame
+    return `
+      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
+        <path d="M0,16 C-13,6 -15,-12 0,-28 C7,-14 17,-6 15,12 C13,20 4,22 0,16 Z" fill="${config.secondary}"/>
+        <path d="M0,12 C-8,3 -10,-8 0,-20 C4,-9 12,-4 10,9 C8,15 2,17 0,12 Z" fill="${config.primary}"/>
+        <path d="M0,7 C-4,1 -5,-4 0,-12 C2,-5 6,-2 5,5 C4,9 1,10 0,7 Z" fill="${config.highlight}"/>
+        <circle cx="3" cy="-18" r="2.2" fill="${config.highlight}" opacity="0.9"/>
+        <circle cx="-4" cy="-9" r="1.5" fill="${config.primary}" opacity="0.8"/>
+        <circle cx="6" cy="-2" r="1" fill="${config.highlight}" opacity="0.7"/>
       </g>
     `;
   } else if (type === 'bean') {
+    // Cute Coffee Bean
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/26})">
         <ellipse cx="2" cy="4" rx="15" ry="10" fill="rgba(0,0,0,0.55)"/>
@@ -233,6 +257,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'nugget') {
+    // Shiny Gold Nugget
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/24})">
         <polygon points="0,-14 12,-5 9,12 -7,14 -14,0" fill="url(#goldGrad-${id})"/>
@@ -241,6 +266,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'leaf') {
+    // Cute Rounded Leaf
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/26})">
         <path d="M0,-18 Q14,0 0,18 Q-14,0 0,-18 Z" fill="${config.primary}"/>
@@ -249,7 +275,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
         <line x1="0" y1="3" x2="-6" y2="-1" stroke="${config.highlight}" stroke-width="1" opacity="0.5"/>
       </g>
     `;
-  } else { // Crystal / Diamond
+  } else { // Glacier Crystal / Diamond / Orb
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/24})">
         <polygon points="0,-12 10,-4 6,10 -6,10 -10,-4" fill="${config.primary}"/>
@@ -295,7 +321,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
     const seed = hash + i * 19;
     const size = (16 + random(seed * 3) * 12) * (scaleVal / 100);
     
-    // Slight controlled jitter perpendicular to stroke
+    // Controlled jitter perpendicular to stroke
     const offsetX = (random(seed * 5) - 0.5) * jitterAmount;
     const offsetY = (random(seed * 7) - 0.5) * jitterAmount;
 
@@ -312,6 +338,12 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
         <linearGradient id="bg-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="${config.bgGrad[0]}"/>
           <stop offset="100%" stop-color="${config.bgGrad[1]}"/>
+        </linearGradient>
+
+        <linearGradient id="flowerGrad-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${config.highlight}"/>
+          <stop offset="60%" stop-color="${config.primary}"/>
+          <stop offset="100%" stop-color="${config.secondary}"/>
         </linearGradient>
         
         <linearGradient id="beanGrad-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -346,7 +378,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
 function render() {
   const prompt = document.getElementById('promptInput').value.trim();
-  const text = (document.getElementById('textInput').value || 'HIGH QUALITY').toUpperCase();
+  const text = (document.getElementById('textInput').value || 'BLOOM').toUpperCase();
   const density = parseInt(document.getElementById('density').value, 10);
   const scaleVal = parseInt(document.getElementById('scale').value, 10);
   const radiusVal = parseInt(document.getElementById('radius').value, 10);
@@ -372,7 +404,7 @@ function render() {
     tilesWrapper.appendChild(tileDiv);
   }
 
-  document.getElementById('footInfo').textContent = `GenType Vector Foundry: "${prompt}" · Primitive: ${config.shape.toUpperCase()}`;
+  document.getElementById('footInfo').textContent = `GenType Vector Foundry: "${prompt}" · Active Primitive: ${config.shape.toUpperCase()}`;
 }
 
 // Preset Handlers
