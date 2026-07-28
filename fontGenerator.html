@@ -197,14 +197,14 @@ function parsePrompt(prompt) {
     config.bgGrad = ['#22150c', '#0a0502'];
     config.primary = '#5c351b'; config.secondary = '#2e180a'; config.highlight = '#d49a63';
     config.shape = 'bean'; config.glow = '#b37746';
-  } else if (p.includes('gold') || p.includes('luxe') || p.includes('jewel')) {
-    config.bgGrad = ['#29210c', '#0c0a03'];
-    config.primary = '#ffcc00'; config.secondary = '#aa7700'; config.highlight = '#fffae0';
-    config.shape = 'nugget'; config.glow = '#ffd700';
+  } else if (p.includes('gold') || p.includes('luxe') || p.includes('jewel') || p.includes('nugget')) {
+    config.bgGrad = ['#2b220b', '#0e0a02'];
+    config.primary = '#ffd700'; config.secondary = '#c48a10'; config.highlight = '#fffde6';
+    config.shape = 'nugget'; config.glow = '#ffca28';
   } else if (p.includes('leaf') || p.includes('jungle') || p.includes('plant') || p.includes('foliage')) {
-    config.bgGrad = ['#0e2416', '#030a05'];
-    config.primary = '#2e8b57'; config.secondary = '#0f4d2a'; config.highlight = '#87ceeb';
-    config.shape = 'leaf'; config.glow = '#3cb371';
+    config.bgGrad = ['#0e2617', '#030c06'];
+    config.primary = '#43a047'; config.secondary = '#1b5e20'; config.highlight = '#e8f5e9';
+    config.shape = 'leaf'; config.glow = '#66bb6a';
   } else if (p.includes('neon') || p.includes('cyber') || p.includes('laser')) {
     config.bgGrad = ['#1a0826', '#05010a'];
     config.primary = '#ff007f'; config.secondary = '#7900ff'; config.highlight = '#00f0ff';
@@ -260,7 +260,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'bean') {
-    // Coffee Bean (Cleaned up - weird top highlight removed)
+    // Coffee Bean
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
         <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.5)"/>
@@ -271,22 +271,33 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
       </g>
     `;
   } else if (type === 'nugget') {
-    // Shiny Gold Nugget
+    // Cute Sparkling 3D Gold Nugget & Jewel
     return `
-      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/24})">
-        <polygon points="0,-14 12,-5 9,12 -7,14 -14,0" fill="url(#goldGrad-${id})"/>
-        <polygon points="0,-14 12,-5 0,0 -14,0" fill="${config.highlight}" opacity="0.6"/>
-        <circle cx="-3" cy="-4" r="2" fill="#ffffff"/>
+      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
+        <ellipse cx="0" cy="14" rx="11" ry="5" fill="rgba(0,0,0,0.4)"/>
+        <path d="M-12,-4 Q-14,-14 0,-16 Q14,-14 12,-4 Q15,10 0,15 Q-15,10 -12,-4 Z" fill="#8f5d0a"/>
+        <path d="M-10,-3 Q-12,-12 0,-14 Q12,-12 10,-3 Q13,8 0,13 Q-13,8 -10,-3 Z" fill="url(#goldGrad-${id})"/>
+        <path d="M0,-14 Q10,-10 8,-2 L0,-4 Z" fill="#fff9d6" opacity="0.6"/>
+        <path d="M-10,-3 Q-2,-10 0,-14 L0,-4 Z" fill="#ffe266" opacity="0.7"/>
+        <path d="M0,-4 L8,-2 Q6,7 0,13 Z" fill="#e69d00" opacity="0.4"/>
+        <circle cx="-3" cy="-7" r="2.2" fill="#ffffff"/>
+        <path d="M11,-11 Q11,-6 16,-6 Q11,-6 11,-1 Q11,-6 6,-6 Q11,-6 11,-11 Z" fill="#ffffff"/>
       </g>
     `;
   } else if (type === 'leaf') {
-    // Cute Rounded Leaf
+    // Cute Detailed Foliage Sprig with Double Leaves & Dewdrop
     return `
-      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/26})">
-        <path d="M0,-18 Q14,0 0,18 Q-14,0 0,-18 Z" fill="${config.primary}"/>
-        <path d="M0,-18 Q10,0 0,18" stroke="${config.highlight}" stroke-width="1.8" fill="none" opacity="0.7"/>
-        <line x1="0" y1="-5" x2="6" y2="-9" stroke="${config.highlight}" stroke-width="1" opacity="0.5"/>
-        <line x1="0" y1="3" x2="-6" y2="-1" stroke="${config.highlight}" stroke-width="1" opacity="0.5"/>
+      <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/30})">
+        <path d="M-2,18 C-2,10 12,2 14,-12 C2,2 -10,6 -2,18 Z" fill="rgba(0,0,0,0.3)"/>
+        <path d="M-1,10 C-8,4 -14,-4 -11,-12 C-4,-8 -1,0 -1,10 Z" fill="#1e5c2b"/>
+        <path d="M-1,10 C-8,4 -14,-4 -11,-12" stroke="#4caf50" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M-3,16 C-3,6 12,-2 13,-15 C2,-1 -8,4 -3,16 Z" fill="url(#leafGrad-${id})"/>
+        <path d="M-3,16 C-3,6 12,-2 13,-15 C2,-1 -8,4 -3,16 Z" stroke="#1b4d24" stroke-width="1.2" fill="none"/>
+        <path d="M-3,16 C1,6 7,0 13,-15" stroke="#a5d6a7" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M1,7 Q6,5 8,1" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.7"/>
+        <path d="M-1,12 Q3,10 5,6" stroke="#a5d6a7" stroke-width="1" fill="none" opacity="0.7"/>
+        <circle cx="3" cy="-1" r="2" fill="#e8f5e9" opacity="0.85"/>
+        <circle cx="2.5" cy="-1.5" r="0.7" fill="#ffffff"/>
       </g>
     `;
   } else { // Glacier Crystal / Diamond / Orb
@@ -359,9 +370,15 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
         </linearGradient>
 
         <linearGradient id="goldGrad-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="35%" stop-color="${config.primary}"/>
-          <stop offset="100%" stop-color="${config.secondary}"/>
+          <stop offset="0%" stop-color="#fff5b8"/>
+          <stop offset="45%" stop-color="#ffd700"/>
+          <stop offset="100%" stop-color="#d4920b"/>
+        </linearGradient>
+
+        <linearGradient id="leafGrad-${tileIdx}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#a5d6a7"/>
+          <stop offset="50%" stop-color="#43a047"/>
+          <stop offset="100%" stop-color="#1b5e20"/>
         </linearGradient>
 
         <filter id="glow-${tileIdx}" x="-20%" y="-20%" width="140%" height="140%">
@@ -373,7 +390,7 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
       <rect width="100" height="100" rx="${radiusVal / 2.4}" fill="url(#bg-${tileIdx})"/>
       
       <path d="${pathD}" stroke="${config.secondary}" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.3"/>
-      <path d="${pathD}" stroke="${config.primary}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.8" filter="url(#glow-${tileIdx})"/>
+      <path d="${pathD}" stroke="${config.primary}" stroke-width="6" stroke-linecap="round" stroke-linecap="round" fill="none" opacity="0.8" filter="url(#glow-${tileIdx})"/>
 
       <g filter="url(#glow-${tileIdx})">
         ${shapesSVG}
