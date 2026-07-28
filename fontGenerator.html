@@ -5,121 +5,406 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GenType Pro — Vector Alphabet Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg: #0b090e; --panel: #16121e; --panel-2: #1f1a2a;
-    --brass: #8caec9; --brass-bright: #b3cfe6;
-    --text: #f5f2ed; --text-dim: #9d9487; --line: #2b2438;
+  :root {
+    --bg-outer: #dbeafe;
+    --window-border: #6b8b9e;
+    --header-bg: #b3d4e5;
+    --tab-inactive: #eaf2f6;
+    --tab-active: #8bbad1;
+    --card-bg: #f9fcff;
+    --panel: #ffffff;
+    --text-dark: #3b4e58;
+    --text-dim: #627783;
+    --accent-blue: #709fb0;
+    --accent-hover: #5b899a;
+    --dashed-line: #a0bed0;
   }
-  *{ box-sizing: border-box; }
-  body{ margin:0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding: 24px 16px 50px; }
-  .wrap{ max-width: 1080px; margin: 0 auto; }
-  
-  header{ margin-bottom: 20px; }
-  .eyebrow{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--brass); margin: 0 0 6px; }
-  h1{ font-family: 'Fraunces', serif; font-weight: 800; font-size: clamp(26px, 4.5vw, 40px); margin: 0 0 6px; }
-  p.sub{ color: var(--text-dim); font-size: 14.5px; line-height: 1.5; margin: 0; max-width: 72ch; }
 
-  .prompt-box{ background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; box-shadow: 0 12px 36px rgba(0,0,0,0.6); }
-  .prompt-row{ display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-  
-  .input-group{ flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
-  .input-group label{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brass); }
-  
-  input[type=text]{ background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
-    font-size: 15px; padding: 12px 14px; border-radius: 8px; outline: none; transition: all 0.2s; }
-  input[type=text]:focus{ border-color: var(--brass); box-shadow: 0 0 0 3px rgba(140, 174, 201, 0.2); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .preset-row{ display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .preset-label{ font-size: 12px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; margin-right: 4px; }
-  
-  button{ font-family: 'Inter', sans-serif; font-weight: 500; font-size: 13px; background: var(--panel-2); color: var(--text);
-    border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; cursor: pointer; white-space: nowrap; transition: all 0.15s ease; }
-  button:hover{ border-color: var(--brass); background: #2a2238; }
-  button:active{ transform: scale(0.97); }
-  button.primary{ background: linear-gradient(135deg, #5b83a6, #32506d); border-color: var(--brass); color: #ffffff; font-weight: 700; padding: 10px 18px; font-size: 13px; box-shadow: 0 4px 14px rgba(91, 131, 166, 0.3); }
-  button.primary:hover{ background: linear-gradient(135deg, #6c97be, #3f6385); transform: translateY(-1px); }
-  button.chip{ font-size: 12px; padding: 6px 12px; border-radius: 20px; }
+  body {
+    background-color: var(--bg-outer);
+    font-family: 'Fredoka', 'Nunito', sans-serif;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px 16px 50px;
+  }
 
-  /* Tile Grid Display */
-  .grid-stage{ background: #070509; border: 1px solid var(--line); border-radius: 14px; padding: 28px 20px; margin-bottom: 20px; box-shadow: 0 16px 48px rgba(0,0,0,0.8); }
-  .tiles-wrapper{ display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; min-height: 280px; }
+  .wrap {
+    width: 100%;
+    max-width: 900px;
+  }
 
-  .tile{ width: 140px; height: 140px; border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.2); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
-  .tile:hover{ transform: translateY(-4px) scale(1.02); box-shadow: 0 16px 32px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.3); }
-  .tile svg{ width: 100%; height: 100%; display: block; }
+  /* Browser Window Style Container */
+  .browser-window {
+    background: var(--card-bg);
+    border: 4px solid var(--window-border);
+    border-radius: 20px;
+    box-shadow: 0 10px 24px rgba(107, 139, 158, 0.25);
+    overflow: hidden;
+  }
 
-  .stage-foot{ display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: var(--panel);
-    border: 1px solid var(--line); border-radius: 10px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-  .foot-info{ font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--brass); }
+  /* Top Browser Bar */
+  .title-bar {
+    background: var(--header-bg);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--window-border);
+  }
 
-  .panel{ background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px 10px; }
-  .panel-title{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin: 0 0 14px; }
-  .grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 28px; }
-  .field{ margin-bottom: 12px; }
-  .field-label{ display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; color: var(--text); }
-  .field-label span:last-child{ font-family: 'IBM Plex Mono', monospace; color: var(--brass); font-size: 12px; }
-  input[type=range]{ width: 100%; accent-color: var(--brass); height: 5px; }
+  .window-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid var(--window-border);
+  }
+
+  .url-bar {
+    background: #ffffff;
+    border: 2px solid var(--window-border);
+    border-radius: 12px;
+    padding: 4px 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 700;
+    width: 50%;
+    text-align: center;
+  }
+
+  /* Cute Main Header Inside Window */
+  header {
+    padding: 20px 24px 10px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+
+  p.sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+
+  .app-body {
+    padding: 16px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* Controls Panel */
+  .prompt-box {
+    background: var(--panel);
+    border: 3px solid var(--window-border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  .prompt-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .input-group {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .input-group label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-blue);
+    font-weight: 700;
+  }
+
+  input[type=text] {
+    background: #f0f7fb;
+    border: 2px solid var(--window-border);
+    color: var(--text-dark);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  input[type=text]:focus {
+    border-color: var(--accent-blue);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(112, 159, 176, 0.25);
+  }
+
+  .preset-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .preset-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  button {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    background: var(--tab-inactive);
+    color: var(--text-dark);
+    border: 2px solid var(--window-border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+
+  button:hover {
+    background: var(--tab-active);
+    color: #ffffff;
+  }
+
+  button:active {
+    transform: scale(0.96);
+  }
+
+  button.primary {
+    background: var(--accent-blue);
+    color: #ffffff;
+    border-color: var(--window-border);
+    padding: 9px 18px;
+    box-shadow: 0 4px 10px rgba(112, 159, 176, 0.3);
+  }
+
+  button.primary:hover {
+    background: var(--accent-hover);
+  }
+
+  button.chip {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  /* Grid Tile Stage */
+  .grid-stage {
+    background: #edf5fa;
+    border: 3px solid var(--window-border);
+    border-radius: 16px;
+    padding: 24px 16px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
+  }
+
+  .tiles-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    min-height: 220px;
+  }
+
+  .tile {
+    width: 140px;
+    height: 140px;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(107, 139, 158, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+
+  .tile:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 22px rgba(107, 139, 158, 0.3);
+  }
+
+  .tile svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .stage-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: var(--panel);
+    border: 3px solid var(--window-border);
+    border-radius: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .foot-info {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-blue);
+  }
+
+  /* Settings Controls Panel */
+  .panel {
+    background: var(--panel);
+    border: 3px solid var(--window-border);
+    border-radius: 16px;
+    padding: 16px 20px 8px;
+  }
+
+  .panel-title {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px 24px;
+  }
+
+  .field {
+    margin-bottom: 12px;
+  }
+
+  .field-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-dark);
+  }
+
+  .field-label span:last-child {
+    color: var(--accent-blue);
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent-blue);
+    height: 6px;
+    background: #e0eef5;
+    border-radius: 4px;
+  }
 </style>
 </head>
 <body>
+
 <div class="wrap">
-
-  <header>
-    <p class="eyebrow">GenType Vector Alphabet Studio</p>
-    <h1>3D Vectorized Prompt Typography</h1>
-    <p class="sub">Type any prompt, word, numbers, or symbols to build clean, high-fidelity vectorized 3D typography tiles.</p>
-  </header>
-
-  <div class="prompt-box">
-    <div class="prompt-row">
-      <div class="input-group" style="flex: 1.3;">
-        <label>1. Any Visual Prompt / Material</label>
-        <input type="text" id="promptInput" value="Dark green leaf vector" placeholder="e.g. Flowers, Fire flames, Coffee beans, Neon cyber...">
+  <div class="browser-window">
+    
+    <div class="title-bar">
+      <div class="window-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
       </div>
-      <div class="input-group" style="flex: 1;">
-        <label>2. Your Text / Symbols</label>
-        <input type="text" id="textInput" value="LEAF 123!@#" spellcheck="false">
+      <div class="url-bar">https://gentype-studio.com</div>
+      <div style="width: 48px;"></div>
+    </div>
+
+    <header>
+      <p class="eyebrow">GenType Vector Alphabet Studio</p>
+      <h1>3D Vectorized Typography</h1>
+      <p class="sub">Type any prompt, word, numbers, or symbols to build clean vectorized 3D typography tiles.</p>
+    </header>
+
+    <div class="app-body">
+      <div class="prompt-box">
+        <div class="prompt-row">
+          <div class="input-group" style="flex: 1.3;">
+            <label>1. Visual Prompt / Material</label>
+            <input type="text" id="promptInput" value="Dark green leaf vector" placeholder="e.g. Flowers, Fire flames, Coffee beans...">
+          </div>
+          <div class="input-group" style="flex: 1;">
+            <label>2. Text / Symbols</label>
+            <input type="text" id="textInput" value="LEAF 123!@#" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="preset-row">
+          <span class="preset-label">Presets:</span>
+          <button class="chip" data-prompt="Dark green leaf vector" data-text="LEAF 100%">🌿 Leaf</button>
+          <button class="chip" data-prompt="Cute pink blossom flowers" data-text="BLOOM & LOVE">🌸 Flower</button>
+          <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE 2026!">🔥 Fire</button>
+          <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE $5.99">☕ Coffee</button>
+          <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD #1">✨ Gold</button>
+          <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON (80s)">⚡ Neon</button>
+          <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="ICE -10°C">🧊 Glacier</button>
+        </div>
       </div>
-    </div>
 
-    <div class="preset-row">
-      <span class="preset-label">Presets:</span>
-      <button class="chip" data-prompt="Dark green leaf vector" data-text="LEAF 100%">🌿 Leaf</button>
-      <button class="chip" data-prompt="Cute pink blossom flowers" data-text="BLOOM & LOVE">🌸 Flower</button>
-      <button class="chip" data-prompt="Fire embers & fiery red flames" data-text="FIRE 2026!">🔥 Fire</button>
-      <button class="chip" data-prompt="Dark roasted espresso coffee beans" data-text="COFFEE $5.99">☕ Coffee</button>
-      <button class="chip" data-prompt="Sparkling liquid gold nuggets" data-text="GOLD #1">✨ Gold</button>
-      <button class="chip" data-prompt="Cyberpunk glowing neon tube light" data-text="NEON (80s)">⚡ Neon</button>
-      <button class="chip" data-prompt="Glittering diamond ice crystals" data-text="ICE -10°C">🧊 Glacier</button>
-    </div>
-  </div>
+      <div class="grid-stage">
+        <div class="tiles-wrapper" id="tilesWrapper"></div>
+      </div>
 
-  <div class="grid-stage">
-    <div class="tiles-wrapper" id="tilesWrapper"></div>
-  </div>
+      <div class="stage-foot">
+        <div class="foot-info" id="footInfo">Vector Engine Ready</div>
+        <div style="display: flex; gap: 8px;">
+          <button id="downloadSvgBtn">Export SVG</button>
+          <button id="downloadPngBtn" class="primary">Export High-Res PNG</button>
+        </div>
+      </div>
 
-  <div class="stage-foot">
-    <div class="foot-info" id="footInfo">Vector Engine Ready</div>
-    <div style="display: flex; gap: 8px;">
-      <button id="downloadSvgBtn">Export SVG</button>
-      <button id="downloadPngBtn" class="primary">Export High-Res PNG</button>
-    </div>
-  </div>
+      <div class="panel">
+        <p class="panel-title">Vector Geometry, Layout & Lighting Controls</p>
+        <div class="grid">
+          <div class="field"><div class="field-label"><span>Tile Box Size</span><span id="v-tileSize">140px</span></div><input type="range" id="tileSize" min="80" max="220" value="140"></div>
+          <div class="field"><div class="field-label"><span>Box Spacing (Gap)</span><span id="v-tileGap">16px</span></div><input type="range" id="tileGap" min="0" max="40" value="16"></div>
+          <div class="field"><div class="field-label"><span>Scatter Density</span><span id="v-density">55%</span></div><input type="range" id="density" min="20" max="90" value="55"></div>
+          <div class="field"><div class="field-label"><span>Vector Pattern Scale</span><span id="v-scale">1.0×</span></div><input type="range" id="scale" min="60" max="150" value="100"></div>
+          <div class="field"><div class="field-label"><span>Tile Corner Radius</span><span id="v-radius">24px</span></div><input type="range" id="radius" min="8" max="40" value="24"></div>
+          <div class="field"><div class="field-label"><span>Path Alignment Strictness</span><span id="v-bevel">85%</span></div><input type="range" id="bevel" min="0" max="100" value="85"></div>
+        </div>
+      </div>
 
-  <div class="panel">
-    <p class="panel-title">Vector Geometry, Layout & Lighting Controls</p>
-    <div class="grid">
-      <div class="field"><div class="field-label"><span>Tile Box Size</span><span id="v-tileSize">140px</span></div><input type="range" id="tileSize" min="80" max="220" value="140"></div>
-      <div class="field"><div class="field-label"><span>Box Spacing (Gap)</span><span id="v-tileGap">16px</span></div><input type="range" id="tileGap" min="0" max="40" value="16"></div>
-      <div class="field"><div class="field-label"><span>Scatter Density</span><span id="v-density">55%</span></div><input type="range" id="density" min="20" max="90" value="55"></div>
-      <div class="field"><div class="field-label"><span>Vector Pattern Scale</span><span id="v-scale">1.0×</span></div><input type="range" id="scale" min="60" max="150" value="100"></div>
-      <div class="field"><div class="field-label"><span>Tile Corner Radius</span><span id="v-radius">24px</span></div><input type="range" id="radius" min="8" max="40" value="24"></div>
-      <div class="field"><div class="field-label"><span>Path Alignment Strictness</span><span id="v-bevel">85%</span></div><input type="range" id="bevel" min="0" max="100" value="85"></div>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -219,9 +504,8 @@ function random(seed) {
 function parsePrompt(prompt) {
   const p = prompt.toLowerCase();
 
-  // Updated Background: Deeper Dusty Slate/Powder Blue Gradient
   let config = {
-    bgGrad: ['#385a75', '#1f384d'], 
+    bgGrad: ['#a2cce3', '#79a1b8'], 
     primary: '#5a8f35',
     secondary: '#3b6620',
     highlight: '#8cc853',
@@ -230,31 +514,31 @@ function parsePrompt(prompt) {
   };
 
   if (p.includes('flower') || p.includes('bloom') || p.includes('petal') || p.includes('rose') || p.includes('blossom')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#ffb3d1'; config.secondary = '#c28b9d'; config.highlight = '#fff5fa';
     config.shape = 'flower'; config.glow = '#ff91c1';
   } else if (p.includes('fire') || p.includes('flame') || p.includes('burn') || p.includes('ember')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#ff2a00'; config.secondary = '#ff8800'; config.highlight = '#ffea00';
     config.shape = 'flame'; config.glow = '#ff4400';
   } else if (p.includes('coffee') || p.includes('bean') || p.includes('espresso')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#5c351b'; config.secondary = '#2e180a'; config.highlight = '#d49a63';
     config.shape = 'bean'; config.glow = '#b37746';
   } else if (p.includes('gold') || p.includes('luxe') || p.includes('jewel') || p.includes('nugget')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#ffd700'; config.secondary = '#c48a10'; config.highlight = '#fffde6';
     config.shape = 'nugget'; config.glow = '#ffca28';
   } else if (p.includes('leaf') || p.includes('leaves') || p.includes('plant') || p.includes('foliage') || p.includes('green')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#5a8f35'; config.secondary = '#3b6620'; config.highlight = '#8cc853';
     config.shape = 'leaf'; config.glow = '#5a8f35';
   } else if (p.includes('neon') || p.includes('cyber') || p.includes('laser')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#ff007f'; config.secondary = '#7900ff'; config.highlight = '#00f0ff';
     config.shape = 'orb'; config.glow = '#00f0ff';
   } else if (p.includes('glacier') || p.includes('ice') || p.includes('frost') || p.includes('crystal')) {
-    config.bgGrad = ['#385a75', '#1f384d'];
+    config.bgGrad = ['#a2cce3', '#79a1b8'];
     config.primary = '#7cd8f7'; config.secondary = '#1b6b93'; config.highlight = '#ffffff';
     config.shape = 'crystal'; config.glow = '#9be3fb';
   }
@@ -267,7 +551,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
   if (type === 'flower') {
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/32})">
-        <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.3)"/>
+        <circle cx="1" cy="3" r="14" fill="rgba(0,0,0,0.15)"/>
         <g fill="#c0a8a0">
           <circle cx="0" cy="-9" r="8.5"/>
           <circle cx="8.5" cy="-2.8" r="8.5"/>
@@ -304,7 +588,7 @@ function renderVectorShape(type, x, y, size, angle, config, id) {
   } else if (type === 'bean') {
     return `
       <g transform="translate(${x},${y}) rotate(${angle}) scale(${size/28})">
-        <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.5)"/>
+        <ellipse cx="2" cy="4" rx="14" ry="10" fill="rgba(0,0,0,0.2)"/>
         <ellipse cx="0" cy="0" rx="14" ry="10" fill="#3a1b0c"/>
         <ellipse cx="-0.5" cy="-0.5" rx="12.5" ry="8.8" fill="url(#beanGrad-${id})"/>
         <path d="M-12,-1 C-5,5 4,-6 12,0" stroke="#1f0c04" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -411,8 +695,8 @@ function createTileSVG(char, config, density, scaleVal, radiusVal, bevelVal, til
 
       <rect width="100" height="100" rx="${radiusVal / 2.4}" fill="url(#bg-${tileIdx})"/>
       
-      <path d="${pathD}" stroke="#132331" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.4"/>
-      <path d="${pathD}" stroke="#89a8c4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+      <path d="${pathD}" stroke="#51788f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.3"/>
+      <path d="${pathD}" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.8"/>
 
       <g>
         ${shapesSVG}
@@ -483,7 +767,7 @@ document.getElementById('downloadSvgBtn').addEventListener('click', () => {
   const svgs = tilesWrapper.querySelectorAll('svg');
   if (!svgs.length) return;
 
-  const combinedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tilesWrapper.clientWidth}" height="${tilesWrapper.clientHeight}" style="background:#070509;">` +
+  const combinedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tilesWrapper.clientWidth}" height="${tilesWrapper.clientHeight}" style="background:#edf5fa;">` +
     Array.from(svgs).map((svg, idx) => {
       const rect = svg.parentElement.getBoundingClientRect();
       const parentRect = tilesWrapper.getBoundingClientRect();
@@ -519,7 +803,7 @@ document.getElementById('downloadPngBtn').addEventListener('click', () => {
   ctx.scale(scale, scale);
 
   // Background
-  ctx.fillStyle = '#070509';
+  ctx.fillStyle = '#edf5fa';
   ctx.fillRect(0, 0, width, height);
 
   let loadedCount = 0;
