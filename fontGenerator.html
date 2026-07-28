@@ -1,3 +1,6 @@
+Here's the full code — copy and paste it all:
+
+```html
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -313,15 +316,16 @@
           </div>
         </div>
 
-        <div style="display:flex; gap:10px; margin-bottom:12px;">
-          <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="flex:1; padding:12px 14px;">
-          <button id="fullSetBtn">A–z Set</button>
-          <button id="shuffleBtn">Reseed Wobble</button>
+        <div style="margin-bottom:18px;">
+          <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="width:100%; padding:12px 14px;">
         </div>
-        <div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
-          <button class="chip" id="exEn">Aa Sample</button>
-          <button class="chip" id="exLig">Ligatures / Text</button>
-          <button class="chip" id="exNum">0–9 Numbers</button>
+
+        <div class="stage">
+          <canvas id="inkCanvas" width="900" height="350"></canvas>
+          <div class="stage-foot">
+            <div class="foot-info" id="footInfoInk">procedural font engine active</div>
+            <button id="downloadBtn">Download PNG</button>
+          </div>
         </div>
 
         <div class="ink-panel">
@@ -343,13 +347,6 @@
           </div>
         </div>
 
-        <div class="stage">
-          <canvas id="inkCanvas" width="900" height="350"></canvas>
-          <div class="stage-foot">
-            <div class="foot-info" id="footInfoInk">procedural font engine active</div>
-            <button id="downloadBtn">Download PNG</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -638,7 +635,7 @@ document.getElementById('downloadSvgBtn').addEventListener('click', () => {
   const svgs = tilesWrapper.querySelectorAll('svg');
   if (!svgs.length) return;
   const combinedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tilesWrapper.clientWidth}" height="${tilesWrapper.clientHeight}" style="background:#d8e6ef;">` +
-    Array.from(svgs).map((svg) => {
+    Array.from(svgs).map((svg, idx) => {
       const rect = svg.parentElement.getBoundingClientRect();
       const parentRect = tilesWrapper.getBoundingClientRect();
       return `<g transform="translate(${rect.left-parentRect.left},${rect.top-parentRect.top}) scale(${rect.width/100},${rect.height/100})">${svg.innerHTML}</g>`;
@@ -886,13 +883,13 @@ function getGlyphStrokes(char, w, h, xh) {
     case 'e': strokes.push(line(stem+2, midY, baseW-stem, midY)); strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.42, 0, -Math.PI * 1.75, 16)); break;
     case 'f': strokes.push(line(cx, capTop+10, cx, baseline)); strokes.push(arcPoints(cx+8, capTop+10, 8, 10, Math.PI, Math.PI*1.8)); strokes.push(line(cx-8, xTop+4, cx+10, xTop+4)); break;
     case 'g': strokes.push(arcPoints(cx, midY, baseW*0.34, xHeight*0.4, 0, Math.PI*2)); strokes.push(line(baseW-stem, midY, baseW-stem, baseline+14)); strokes.push(arcPoints(cx, baseline+14, baseW*0.34, 8, 0, Math.PI)); break;
-    case 'h': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI, 0)); strokes.push(line(baseW-stem, midY, baseW-stem, baseline)); break;
+    case 'h': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(arcPoints(cx+2, xTop, baseW*0.34, xHeight*0.38, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
     case 'i': strokes.push(line(cx, xTop, cx, baseline)); strokes.push(line(cx, capTop+2, cx, capTop+6)); break;
     case 'j': strokes.push(line(cx+4, xTop, cx+4, baseline+14)); strokes.push(arcPoints(cx-2, baseline+14, 6, 6, 0, Math.PI)); strokes.push(line(cx+4, capTop+2, cx+4, capTop+6)); break;
     case 'k': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(line(stem+4, midY, baseW-stem, xTop+4)); strokes.push(line(stem+4, midY, baseW-stem, baseline)); break;
     case 'l': strokes.push(line(stem, capTop, stem, baseline)); strokes.push(line(stem, baseline, stem+10, baseline)); break;
-    case 'm': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(stem + (baseW*0.24), baseline - xHeight/2, baseW*0.22, xHeight/2, Math.PI, 0)); strokes.push(arcPoints(baseW - (baseW*0.24), baseline - xHeight/2, baseW*0.22, xHeight/2, Math.PI, 0)); strokes.push(line(baseW-stem, midY, baseW-stem, baseline)); break;
-    case 'n': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI, 0)); strokes.push(line(baseW-stem, midY, baseW-stem, baseline)); break;
+    case 'm': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(stem + baseW*0.24, xTop, baseW*0.22, xHeight*0.3, -Math.PI, 0)); strokes.push(arcPoints(baseW - baseW*0.24, xTop, baseW*0.22, xHeight*0.3, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
+    case 'n': strokes.push(line(stem, xTop, stem, baseline)); strokes.push(arcPoints(cx+2, xTop, baseW*0.34, xHeight*0.38, -Math.PI, 0)); strokes.push(line(baseW-stem, xTop, baseW-stem, baseline)); break;
     case 'o': strokes.push(arcPoints(cx, midY, baseW*0.36, xHeight*0.42, 0, Math.PI*2)); break;
     case 'p': strokes.push(line(stem, xTop, stem, baseline+18)); strokes.push(arcPoints(cx+2, baseline - xHeight/2, baseW*0.34, xHeight/2, -Math.PI/2, Math.PI/2)); break;
     case 'q': strokes.push(line(baseW-stem, xTop, baseW-stem, baseline+18)); strokes.push(arcPoints(cx-2, baseline - xHeight/2, baseW*0.34, xHeight/2, Math.PI/2, Math.PI*1.5)); break;
@@ -907,13 +904,13 @@ function getGlyphStrokes(char, w, h, xh) {
     case 'z': strokes.push(line(stem, xTop, baseW-stem, xTop)); strokes.push(line(baseW-stem, xTop, stem, baseline)); strokes.push(line(stem, baseline, baseW-stem, baseline)); break;
     case '0': strokes.push(arcPoints(cx, (capTop+baseline)/2, baseW*0.34, baseH*0.45, 0, Math.PI*2)); break;
     case '1': strokes.push(line(cx-6, capTop+10, cx, capTop)); strokes.push(line(cx, capTop, cx, baseline)); strokes.push(line(cx-10, baseline, cx+10, baseline)); break;
-    case '2': strokes.push(arcPoints(cx, capTop+12, baseW*0.32, 12, Math.PI, 0)); strokes.push(line(baseW-stem, capTop+12, stem, baseline)); strokes.push(line(stem, baseline, baseW-stem, baseline)); break;
-    case '3': strokes.push(arcPoints(cx, capTop+12, baseW*0.3, 10, Math.PI*1.2, 0)); strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8)); break;
+    case '2': strokes.push(arcPoints(cx, capTop+12, baseW*0.32, 12, -Math.PI, 0)); strokes.push(line(baseW-stem, capTop+12, stem, baseline)); strokes.push(line(stem, baseline, baseW-stem, baseline)); break;
+    case '3': strokes.push(arcPoints(cx, capTop+12, baseW*0.3, 12, -Math.PI, 0)); strokes.push(arcPoints(cx, baseline-12, baseW*0.34, 12, 0, Math.PI)); break;
     case '4': strokes.push(line(baseW-stem-4, capTop, stem, (capTop+baseline)/2)); strokes.push(line(stem, (capTop+baseline)/2, baseW-stem, (capTop+baseline)/2)); strokes.push(line(baseW-stem-4, capTop, baseW-stem-4, baseline)); break;
     case '5': strokes.push(line(baseW-stem, capTop, stem+4, capTop)); strokes.push(line(stem+4, capTop, stem+2, (capTop+baseline)/2 - 2)); strokes.push(arcPoints(cx, baseline-14, baseW*0.32, 12, -Math.PI/2, Math.PI*0.8)); break;
     case '6': strokes.push(arcPoints(cx, baseline-16, baseW*0.32, 14, 0, Math.PI*2)); strokes.push(line(stem+2, baseline-16, cx+4, capTop)); break;
     case '7': strokes.push(line(stem, capTop, baseW-stem, capTop)); strokes.push(line(baseW-stem, capTop, stem+4, baseline)); break;
-    case '8': strokes.push(arcPoints(cx, capTop+14, baseW*0.28, 11, 0, Math.PI*2)); strokes.push(arcPoints(cx, baseline-16, baseW*0.34, 14, 0, Math.PI*2)); break;
+    case '8': strokes.push(arcPoints(cx, capTop+18, baseW*0.28, 16, 0, Math.PI*2)); strokes.push(arcPoints(cx, baseline-18, baseW*0.32, 16, 0, Math.PI*2)); break;
     case '9': strokes.push(arcPoints(cx, capTop+16, baseW*0.32, 14, 0, Math.PI*2)); strokes.push(line(baseW-stem-2, capTop+16, cx-4, baseline)); break;
     default: strokes.push(line(cx, xTop, cx, baseline)); break;
   }
@@ -980,11 +977,6 @@ document.getElementById('generateBtn').addEventListener('click', () => { pickRan
   document.getElementById(id).addEventListener('input', renderInk);
 });
 document.getElementById('inkTextInput').addEventListener('input', renderInk);
-document.getElementById('shuffleBtn').addEventListener('click', () => { fontSeed = Math.floor(Math.random()*90000); renderInk(); });
-document.getElementById('exEn').addEventListener('click', () => { document.getElementById('inkTextInput').value = 'the quick brown fox'; renderInk(); });
-document.getElementById('exLig').addEventListener('click', () => { document.getElementById('inkTextInput').value = 'headache offset title'; renderInk(); });
-document.getElementById('exNum').addEventListener('click', () => { document.getElementById('inkTextInput').value = '0123456789'; renderInk(); });
-document.getElementById('fullSetBtn').addEventListener('click', () => { document.getElementById('inkTextInput').value = 'abcdefghijklmnopqrstuvwxyz'; renderInk(); });
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const link = document.createElement('a');
   link.download = `${currentDNA.name.toLowerCase().replace(/\s+/g, '-')}.png`;
