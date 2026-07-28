@@ -1,3 +1,6 @@
+Here's the complete `inkform.html` file:
+
+```html
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -278,18 +281,16 @@
     </div>
 
     <div id="tab2" class="tab-content">
-      <div class="app-body">
-        <header style="padding: 0 0 10px;">
+      <div class="inkform-wrap">
+        <header>
           <p class="eyebrow">Inkform / procedural type foundry</p>
           <h1>Procedural Type Generator</h1>
           <p class="sub">Click "Generate New Font" to create distinct, wildly unique typefaces engineered with realistic material textures, stroke geometry, and pen physics.</p>
         </header>
 
         <div class="ink-panel">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px; flex-wrap:wrap;">
-            <span style="font-size:14px; color:var(--text-dark); font-weight:700;" id="dnaLabel">✦ Modernist Sans</span>
-            <span style="font-size:12px; color:var(--text-dim);" id="dnaDetail">id: 001 | uniform strokes · medium x-height</span>
-            <button id="generateBtn" class="primary" style="margin-left:auto;">✦ Generate New Font</button>
+          <div style="display:flex; align-items:center; justify-content:center; margin-bottom:4px;">
+            <button id="generateBtn" class="primary">✦ Generate New Font</button>
           </div>
         </div>
 
@@ -304,6 +305,9 @@
                 <option value="spray">Spray Paint Splatter & Drips</option>
                 <option value="charcoal">Charcoal / Textured Graphite Pencil</option>
                 <option value="ink">Classic Fountain Ink</option>
+                <option value="metallic">Metallic Foil Sheen & Highlights</option>
+                <option value="glitter">Glitter Sparkle & Glam Shimmer</option>
+                <option value="hologram">Holographic Rainbow Shift</option>
               </select>
             </div>
             <div class="field">
@@ -313,7 +317,7 @@
           </div>
         </div>
 
-        <div style="margin-bottom:2px;">
+        <div style="margin-bottom:18px;">
           <input type="text" id="inkTextInput" value="the quick brown fox" maxlength="80" spellcheck="false" style="width:100%; padding:12px 14px;">
         </div>
 
@@ -325,7 +329,7 @@
           </div>
         </div>
 
-        <div class="ink-panel" style="margin-top: 16px;">
+        <div class="ink-panel">
           <p class="panel-title">Shape & Physics Controls</p>
           <div class="grid">
             <div class="field"><div class="field-label"><span>Nib Width</span><span id="v-width">8</span></div><input type="range" id="width" min="1" max="32" value="8"></div>
@@ -691,30 +695,54 @@ renderVec();
 const canvas = document.getElementById('inkCanvas');
 const ctx = canvas.getContext('2d');
 
-let fontSeed = Math.floor(Math.random() * 100000);
-
 const ARCHETYPES = [
   { name: 'Modernist Geometric Sans', style: 'sans', width: 1.0, xh: 1.0, nibWidth: 7, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
   { name: 'Didone High-Contrast Serif', style: 'serif', width: 0.85, xh: 0.85, nibWidth: 16, angle: 90, slant: 0, contrast: 'extreme', jitter: 0 },
   { name: 'Heavy Poster Slab Serif', style: 'slab', width: 1.25, xh: 1.1, nibWidth: 22, angle: 0, slant: 0, contrast: 'low', jitter: 0 },
   { name: 'Gothic Blackletter Display', style: 'blackletter', width: 0.8, xh: 1.15, nibWidth: 18, angle: 45, slant: 0, contrast: 'high', jitter: 1 },
-  { name: 'Ultra-Condensed Technical', style: 'condensed', width: 0.55, xh: 1.2, nibWidth: 5, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Ultra-Condensed Technical', style: 'condensed', width: 0.55, xh: 1.2, nibWidth: 6, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
   { name: 'Extended Modern Art-Deco', style: 'artdeco', width: 1.6, xh: 0.65, nibWidth: 7, angle: 15, slant: 0, contrast: 'medium', jitter: 0 },
   { name: 'Organic Bubble Display', style: 'bubble', width: 1.1, xh: 1.1, nibWidth: 26, angle: 0, slant: 0, contrast: 'none', jitter: 2 },
   { name: 'Expressive Calligraphic Italic', style: 'script', width: 0.95, xh: 0.9, nibWidth: 14, angle: 35, slant: 18, contrast: 'high', jitter: 3 },
   { name: 'Cyberpunk Glitch Neon', style: 'cyber', width: 1.1, xh: 1.05, nibWidth: 6, angle: 10, slant: -5, contrast: 'none', jitter: 4 },
   { name: 'Brutalist Monospace Block', style: 'brutal', width: 1.3, xh: 1.2, nibWidth: 20, angle: 0, slant: 0, contrast: 'low', jitter: 1 },
   { name: 'Whimsical Comic Marker', style: 'comic', width: 1.0, xh: 1.1, nibWidth: 12, angle: 20, slant: 8, contrast: 'medium', jitter: 5 },
-  { name: 'Victorian Ornamental Script', style: 'victorian', width: 0.9, xh: 0.8, nibWidth: 10, angle: 50, slant: 12, contrast: 'extreme', jitter: 2 }
+  { name: 'Victorian Ornamental Script', style: 'victorian', width: 0.9, xh: 0.8, nibWidth: 10, angle: 50, slant: 12, contrast: 'extreme', jitter: 2 },
+  { name: 'Pixel Bitmap 8-bit Mono', style: 'pixel', width: 0.9, xh: 1.15, nibWidth: 6, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Sharp Splinter Gothic', style: 'sharp', width: 0.7, xh: 1.2, nibWidth: 6, angle: 0, slant: -5, contrast: 'none', jitter: 1 },
+  { name: 'Swirly Whirlpool Script', style: 'swirl', width: 0.95, xh: 0.85, nibWidth: 8, angle: 60, slant: 15, contrast: 'high', jitter: 3 },
+  { name: 'Dotted Stencil Outline', style: 'dotted', width: 1.0, xh: 1.0, nibWidth: 5, angle: 0, slant: 0, contrast: 'medium', jitter: 2 },
+  { name: 'Futuristic Hologram Display', style: 'hologram', width: 1.15, xh: 1.0, nibWidth: 6, angle: 15, slant: 5, contrast: 'none', jitter: 4 },
+  { name: 'Grunge Distressed Chaos', style: 'grunge', width: 0.9, xh: 1.1, nibWidth: 15, angle: 25, slant: 3, contrast: 'low', jitter: 6 },
+  { name: 'Fantasy Elven Script', style: 'elven', width: 0.85, xh: 0.8, nibWidth: 6, angle: 55, slant: 10, contrast: 'extreme', jitter: 2 },
+  { name: 'Retro Arcade Block', style: 'retro', width: 1.0, xh: 1.1, nibWidth: 8, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Stencil Army Stamp', style: 'stencil', width: 1.1, xh: 1.15, nibWidth: 14, angle: 0, slant: 0, contrast: 'low', jitter: 1 },
+  { name: 'Ink Splatter Chaos', style: 'splatter', width: 1.0, xh: 1.0, nibWidth: 12, angle: 30, slant: 0, contrast: 'medium', jitter: 5 },
+  { name: 'Chiseled Stone Carve', style: 'chisel', width: 0.95, xh: 0.9, nibWidth: 18, angle: 70, slant: 0, contrast: 'high', jitter: 0 },
+  { name: 'Wet Paint Drip Mess', style: 'drip', width: 1.0, xh: 1.0, nibWidth: 20, angle: 0, slant: 2, contrast: 'low', jitter: 4 },
+  { name: 'Neon Tube Glow Sign', style: 'neon', width: 1.05, xh: 0.95, nibWidth: 5, angle: 0, slant: 0, contrast: 'none', jitter: 1 },
+  { name: 'Puffy Cloud Bubble', style: 'puffy', width: 1.2, xh: 1.05, nibWidth: 28, angle: 0, slant: 0, contrast: 'none', jitter: 3 },
+  { name: 'Wobbly Jelly Gel', style: 'jelly', width: 1.0, xh: 1.05, nibWidth: 14, angle: 0, slant: 0, contrast: 'low', jitter: 8 },
+  { name: 'Spiky Cactus Desert', style: 'spiky', width: 0.85, xh: 1.3, nibWidth: 6, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Flowing Cursive Hand', style: 'cursive', width: 0.9, xh: 0.85, nibWidth: 9, angle: 40, slant: 20, contrast: 'high', jitter: 2 },
+  { name: 'Skeleton Bone Hollow', style: 'bone', width: 0.95, xh: 1.1, nibWidth: 6, angle: 0, slant: 0, contrast: 'none', jitter: 1 },
+  { name: 'Toxic Waste Glow', style: 'toxic', width: 1.0, xh: 1.0, nibWidth: 7, angle: 5, slant: -3, contrast: 'none', jitter: 3 },
+  { name: 'Steampunk Gear Brass', style: 'steampunk', width: 0.85, xh: 0.9, nibWidth: 11, angle: 45, slant: 5, contrast: 'medium', jitter: 2 },
+  { name: 'Melted Wax Candle', style: 'melt', width: 1.15, xh: 0.8, nibWidth: 24, angle: 0, slant: 5, contrast: 'low', jitter: 6 },
+  { name: 'Chalkboard Scrawl', style: 'chalk', width: 0.95, xh: 1.05, nibWidth: 10, angle: 10, slant: 5, contrast: 'none', jitter: 7 },
+  { name: 'Blood Drip Horror', style: 'blood', width: 1.0, xh: 1.0, nibWidth: 13, angle: 0, slant: 0, contrast: 'medium', jitter: 4 },
+  { name: 'Bubblegum Pop Round', style: 'round', width: 1.2, xh: 1.2, nibWidth: 30, angle: 0, slant: 0, contrast: 'none', jitter: 0 },
+  { name: 'Fractured Glitch Artifact', style: 'glitch', width: 0.8, xh: 1.15, nibWidth: 6, angle: 5, slant: -8, contrast: 'none', jitter: 7 },
+  { name: 'Slimy Ooze Drip', style: 'ooze', width: 1.1, xh: 0.9, nibWidth: 17, angle: 0, slant: 2, contrast: 'low', jitter: 5 },
 ];
 
 let currentDNA = ARCHETYPES[0];
+let fontSeed = Math.floor(Math.random() * 100000);
 
 function pickRandomDNA() {
   fontSeed = Math.floor(Math.random() * 100000);
   const base = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
   currentDNA = { ...base,
-    id: Math.floor(Math.random() * 899) + 100,
     width: Math.round((base.width + (Math.random() * 0.35 - 0.17)) * 100) / 100,
     xh: Math.round((base.xh + (Math.random() * 0.25 - 0.12)) * 100) / 100,
     slant: Math.random() > 0.6 ? Math.floor(Math.random() * 24 - 6) : base.slant,
@@ -726,8 +754,6 @@ function pickRandomDNA() {
   document.getElementById('xheight').value = Math.round(currentDNA.xh * 100);
   document.getElementById('slant').value = currentDNA.slant;
   document.getElementById('jitter').value = currentDNA.jitter;
-  document.getElementById('dnaLabel').textContent = `✦ ${currentDNA.name}`;
-  document.getElementById('dnaDetail').textContent = `id: ${currentDNA.id} | style: ${currentDNA.style} · width: ${currentDNA.width}×`;
 }
 
 function random(seed) { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
@@ -739,131 +765,175 @@ function hexToRgba(hex, alpha) {
   return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
 }
 
-function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, colorHex) {
+function drawMaterialStroke(ctx, points, nibW, jitterAmt, material, opacityVal, colorHex, bleed) {
   if (points.length < 2) return;
   const baseAlpha = opacityVal / 100;
   ctx.save();
 
   if (material === 'watercolor') {
-    for (let layer = 0; layer < 4; layer++) {
-      ctx.beginPath();
-      ctx.lineWidth = nibW * (1.2 + layer * 0.5);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * (0.08 / (layer + 1)));
+    const bc = 1 + bleed / 60;
+    ctx.beginPath(); ctx.lineWidth = nibW * (1.4 + bleed / 200); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.18);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+    for (let layer = 0; layer < 3; layer++) {
+      ctx.beginPath(); ctx.lineWidth = nibW * (0.8 + layer * 0.2);
+      ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.25);
       ctx.moveTo(points[0][0], points[0][1]);
       for (let i = 1; i < points.length; i++) {
-        let px = points[i][0] + (random(fontSeed + i * 3 + layer * 19) - 0.5) * (nibW * 0.8);
-        let py = points[i][1] + (random(fontSeed + i * 7 + layer * 23) - 0.5) * (nibW * 0.8);
+        let px = points[i][0] + (random(fontSeed + i * 5 + layer * 17) - 0.5) * (jitterAmt + 3 + bleed / 15);
+        let py = points[i][1] + (random(fontSeed + i * 11 + layer * 23) - 0.5) * (jitterAmt + 3 + bleed / 15);
         ctx.lineTo(px, py);
       }
       ctx.stroke();
     }
-    ctx.beginPath();
-    ctx.lineWidth = Math.max(2, nibW * 0.7);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.55);
+    ctx.beginPath(); ctx.lineWidth = Math.max(1, nibW * 0.25); ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.65);
     ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
     ctx.stroke();
-    for (let i = 0; i < points.length; i += 2) {
-      if (random(fontSeed + i * 31) > 0.5) {
-        const dropRadius = random(fontSeed + i * 43) * (nibW * 0.6) + 1;
-        const offsetX = (random(fontSeed + i * 53) - 0.5) * (nibW * 2.5);
-        const offsetY = (random(fontSeed + i * 61) - 0.5) * (nibW * 2.5);
-        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.15 + random(fontSeed + i) * 0.3));
-        ctx.beginPath();
-        ctx.arc(points[i][0] + offsetX, points[i][1] + offsetY, dropRadius, 0, Math.PI * 2);
-        ctx.fill();
+    for (let i = 0; i < points.length; i++) {
+      if (random(fontSeed + i * 31) > 0.68) {
+        const dropRadius = (random(fontSeed + i * 43) * (nibW * 0.45) + 0.8) * bc;
+        const offsetX = (random(fontSeed + i * 53) - 0.5) * (nibW * 3.8 * bc);
+        const offsetY = (random(fontSeed + i * 61) - 0.5) * (nibW * 3.8 * bc);
+        const cx = points[i][0] + offsetX;
+        const cy = points[i][1] + offsetY;
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.3 + random(fontSeed + i) * 0.4));
+        ctx.beginPath(); ctx.arc(cx, cy, dropRadius, 0, Math.PI * 2); ctx.fill();
       }
     }
   } else if (material === 'paint') {
-    ctx.beginPath();
-    ctx.lineWidth = nibW;
-    ctx.lineCap = 'square';
-    ctx.lineJoin = 'miter';
+    const bc = 1 + bleed / 70;
+    ctx.beginPath(); ctx.lineWidth = nibW * (1 + bleed / 150); ctx.lineCap = 'square'; ctx.lineJoin = 'round';
     ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
     ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
     ctx.stroke();
-
-    const bristleCount = Math.max(3, Math.floor(nibW * 0.7));
+    const bristleCount = Math.max(4, Math.floor(nibW * 0.8));
     for (let b = 0; b < bristleCount; b++) {
-      const offset = (b / bristleCount - 0.5) * (nibW * 0.8);
-      ctx.beginPath();
-      ctx.lineWidth = Math.max(1, nibW / (bristleCount * 1.5));
-      ctx.strokeStyle = b % 2 === 0 ? hexToRgba('#ffffff', baseAlpha * 0.35) : hexToRgba('#000000', baseAlpha * 0.4);
+      const offset = (b / bristleCount - 0.5) * (nibW * 0.85 * bc);
+      ctx.beginPath(); ctx.lineWidth = Math.max(1, nibW / bristleCount);
+      ctx.strokeStyle = b % 2 === 0 ? hexToRgba('#ffffff', baseAlpha * 0.22) : hexToRgba('#000000', baseAlpha * 0.28);
       ctx.moveTo(points[0][0] + offset, points[0][1] + offset);
       for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0] + offset, points[i][1] + offset);
       ctx.stroke();
     }
+    [points[0], points[points.length - 1]].forEach(pt => {
+      ctx.fillStyle = hexToRgba(colorHex, baseAlpha);
+      ctx.beginPath(); ctx.arc(pt[0], pt[1], nibW * 0.55 * bc, 0, Math.PI * 2); ctx.fill();
+    });
   } else if (material === 'spray') {
+    const bc = 1 + bleed / 50;
     for (let i = 0; i < points.length - 1; i++) {
-      const p1 = points[i];
-      const p2 = points[i+1];
-      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
-      const steps = Math.max(6, Math.floor(dist * 1.5));
-      for (let s = 0; s < steps; s++) {
-        const t = s / steps;
-        const cx = p1[0] + (p2[0] - p1[0]) * t;
-        const cy = p1[1] + (p2[1] - p1[1]) * t;
-        const particleCount = Math.floor(nibW * 5);
-        for (let p = 0; p < particleCount; p++) {
-          const angle = random(fontSeed + p * 7 + s * 13) * Math.PI * 2;
-          const radius = Math.pow(random(fontSeed + p * 17 + s * 3), 1.8) * (nibW * 1.2);
-          const px = cx + Math.cos(angle) * radius;
-          const py = cy + Math.sin(angle) * radius;
-          const dotSize = random(fontSeed + p) * 1.6 + 0.5;
-          ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (1 - radius / (nibW * 1.3)));
-          ctx.fillRect(px, py, dotSize, dotSize);
-        }
-      }
-      if (random(fontSeed + i * 97) > 0.82) {
-        const dripX = points[i][0];
-        const dripY = points[i][1];
-        const dripLen = random(fontSeed + i * 41) * 32 + 10;
-        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * 0.9);
-        ctx.beginPath();
-        ctx.rect(dripX - 1, dripY, 2, dripLen);
-        ctx.arc(dripX, dripY + dripLen, 2.2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  } else if (material === 'charcoal') {
-    for (let i = 0; i < points.length - 1; i++) {
-      const p1 = points[i];
-      const p2 = points[i+1];
+      const p1 = points[i]; const p2 = points[i+1];
       const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
       const steps = Math.max(5, Math.floor(dist * 1.2));
       for (let s = 0; s < steps; s++) {
         const t = s / steps;
         const cx = p1[0] + (p2[0] - p1[0]) * t;
         const cy = p1[1] + (p2[1] - p1[1]) * t;
-        for (let p = 0; p < nibW * 3.5; p++) {
-          const rx = (random(fontSeed + p * 5 + s * 7) - 0.5) * (nibW * 1.2);
-          const ry = (random(fontSeed + p * 11 + s * 13) - 0.5) * (nibW * 1.2);
-          if (random(fontSeed + p * 19) > 0.25) {
-            ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.2 + random(fontSeed + p) * 0.6));
-            ctx.fillRect(cx + rx, cy + ry, 1.5, 1.5);
+        const totalParticles = Math.floor(nibW * 4.5 * bc);
+        for (let p = 0; p < totalParticles; p++) {
+          const angle = random(fontSeed + p * 7 + s * 13) * Math.PI * 2;
+          const rPow = Math.pow(random(fontSeed + p * 17 + s * 3), 2.2);
+          const radius = rPow * (nibW * 1.5 * bc);
+          const px = cx + Math.cos(angle) * radius;
+          const py = cy + Math.sin(angle) * radius;
+          const dotSize = random(fontSeed + p) * 1.8 + 0.4;
+          ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (1 - radius / (nibW * 1.6 * bc)));
+          ctx.fillRect(px, py, dotSize, dotSize);
+        }
+      }
+      if (random(fontSeed + i * 97) > 0.88) {
+        const dripX = points[i][0]; const dripY = points[i][1];
+        const dripLen = (random(fontSeed + i * 41) * 28 + 8) * bc;
+        ctx.fillStyle = hexToRgba(colorHex, baseAlpha * 0.85);
+        ctx.beginPath(); ctx.rect(dripX - 1, dripY, 2, dripLen);
+        ctx.arc(dripX, dripY + dripLen, 2.5 * bc, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+  } else if (material === 'charcoal') {
+    const bc = 1 + bleed / 60;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i]; const p2 = points[i+1];
+      const dist = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      const steps = Math.max(4, Math.floor(dist));
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        const cx = p1[0] + (p2[0] - p1[0]) * t;
+        const cy = p1[1] + (p2[1] - p1[1]) * t;
+        for (let p = 0; p < nibW * 3 * bc; p++) {
+          const rx = (random(fontSeed + p * 5 + s) - 0.5) * nibW * bc;
+          const ry = (random(fontSeed + p * 11 + s) - 0.5) * nibW * bc;
+          if (random(fontSeed + p * 19) > 0.3) {
+            ctx.fillStyle = hexToRgba(colorHex, baseAlpha * (0.15 + random(fontSeed + p) * 0.45));
+            ctx.fillRect(cx + rx, cy + ry, 1.4, 1.4);
           }
         }
       }
     }
+  } else if (material === 'metallic') {
+    ctx.beginPath(); ctx.lineWidth = nibW * 1.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.9);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+    for (let h = 0; h < 3; h++) {
+      ctx.beginPath(); ctx.lineWidth = Math.max(1, nibW * 0.2);
+      const off = (h - 1) * nibW * 0.2;
+      ctx.strokeStyle = hexToRgba('#ffffff', baseAlpha * (0.4 + h * 0.15));
+      ctx.moveTo(points[0][0] + off, points[0][1] + off * 0.5);
+      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0] + off, points[i][1] + off * 0.5);
+      ctx.stroke();
+    }
+    for (let i = 0; i < points.length; i += 4) {
+      if (random(fontSeed + i) > 0.55) {
+        ctx.fillStyle = hexToRgba('#ffffff', baseAlpha * random(fontSeed + i * 3));
+        ctx.fillRect(points[i][0] - 1.5, points[i][1] - 1.5, 3, 3);
+      }
+    }
+  } else if (material === 'glitter') {
+    ctx.beginPath(); ctx.lineWidth = nibW; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba(colorHex, baseAlpha * 0.5);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+    for (let i = 0; i < points.length; i++) {
+      const sc = Math.floor(3 + random(fontSeed + i * 97) * 5);
+      for (let s = 0; s < sc; s++) {
+        const a = random(fontSeed + i * 7 + s * 13) * Math.PI * 2;
+        const d = random(fontSeed + i * 5 + s * 17) * nibW * 1.5;
+        const sz = 1 + random(fontSeed + i * 3 + s) * 2;
+        ctx.fillStyle = random(fontSeed + i * 11 + s) > 0.5 ? hexToRgba('#ffffff', baseAlpha) : hexToRgba(colorHex, baseAlpha * 0.8);
+        ctx.fillRect(points[i][0] + Math.cos(a) * d, points[i][1] + Math.sin(a) * d, sz, sz);
+      }
+    }
+  } else if (material === 'hologram') {
+    const colors = ['#ff0000', '#ff8800', '#ffff00', '#00ff00', '#0088ff', '#8800ff'];
+    colors.forEach((color, idx) => {
+      const off = (idx - 2.5) * nibW * 0.15;
+      ctx.beginPath(); ctx.lineWidth = Math.max(1, nibW * 0.6); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.globalAlpha = baseAlpha * 0.35;
+      ctx.strokeStyle = color;
+      ctx.moveTo(points[0][0] + off, points[0][1]);
+      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0] + off, points[i][1]);
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.lineWidth = 1; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = hexToRgba('#ffffff', baseAlpha * 0.6);
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
   } else {
-    ctx.beginPath();
-    ctx.lineWidth = nibW;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    const bc = 1 + bleed / 80;
+    ctx.beginPath(); ctx.lineWidth = nibW * (1 + bleed / 200); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.strokeStyle = hexToRgba(colorHex, baseAlpha);
     ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) {
-      let px = points[i][0];
-      let py = points[i][1];
-      if (jitterAmt > 0) {
-        px += (random(fontSeed + i * 7) - 0.5) * jitterAmt;
-        py += (random(fontSeed + i * 13) - 0.5) * jitterAmt;
-      }
+      let px = points[i][0]; let py = points[i][1];
+      if (jitterAmt > 0) { px += (random(fontSeed + i * 7) - 0.5) * (jitterAmt + bleed / 30); py += (random(fontSeed + i * 13) - 0.5) * (jitterAmt + bleed / 30); }
       ctx.lineTo(px, py);
     }
     ctx.stroke();
@@ -938,9 +1008,11 @@ function renderInk() {
   const material = document.getElementById('materialType').value;
   const opacityVal = parseInt(document.getElementById('opacity').value, 10);
   const nibW = parseInt(document.getElementById('width').value, 10);
+  const angle = parseInt(document.getElementById('angle').value, 10);
   const slant = parseInt(document.getElementById('slant').value, 10);
   const spacing = parseInt(document.getElementById('spacing').value, 10) / 100;
   const jitter = parseInt(document.getElementById('jitter').value, 10);
+  const bleed = parseInt(document.getElementById('bleed').value, 10);
   const inkColor = document.getElementById('inkColor').value;
   const paperColor = document.getElementById('paperColor').value;
 
@@ -973,10 +1045,11 @@ function renderInk() {
     const glyph = getGlyphStrokes(char, aspect, 1.0, xh);
     ctx.save();
     ctx.translate(cursorX, cursorY);
+    if (angle !== 0) ctx.rotate((angle * Math.PI) / 180);
     if (slant !== 0) ctx.transform(1, 0, Math.tan((slant * Math.PI) / 180), 1, 0, 0);
 
     glyph.strokes.forEach(stroke => {
-      drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor);
+      drawMaterialStroke(ctx, stroke, nibW, jitter, material, opacityVal, inkColor, bleed);
     });
 
     ctx.restore();
@@ -1006,3 +1079,4 @@ renderInk();
 </script>
 </body>
 </html>
+```
